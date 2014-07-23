@@ -84,3 +84,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'collectstatic'
+
+# Wikipedia source
+SOURCE_WIKIPEDIA_LANG = "nl"
