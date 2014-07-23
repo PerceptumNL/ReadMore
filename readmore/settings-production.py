@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'readmore.main',
     'readmore.widgets',
+    'readmore.widgets.categorylist',
     'readmore.sources',
 )
 
