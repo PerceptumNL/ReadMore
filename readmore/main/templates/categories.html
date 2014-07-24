@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block body %}
+
+<div class="container background">
+	<div class="col-md-6">
+		<div id="categories">
+			{% for item in categories %}
+				<h3> {{ item.name }} </h3>
+				<div> {{ item.pk }} </div>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div id="articles">
+			{% for item in categories %}
+				<h3> {{ item.name }} </h3>
+				<div> {{ item.pk }} </div>
+			{% endfor %}
+		</div>
+	</div>	
+</div>
+
+{% endblock body %}
