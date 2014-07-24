@@ -18,13 +18,8 @@
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 </head>
-
-<style>
-	html { height:100%; }
-	main { position:absolute; top:0; bottom:0; right:0; left:0; }
-</style>
-
 <body>
+	
 	<!-- Header -->
 	<div class="container">
 		<div class="navbar navbar-default">
@@ -74,20 +69,22 @@
 	</div>
 	<!-- Body -->
 
-		<div class="main" style="background-color: black">
-			{% block mainContent %}
-			
-			{% endblock mainContent %}
-		</div>
-		<div class="footer" style="height:60px">
-			<p class="pull-right">By Perceptum</p>
-		</div>
 
-	
+
+
+
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="{% static 'js/jquery-ui.js' %}"></script>
+	<script src="{% static 'js/interface.js' %}"></script>
+	<script src="{% static 'js/widget_categorylist.js' %}"></script>
+	<script>
+		var list = $( "<div></div>" )
+			.appendTo( "body" )
+			.categorylist({'sources':['wikipedia']});
+	</script>
 </body>
 </html>
