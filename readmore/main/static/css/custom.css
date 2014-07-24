@@ -14,10 +14,14 @@
 	padding:1%;
 }
 
+/* 
+	Landing page 
+*/
+
 /* Blocks for landing page */
 
 .iconBlock{
-	background-color: #cccccc;
+	background-color: #cecece;
 	text-align: center;
 	padding: 1%;
 	margin:1%;
@@ -26,4 +30,27 @@
 
 .iconBlock:hover{
 	background-color: #438EB9;
+}
+
+/*
+	Categories page
+*/
+
+.cats{
+	background-color: #cecece;
+	padding: 1%;
+	color: #414141;
+}
+
+.content{
+	background-color: #ffffff;
+	color: #414141;
+}
+
+.title{
+	color: #ffffff;
+	background-color: #438eb9;
+	padding: 1%;
+	text-align: center;
+	border-radius: 4px;
 }

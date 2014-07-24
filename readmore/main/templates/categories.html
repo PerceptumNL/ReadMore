@@ -5,19 +5,19 @@
 {% block body %}
 
 <div class="container background">
-	<div class="col-md-6">
+	<div class="col-md-6 cats">
 		<div id="categories">
 			{% for item in categories %}
-				<h3> {{ item.name }} </h3>
-				<div> {{ item.pk }} </div>
+				<h3 class="title"> {{ item.title }} </h3>
+				<div class="content"> {{ item.get_subcategories }}</div>
 			{% endfor %}
 		</div>
 	</div>
-	<div class="col-md-6">
-		<div id="articles">
+	<div class="col-md-6 cats">
+		<div id="categories_second">
 			{% for item in categories %}
-				<h3> {{ item.name }} </h3>
-				<div> {{ item.pk }} </div>
+				<h3 class="title"> {{ item.title }} </h3>
+				<div class="content"> {{ item.get_subcategories }} </div>
 			{% endfor %}
 		</div>
 	</div>	
