@@ -1,0 +1,29 @@
+/* File for custom CSS */
+
+/* Body background landing page */
+
+.body-background{
+	background-color: #438EB9;
+}
+
+/* Menu background landing page */
+
+.background{
+	background-color: #f0f0f0;
+	border-radius:4px;
+	padding:1%;
+}
+
+/* Blocks for landing page */
+
+.iconBlock{
+	background-color: #cccccc;
+	text-align: center;
+	padding: 1%;
+	margin:1%;
+	border-radius: 4px;
+}
+
+.iconBlock:hover{
+	background-color: #438EB9;
+}

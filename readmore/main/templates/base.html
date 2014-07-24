@@ -10,6 +10,8 @@
 
 	<!-- Bootstrap -->
 	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+	<!-- Custom -->
+	<link href="{% static 'css/custom.css' %}" rel="stylesheet">	
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -18,11 +20,11 @@
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 </head>
-<body>
+<body class="body-background">
 	
 	<!-- Header -->
-	<div class="container">
-		<div class="navbar navbar-default">
+	<div class="container background">
+		<div class="navbar navbar-default navLink">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
 					<span class="icon-bar"></span>
@@ -67,7 +69,13 @@
 			</div>
 		</div>
 	</div>
-	<!-- Body -->
+	<!-- Body begin-->
+
+	{% block body %}
+
+	{% endblock body %}
+
+	<!-- Body end-->
 
 
 
