@@ -80,11 +80,11 @@
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script src="{% static 'js/jquery-ui.js' %}"></script>
 	<script src="{% static 'js/interface.js' %}"></script>
-	<script src="{% static 'js/widget_categorylist.js' %}"></script>
+	<script src="{% static 'js/widget_articleviewer.js' %}"></script>
 	<script>
 		var list = $( "<div></div>" )
 			.appendTo( "body" )
-			.categorylist({'sources':['wikipedia']});
+			.articleviewer({'article':'/sources/readmore/1'});
 	</script>
 </body>
 </html>

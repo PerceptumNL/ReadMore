@@ -16,7 +16,8 @@ def index(request):
             # Return JSON list of categories with their properties
             categories = [{'url': c.get_absolute_url(), 'title': c.title,
                 'image': c.image} for c in categories]
-            return HttpResponse(json.dumps(categories))
+            return HttpResponse(json.dumps(categories),
+                    content_type='application/json')
         else:
             # Return rendered HTML
             # return render("template", {'categories': categories})
@@ -41,8 +42,12 @@ def index(request):
                 for a in articles]
             subcategories = [{'url': c.get_absolute_url(), 'title': c.title, 'image': c.image}
                 for c in subcategories]
-            return HttpResponse(json.dumps({'articles': articles,
-                'subcategories': subcategories}))
+            return HttpResponse(
+                    json.dumps({
+                        'articles': articles,
+                        'subcategories': subcategories
+                    }),
+                    content_type='application/json')
         else:
             # Return rendered HTML
             # return render("template", {'articles': articles})
@@ -61,8 +66,12 @@ def article(request, identifier, source=None):
             return HttpResponseNotFound('Unknown article')
     if True or request.is_ajax():
         # Return JSON with article properties
-        article = {'title': article.title, 'body': article.get_body()}
-        return HttpResponse(json.dumps(article))
+        return HttpResponse(
+                json.dumps({
+                    'title': article.title,
+                    'body': article.get_body()
+                }),
+                content_type='application/json')
     else:
         # Return rendered HTML
         # return render("template", {'article': article})
