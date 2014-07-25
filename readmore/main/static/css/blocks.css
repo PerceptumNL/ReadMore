@@ -1,0 +1,17 @@
+/* File for custom CSS */
+
+/* Blocks for landing page */
+
+.iconBlock{
+	background-color: #f0f0f0;
+	border-style: solid;
+	border-width: 3px;
+	border-color: #FFFFFF;
+	text-align: center;
+	padding: 1%;
+}
+
+/*.img-icon{
+	width:33%;
+	height:33%;
+}*/
