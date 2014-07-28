@@ -16,7 +16,14 @@ $.widget( "readmore.articleviewer", {
 		);
 	},
 	process: function(data){
-		console.log(data);
 		$('.mw-editsection').remove();
+		$('a').each(function(){
+			var link = $(this).attr('href');
+			if(link.substring(0,5) == "/wiki"){
+				var link = '/sources/wikipedia' + link.substring(5);
+				$(this).attr('href', link);
+			}
+			
+		})
 	}
 })
