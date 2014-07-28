@@ -115,7 +115,7 @@ class WikiCategory(Category):
         """
         info = wiki_api.get_info(identifier)
         if info is not None:
-            return WikiCategory(title=info['title'], wiki_type=info['ns'],
+            return WikiCategory(title=info['title'], wiki_type=str(info['ns']),
                 identifier=identifier)
         else:
             return None
