@@ -11,7 +11,12 @@ $.widget( "readmore.articleviewer", {
 			'GET',
 			function(data, xhr){
 				_self.element.html(data['body']);
+				_self.process(_self.element);
 			}
 		);
+	},
+	process: function(data){
+		console.log(data);
+		$('.mw-editsection').remove();
 	}
 })

@@ -22,5 +22,14 @@ def categories(request):
 		"right": right_col
 	})
 
+def navigation(request):
+    category_obj = Category.objects.get(pk=int(category))
+    articles = category_obj.get_articles()
+    subcategories = category_obj.get_subcategories()
+    return render(request, 'navigation.html', {
+        "articles": articles,
+        "subcategories": subcategories
+    })
+
 def category(request, category_id):
     return HttpResponse(category_id)    

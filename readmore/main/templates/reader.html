@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="wrapper">
+	<div class="container background inside">
+		<div class="col-md-8 text" id="reader">	
+			<script>
+				$(
+					$("#reader").articleviewer({'article': "{{ article.get_absolute_url }}" })
+				);
+			</script>
+		</div>
+		<div class="col-md-4 right">
+			widgets!
+		</div>
+	</div>
+</div> 
+
+{% endblock body %}
