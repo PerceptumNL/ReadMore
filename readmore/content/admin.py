@@ -1,5 +1,5 @@
 from django.contrib import admin
-from readmore.sources.models import *
+from readmore.content.models import *
 from polymorphic.admin import PolymorphicParentModelAdmin, \
         PolymorphicChildModelAdmin
 

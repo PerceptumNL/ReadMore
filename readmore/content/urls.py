@@ -1,18 +1,17 @@
 from django.conf.urls import patterns, include, url
 
-"""
-Retrieve main categories
-/sources/
-Retrieve articles and subcategories in Category 1
-/sources/?category=1
-Retrieve Article Lijst_van_sporten from wikipedia source
-/sources/wikipedia/Lijst_van_sporten
-"""
-
 urlpatterns = patterns('',
-    url(r'wikipedia/(?P<identifier>.+)$',
-        'readmore.sources.views.wiki_article', name='source_wiki_article'),
-    url(r'readmore/(?P<identifier>\d+)$',
-        'readmore.sources.views.article', name='source_article'),
-    url(r'$', 'readmore.sources.views.index', name='source_index'))
+    url(r'articles/(?P<identifier>\d+)$',
+        'readmore.content.views.article', {'source':'local'},
+        name='article'),
+    url(r'articles/wikipedia/(?P<identifier>.+)$',
+        'readmore.content.views.article', {'source':'wikipedia'},
+        name='wikipedia_article'),
+    url(r'categories/(?P<identifier>\d+)$',
+        'readmore.content.views.category', {'source':'local'},
+        name='category'),
+    url(r'categories/wikipedia/(?P<identifier>.+)$',
+        'readmore.content.views.category', {'source':'wikipedia'},
+        name='wikipedia_category'),
+    url(r'$', 'readmore.content.views.index', name='content_index'))
 

@@ -1,6 +1,7 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 from polymorphic import PolymorphicModel
-from readmore.sources.wikipedia import wiki_api
+from readmore.content.thirdparty import wiki_api
 
 class Category(PolymorphicModel):
     """Basic DB model for categories.
@@ -71,7 +72,7 @@ class Category(PolymorphicModel):
         See also:
         https://docs.djangoproject.com/en/1.6/ref/models/instances/#django.db.models.Model.get_absolute_url
         """
-        return "/sources/?category=%s" % (self.pk,)
+        return reverse('category', args=(self.pk,))
 
 class WikiCategory(Category):
     """Model for wikipedia-based categories.
@@ -191,7 +192,7 @@ class WikiCategory(Category):
         See also:
         https://docs.djangoproject.com/en/1.6/ref/models/instances/#django.db.models.Model.get_absolute_url
         """
-        return "/sources/?category=%s&source=wikipedia" % (self.identifier,)
+        return reverse('wikipedia_category', args=(self.identifier,))
 
 
 class Article(PolymorphicModel):
@@ -225,7 +226,7 @@ class Article(PolymorphicModel):
         See also:
         https://docs.djangoproject.com/en/1.6/ref/models/instances/#django.db.models.Model.get_absolute_url
         """
-        return "/sources/readmore/%d" % (self.pk,)
+        return reverse('article', args=(self.pk,))
 
 class WikiArticle(Article):
     """Model for wikipedia-based articles.
@@ -273,4 +274,4 @@ class WikiArticle(Article):
         See also:
         https://docs.djangoproject.com/en/1.6/ref/models/instances/#django.db.models.Model.get_absolute_url
         """
-        return "/sources/wikipedia/%s" % (self.identifier,)
+        return reverse('wikipedia_article', args=(self.identifier,))

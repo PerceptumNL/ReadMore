@@ -4,71 +4,82 @@ from django.http import HttpResponse, HttpResponseNotFound, \
 from django.conf import settings
 import json
 import requests
-from readmore.sources.models import *
+from readmore.content.models import *
 from bs4 import BeautifulSoup
 
 def index(request):
-    category = request.GET.get('category',None)
-    print "CAT IS: " + str(category)
-    source = request.GET.get('source', None)
-    print "SOURCE IS: " + str(source)
-    if category is None:
-        # Show list of categories (remove `True or' later)
-        categories = Category.objects.filter(parent=None)
-        print "AJAX: " + str(request.is_ajax)
-        if request.is_ajax():
-            # Return JSON list of categories with their properties
-            categories = [{'url': c.get_absolute_url(), 'title': c.title,
-                'image': c.image} for c in categories]
-            return HttpResponse(json.dumps(categories),
-                    content_type='application/json')
-        else:
-            #categories = Category.objects.all()
-            #cat = Category.objects.filter(pk=2)
-            return render(request, 'landing.html', {
-                "crtCategory": source,
-                "categories": categories,
-            })
-            #pass
+    """Return response containing index of categories."""
+    # Only show top categories on the index page
+    categories = Category.objects.filter(parent=None)
+    # Render response
+    if request.is_ajax():
+        # Return JSON list of categories with their properties
+        categories = [{'url': c.get_absolute_url(), 'title': c.title,
+            'image': c.image} for c in categories]
+        return HttpResponse(json.dumps(categories),
+                content_type='application/json')
     else:
-        # Show list of articles and subcategories
-        if source == "wikipedia":
-            category_obj = WikiCategory.factory(category)
-            if category_obj is None:
-                return HttpResponseNotFound('Unknown category.')
-        else:
-            try:
-                category_obj = Category.objects.get(pk=int(category))
-            except Category.DoesNotExist:
-                return HttpResponseNotFound('Unknown category.')
+        # Render HTML of the landing page containing top categories
+        return render(request, 'landing.html', { "categories": categories })
 
-        articles = category_obj.get_articles()
-        subcategories = category_obj.get_subcategories()
-        print "subcats: " + str(subcategories)
-        print "articles: " + str(articles)
-        if request.is_ajax():
-            # Return JSON list of topics with their properties
-            articles = [{'url': a.get_absolute_url(), 'title': a.title}
-                for a in articles]
-            subcategories = [{'url': c.get_absolute_url(), 'title': c.title, 'image': c.image}
-                for c in subcategories]
-            return HttpResponse(
-                    json.dumps({
-                        'articles': articles,
-                        'subcategories': subcategories
-                    }),
-                    content_type='application/json')
-        else:
-            return render(request, 'navigation.html', {
-                "articles": articles,
-                "subcategories": subcategories
-        })
-            # Return rendered HTML
-            # return render("template", {'articles': articles})
-            #pass
+def category(request, identifier, source='local'):
+    """Return response containing contents of identified category.
 
+    The category is identified by a identifier and optionally a source. When
+    the source is set to 'local', the identifier must be the primary key of a
+    Category object. When the source is set to 'wikipedia', the identifier must
+    correspond to either a pageid or a title of a wikipedia page.
 
-def article(request, identifier, source=None):
+    Named keywords:
+    identifier -- Number or string identifying the category
+    source -- The source the identifier belongs to ( default 'local' )
+    """
+    # Resolve identified category
+    if source == "wikipedia":
+        category = WikiCategory.factory(identifier)
+        if category is None:
+            return HttpResponseNotFound('Unknown category.')
+    else:
+        try:
+            category = Category.objects.get(pk=int(identifier))
+        except Category.DoesNotExist:
+            return HttpResponseNotFound('Unknown category.')
+    # Fetch any subcategories and articles contained in the category.
+    articles = category.get_articles()
+    subcategories = category.get_subcategories()
+    # Render response
+    if request.is_ajax():
+        # Return JSON list of topics with their properties
+        articles = [{'url': a.get_absolute_url(), 'title': a.title}
+            for a in articles]
+        subcategories = [{'url': c.get_absolute_url(), 'title': c.title,
+            'image': c.image} for c in subcategories]
+        return HttpResponse(
+            json.dumps({
+                'articles': articles,
+                'subcategories': subcategories
+            }),
+            content_type='application/json')
+    else:
+        return render(request, 'navigation.html', {
+            "crtCategory": category,
+            "articles": articles,
+            "subcategories": subcategories
+    })
+
+def article(request, identifier, source='local'):
+    """Return response containing the identified article.
+
+    The article is identified by a identifier and optionally a source. When
+    the source is set to 'local', the identifier must be the primary key of a
+    Category object. When the source is set to 'wikipedia', the identifier must
+    correspond to either a pageid or a title of a wikipedia page.
+
+    Named keywords:
+    identifier -- Number or string identifying the category
+    source -- The source the identifier belongs to ( default 'local' )
+    """
+    # Resolve identified article
     if source == 'wikipedia':
         article = WikiArticle.factory(identifier)
         if article is None:
@@ -78,22 +89,15 @@ def article(request, identifier, source=None):
             article = Article.objects.get(pk=int(identifier))
         except Article.DoesNotExist:
             return HttpResponseNotFound('Unknown article')
+    # Render response
     if request.is_ajax():
         # Return JSON with article properties
         return HttpResponse(
-                json.dumps({
-                    'title': article.title,
-                    'body': article.get_body()
-                }),
-                content_type='application/json')
+            json.dumps({
+                'title': article.title,
+                'body': article.get_body()
+            }),
+            content_type='application/json')
     else:
         # Return rendered HTML
-        # return render("template", {'article': article})
-        print article.get_body()
-        return render(request, 'reader.html', {
-            "article": article
-        })
-
-
-def wiki_article(request, identifier):
-    return article(request, identifier, source='wikipedia')
+        return render(request, 'reader.html', { "article": article })
