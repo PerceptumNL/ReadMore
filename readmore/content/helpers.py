@@ -18,4 +18,8 @@ def process_wiki_page_html(html):
     	source = link.get('href')
     	if source[0:5] == "/wiki":
     		link['href'] = reverse('wikipedia_article', args=(source[6:],))
+    #Find all external links and add target="_blank"
+    external = soup.find_all("a", class_="external text")
+    for link in external:
+    	link['target'] = '_blank'		
     return str(soup)
