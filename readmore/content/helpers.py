@@ -17,9 +17,5 @@ def process_wiki_page_html(html):
     for link in internal:
     	source = link.get('href')
     	if source[0:5] == "/wiki":
-    		identifier = source[6:]
-    		print identifier
-    		source = "/content/articles/wikipedia/" + identifier
-    		link['href'] = source
-    	#print reverse('wikipedia_article', args=(identifier))
+    		link['href'] = reverse('wikipedia_article', args=(source[6:],))
     return str(soup)
