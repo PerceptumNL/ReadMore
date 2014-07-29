@@ -6,13 +6,12 @@
 	<div class="col-md-6 cats">
 		<div class="subs">
 			{% for item in subcategories %}
-				<h3 class="title"> {{ item.title }} </h3>
+				<h3 class="title"> <a href = "{{ item.get_absolute_url }}" class="whiteLink"> {{ item.title }} </a></h3>
 				<div class="content">
-					{{ item.get_absolute_url }}
 					<ul>
 						{% for sub in item.get_articles %}
 						<li>
-							<a href = "{{ sub.get_absolute_url }}"> {{ sub.title }} </a>
+							<a href = "{{ sub.get_absolute_url }}" class="blueLink"> {{ sub.title }} </a>
 						</li>
 						{% endfor %}
 					</ul>
@@ -25,7 +24,7 @@
 			{% for item in articles %}
 				<h3 class="title"> {{ item.title }} </h3>
 				<div class="content">
-					{{ item.get_absolute_url }}
+					{{ item.get_body|safe }}
 				</div>
 			{% endfor %}
 		</div>

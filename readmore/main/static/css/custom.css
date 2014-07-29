@@ -79,3 +79,22 @@ html,body{
 	color:#ffffff;
 	font-family:sans-serif;
 }
+
+.whiteLink{
+	color:#ffffff;
+}
+.whiteLink:hover{
+	color:#ffffff;
+	text-decoration: underline;
+}
+
+.blueLink{
+	color:#438eb9;
+	font-family: sans-serif
+}
+
+.blueLink:hover{
+	color:#438eb9;
+	font-family: sans-serif;
+	text-decoration: underline
+}

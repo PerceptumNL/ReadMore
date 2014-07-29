@@ -64,6 +64,7 @@ class Category(PolymorphicModel):
             categories = self.get_subcategories(False)
             for category in categories:
                 articles += category.get_articles(True)
+        print "articles: " + str(articles)        
         return articles
 
     def get_absolute_url(self):

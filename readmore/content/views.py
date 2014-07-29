@@ -61,6 +61,7 @@ def category(request, identifier, source='local'):
     articles = category.get_articles()
     subcategories = category.get_subcategories()
     # Render response
+
     if request.is_ajax():
         # Return JSON list of topics with their properties
         articles = [{'url': a.get_absolute_url(), 'title': a.title}
@@ -102,7 +103,6 @@ def article(request, identifier, source='local'):
             article = Article.objects.get(pk=int(identifier))
         except Article.DoesNotExist:
             return HttpResponseNotFound('Unknown article')
-    # Render response
     if request.is_ajax():
         # Return JSON with article properties
         return HttpResponse(
@@ -112,5 +112,4 @@ def article(request, identifier, source='local'):
             }),
             content_type='application/json')
     else:
-        # Return rendered HTML
         return render(request, 'reader.html', { "article": article })
