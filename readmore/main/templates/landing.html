@@ -8,37 +8,11 @@
 	<div class="row">
 		<div class="col-md-1"></div>
 		{% for item in cat %}
-			<a href= "{{ item.get_absolute_url }}"><div class="col-md-3 iconBlock"> <img src="{{ item.image }}" class="img-icon"> <p class="landingText"> <br> {{ item }} <br> </p></div></a>
+			<a href= "{{ item.get_absolute_url }}"> <div class="col-md-3 iconBlock"> <br><img src="{{ item.image }}" class="img-icon"> <p class="landingText"> <br> {{ item }} </p></div></a>
 		{% endfor %}
 		<div class="col-md-1"></div>
 		<div class="col-md-1"></div>
 	</div>
 	{% endfor %}
 </div>
-<!--
-	<div class="row">
-		<div class="col-md-1"></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/music.png" %}" class="img-icon"></p></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/sport.png" %}" class="img-icon"></p></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/technology.png" %}" class="img-icon"></p></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-	</div>
-	<div class="row">
-		<div class="col-md-1"></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/art.png" %}" class="img-icon"></p></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/nature.png" %}" class="img-icon"></p></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/music.png" %}" class="img-icon"></p></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-	</div>
-	<div class="row">
-		<div class="col-md-1"></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/music.png" %}" class="img-icon"></p></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/music.png" %}" class="img-icon"></p></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/music.png" %}" class="img-icon"></p></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-	</div>
-</div>-->
 {% endblock body %}
