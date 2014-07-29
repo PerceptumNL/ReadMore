@@ -4,29 +4,41 @@
 
 {% block body %}
 <div class="container background">
+	{% for cat in categories %}
 	<div class="row">
 		<div class="col-md-1"></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/musicwhite.png" %}" class="img-icon"></p></div>
+		{% for item in cat %}
+			<div class="col-md-3 iconBlock"> <img src="{{ item.image }}" class="img-icon"> <p class="landingText"> <br> {{ item }} <br> </p></div>
+		{% endfor %}
+		<div class="col-md-1"></div>
+		<div class="col-md-1"></div>
+	</div>
+	{% endfor %}
+</div>
+<!--
+	<div class="row">
+		<div class="col-md-1"></div>
+		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/music.png" %}" class="img-icon"></p></div>
 		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/sport.png" %}" class="img-icon"></p></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/tech.png" %}" class="img-icon"></p></div>
+		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/technology.png" %}" class="img-icon"></p></div>
 		<div class="col-md-1"></div>
 		<div class="col-md-1"></div>
 	</div>
 	<div class="row">
 		<div class="col-md-1"></div>
 		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/art.png" %}" class="img-icon"></p></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/nature_dna.png" %}" class="img-icon"></p></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/musicwhite.png" %}" class="img-icon"></p></div>
+		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/nature.png" %}" class="img-icon"></p></div>
+		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/music.png" %}" class="img-icon"></p></div>
 		<div class="col-md-1"></div>
 		<div class="col-md-1"></div>
 	</div>
 	<div class="row">
 		<div class="col-md-1"></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/musicwhite.png" %}" class="img-icon"></p></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/musicwhite.png" %}" class="img-icon"></p></div>
-		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/musicwhite.png" %}" class="img-icon"></p></div>
+		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/music.png" %}" class="img-icon"></p></div>
+		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/music.png" %}" class="img-icon"></p></div>
+		<div class="col-md-3 iconBlock"><p><img src="{% static "img/icons/music.png" %}" class="img-icon"></p></div>
 		<div class="col-md-1"></div>
 		<div class="col-md-1"></div>
 	</div>
-</div>
+</div>-->
 {% endblock body %}

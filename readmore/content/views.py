@@ -19,7 +19,21 @@ def index(request):
                 content_type='application/json')
     else:
         # Render HTML of the landing page containing top categories
-        return render(request, 'landing.html', { "categories": categories })
+        counter = 0
+        catList = []
+        miniList = []
+        for i in categories:
+            counter +=1
+            if counter < 3:
+                miniList.append(i)
+            else:
+                miniList.append(i)
+                counter = 0
+                catList.append(miniList)
+                miniList = []
+        if(miniList != []):
+            catList.append(miniList)
+        return render(request, 'landing.html', { "categories": catList })
 
 def category(request, identifier, source='local'):
     """Return response containing contents of identified category.
