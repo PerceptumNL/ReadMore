@@ -2,6 +2,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from polymorphic import PolymorphicModel
 from readmore.content.thirdparty import wiki_api
+from readmore.content.helpers import process_wiki_page_html
 
 class Category(PolymorphicModel):
     """Basic DB model for categories.
@@ -265,7 +266,7 @@ class WikiArticle(Article):
 
         The body text is retrieved using *wiki_api.get_page_text*.
         """
-        return wiki_api.get_page_text(self.identifier)
+        return process_wiki_page_html(wiki_api.get_page_text(self.identifier))
 
     def get_absolute_url(self):
         """Return the URL identifiying this object.

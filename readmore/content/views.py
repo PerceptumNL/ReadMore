@@ -5,7 +5,6 @@ from django.conf import settings
 import json
 import requests
 from readmore.content.models import *
-from bs4 import BeautifulSoup
 
 def index(request):
     """Return response containing index of categories."""
