@@ -224,6 +224,9 @@ class Article(PolymorphicModel):
         """Return an extract of given size from this article.
         Use this method to retrieve the body as it can be overriden by
         subclasses to give the expected result for each type of article.
+
+        Keywords arguments:
+        chars -- Length of extract in number of characters (default 100)
         """
         return self.body[:chars-3]+"..."
 
@@ -281,6 +284,9 @@ class WikiArticle(Article):
         subclasses to give the expected result for each type of article.
 
         The body text is retrieved using *wiki_api.get_page_extract*.
+
+        Keywords arguments:
+        chars -- Length of extract in number of characters (default 100)
         """
         return wiki_api.get_page_extract(self.identifier, chars=chars)
 
