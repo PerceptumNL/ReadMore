@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'readmore.main',
     'readmore.widgets',
     'readmore.widgets.articleviewer',
+    'readmore.widgets.dummy',
     'readmore.content',
 )
 
