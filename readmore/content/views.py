@@ -10,6 +10,7 @@ def index(request):
     """Return response containing index of categories."""
     # Only show top categories on the index page
     categories = Category.objects.filter(parent=None)
+    request.session['previous'] = ("", "")
     request.session['urls'] = [ ("Index","/") ]
     # Render response
     if request.is_ajax():
@@ -63,13 +64,14 @@ def category(request, identifier, source='local'):
     subcategories = category.get_subcategories()
     # Render response
     urlsNow = request.session['urls']
-    print type(urlsNow)
-    print "title: " + stripped(category.title)
-    print type(category)
-    urlsNow.append((stripped(category.title), category.get_absolute_url()))
-    request.session['urls'] = urlsNow
-    print "session:" + str(request.session['urls'])
-
+    request.session['previous'] = urlsNow[-1] 
+    previous = urlsNow[-1]
+    current = [stripped(category.title), category.get_absolute_url()]
+    if(current == previous):
+        print "same"
+    else:
+        urlsNow.append((stripped(category.title), category.get_absolute_url()))
+        request.session['urls'] = urlsNow
 
     if request.is_ajax():
         # Return JSON list of topics with their properties

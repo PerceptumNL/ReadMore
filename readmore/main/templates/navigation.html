@@ -3,11 +3,10 @@
 {% block body %}
 
 <div class="container background">
-	<div class="crumbs col-md-12">
+	<div class="col-md-12">
 		{% for tup in crumbs %}
-			<span>
-				<a href = "{{ tup.1 }}"> {{ tup.0 }} </a> <img src="/static/img/layout/arrow.png">
-			</span>
+			<span class="arrows"> >> </span>
+			<a href = "{{ tup.1 }}" class="crumbs"> {{ tup.0 }} </a> 
 		{% endfor %}
 	</div>
 	<div class="col-md-6 cats">

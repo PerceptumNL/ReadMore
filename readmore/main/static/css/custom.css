@@ -46,6 +46,8 @@
 .content{
 	background-color: #ffffff;
 	color: #414141;
+	padding:10px;
+	border-radius:4px;
 }
 
 .title{
@@ -98,3 +100,18 @@ html,body{
 	font-family: sans-serif;
 	text-decoration: underline
 }
+
+.titleBig{
+	color:#ffffff;
+	text-align: center;
+}
+
+.crumbs{
+	color: #438eb9;
+	font-family: sans-serif;
+}
+.crumbs:hover{
+	color:#cecece;;
+}
+
+.arrows{color:#cecece;}
