@@ -63,8 +63,7 @@ class Category(PolymorphicModel):
         if recursive:
             categories = self.get_subcategories(False)
             for category in categories:
-                articles += category.get_articles(True)
-        print "articles: " + str(articles)        
+                articles += category.get_articles(True) 
         return articles
 
     def get_absolute_url(self):
