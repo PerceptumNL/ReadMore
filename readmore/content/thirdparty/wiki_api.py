@@ -62,6 +62,25 @@ def get_info(identifier):
     else:
         return {'ns': info['ns'], 'title': info['title']}
 
+def get_page_extract(identifier, chars=100):
+    if isinstance(identifier, int) or identifier.isdigit():
+        res = wiki_request({
+            'action': 'query',
+            'pageids': identifier,
+            'prop': 'extracts',
+            'exchars': chars})
+    else:
+        res = wiki_request({
+            'action': 'query',
+            'titles': identifier,
+            'prop': 'extracts',
+            'exchars': chars})
+    info = res['query']['pages'].values()[0]
+    if 'missing' in info:
+        return None
+    else:
+        return info['extract']
+
 def get_subcategories(identifier, recursive=False):
     if isinstance(identifier, int) or identifier.isdigit():
         res = wiki_request({

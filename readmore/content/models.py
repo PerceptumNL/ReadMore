@@ -63,7 +63,7 @@ class Category(PolymorphicModel):
         if recursive:
             categories = self.get_subcategories(False)
             for category in categories:
-                articles += category.get_articles(True) 
+                articles += category.get_articles(True)
         return articles
 
     def get_absolute_url(self):
@@ -220,6 +220,13 @@ class Article(PolymorphicModel):
         """
         return self.body
 
+    def get_extract(self, chars=100):
+        """Return an extract of given size from this article.
+        Use this method to retrieve the body as it can be overriden by
+        subclasses to give the expected result for each type of article.
+        """
+        return self.body[:chars-3]+"..."
+
     def get_absolute_url(self):
         """Return the URL identifiying this object.
         Use this method to form an identification URL as it can be overriden by
@@ -267,6 +274,15 @@ class WikiArticle(Article):
         The body text is retrieved using *wiki_api.get_page_text*.
         """
         return process_wiki_page_html(wiki_api.get_page_text(self.identifier))
+
+    def get_extract(self, chars=100):
+        """Return an extract of given size from this article.
+        Use this method to retrieve the body as it can be overriden by
+        subclasses to give the expected result for each type of article.
+
+        The body text is retrieved using *wiki_api.get_page_extract*.
+        """
+        return wiki_api.get_page_extract(self.identifier, chars=chars)
 
     def get_absolute_url(self):
         """Return the URL identifiying this object.
