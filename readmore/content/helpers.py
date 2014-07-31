@@ -27,3 +27,4 @@ def process_wiki_page_html(html):
 def stripped(title):
     if(title[:10] == "Categorie:"):
         return title[10:]
+    return title
