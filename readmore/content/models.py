@@ -222,7 +222,7 @@ class Article(PolymorphicModel):
         """
         return self.body
 
-    def get_extract(self, chars=100):
+    def get_extract(self, chars=500):
         """Return an extract of given size from this article.
         Use this method to retrieve the body as it can be overriden by
         subclasses to give the expected result for each type of article.
@@ -277,7 +277,7 @@ class WikiArticle(Article):
         """
         return process_wiki_page_html(wiki_api.get_page_text(self.identifier))
 
-    def get_extract(self, chars=100):
+    def get_extract(self, chars=500):
         """Return an extract of given size from this article.
         Use this method to retrieve the body as it can be overriden by
         subclasses to give the expected result for each type of article.
