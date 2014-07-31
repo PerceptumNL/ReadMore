@@ -2,21 +2,18 @@
 
 {% block body %}
 
-<div class="wrapper">
-	<div class="container background inside">
-		<div class="col-md-8 text" id="reader">	
-			<script>
-				$(
-					$("#reader").articleviewer({'article': "{{ article.get_absolute_url }}" })
-				);
+<div class="container background inside">
+	<div class="col-md-8 text" id="reader">	
+		<script>
+			$(
+				$("#reader").articleviewer({'article': "{{ article.get_absolute_url }}" })				);
 			</script>
-		</div>
-		<div class="col-md-4 right">
-			<div id="dummy" class="row"></div>
-			<script>$( $("#dummy").dummy() )</script>
-			widgets!
-		</div>
 	</div>
-</div> 
+	<div class="col-md-4 right">
+		<div id="dummy" class="row"></div>
+		<script>$( $("#dummy").dummy() )</script>
+					widgets!
+	</div>
+</div>
 
 {% endblock body %}

@@ -65,20 +65,13 @@ html,body{
 }
 
 .wrapper{
-	height:100%;
-}
-
-.text{
-	height:100%;
-	overflow:auto;
+	height:85%;
 }
 
 .inside{
-	height:100%;
 	background-color:#ffffff;
+	height:85;
 }
-.col-md-8{height:100%;}
-
 .landingText{
 	color:#ffffff;
 	font-family:sans-serif;
