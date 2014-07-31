@@ -12,14 +12,21 @@ def process_wiki_page_html(html):
     internal = soup.find_all("a")
     for link in internal:
     	source = link.get('href')
+        link['class'] = 'wikiBlueLink'
     	if source[0:5] == "/wiki":
     		link['href'] = reverse('wikipedia_article', args=(source[6:],)) + "?type=title"
     #Find all external links and add target="_blank"
     external = soup.find_all("a", class_="external text")
     for link in external:
     	link['target'] = '_blank'
+
+    #Get all info-tables and delete them
+    infoTables = soup.find_all("table", class_="infobox")		
+    for table in infoTables:
+        table.extract()
     return str(soup)
 
 def stripped(title):
     if(title[:10] == "Categorie:"):
         return title[10:]
+    return title

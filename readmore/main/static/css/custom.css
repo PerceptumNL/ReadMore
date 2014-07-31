@@ -12,6 +12,8 @@
 	background-color: #f0f0f0;
 	border-radius:4px;
 	padding:1%;
+	height:85%;
+	overflow:scroll;
 }
 
 /* 
@@ -46,6 +48,8 @@
 .content{
 	background-color: #ffffff;
 	color: #414141;
+	padding:10px;
+	border-radius:4px;
 }
 
 .title{
@@ -61,20 +65,13 @@ html,body{
 }
 
 .wrapper{
-	height:100%;
-}
-
-.text{
-	height:100%;
-	overflow:auto;
+	height:85%;
 }
 
 .inside{
-	height:100%;
 	background-color:#ffffff;
+	height:85;
 }
-.col-md-8{height:100%;}
-
 .landingText{
 	color:#ffffff;
 	font-family:sans-serif;
@@ -98,3 +95,29 @@ html,body{
 	font-family: sans-serif;
 	text-decoration: underline
 }
+
+.titleBig{
+	color:#ffffff;
+	text-align: center;
+}
+
+.crumbs{
+	color: #438eb9;
+	font-family: sans-serif;
+}
+.crumbs:hover{
+	color:#cecece;;
+}
+
+.arrows{color:#cecece;}
+
+.footer{
+	height:15%;
+}
+
+.wikiBlueLink{
+	color:#438eb9;
+}
+.wikiBlueLink:hover{
+	color:#438EB9;
+	text-decoration: underline;

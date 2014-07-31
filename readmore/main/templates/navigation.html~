@@ -1,20 +1,12 @@
-{% extends "main_base.html" %}
+{% extends "base.html" %}
 
 {% block body %}
 
 <div class="container background">
-	<div class="col-md-12">
-		{% for tup in crumbs %}
-			<span class="arrows"> >> </span>
-			<a href = "{{ tup.1 }}" class="crumbs"> {{ tup.0 }} </a> 
-		{% endfor %}
-	</div>
 	<div class="col-md-6 cats">
 		<div class="subs">
-			<h3 class="titleBig">Subcategorie&euml;n</h3>
 			{% for item in subcategories %}
 				<h3 class="title"> <a href = "{{ item.get_absolute_url }}" class="whiteLink"> {{ item.title }} </a></h3>
-				{% if item.get_articles %}
 				<div class="content">
 					<ul>
 						{% for sub in item.get_articles %}
@@ -24,18 +16,15 @@
 						{% endfor %}
 					</ul>
 				</div>
-				{% endif %}
 			{% endfor %}
 		</div>
 	</div>
 	<div class="col-md-6 cats">
 		<div class="arts">
-			<h3 class="titleBig">Artikelen</h3>
 			{% for item in articles %}
 				<h3 class="title"> {{ item.title }} </h3>
 				<div class="content">
-					{{ item.get_extract|safe }}
-					<a href = "{{ item.get_absolute_url }}" class="blueLink">Lees meer </a>
+					{{ item.get_body|safe }}
 				</div>
 			{% endfor %}
 		</div>

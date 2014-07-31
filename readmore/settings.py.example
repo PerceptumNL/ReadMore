@@ -29,19 +29,25 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+# Application definition
+
 INSTALLED_APPS = (
     'django.contrib.admin',
-	'polymorphic',
+    'polymorphic',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'readmore.main',
     'readmore.widgets',
     'readmore.widgets.articleviewer',
     'readmore.widgets.dummy',
     'readmore.content',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -57,6 +63,31 @@ ROOT_URLCONF = 'readmore.urls'
 
 WSGI_APPLICATION = 'readmore.wsgi.application'
 
+
+# Django sites
+SITE_ID = 1
+
+# Authentication back-end
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend"
+)
+
+# auth and allauth settings
+# Settings for social providers
+# Note: Windows Live requires no settings
+LOGIN_REDIRECT_URL = '/'
+
+
+# Template Context
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.request",
+    "django.contrib.auth.context_processors.auth",
+    "allauth.account.context_processors.account",
+    "allauth.socialaccount.context_processors.socialaccount",
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
