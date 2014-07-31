@@ -12,6 +12,8 @@
 	background-color: #f0f0f0;
 	border-radius:4px;
 	padding:1%;
+	height:85%;
+	overflow:scroll;
 }
 
 /* 
@@ -46,6 +48,8 @@
 .content{
 	background-color: #ffffff;
 	color: #414141;
+	padding:10px;
+	border-radius:4px;
 }
 
 .title{
@@ -97,4 +101,23 @@ html,body{
 	color:#438eb9;
 	font-family: sans-serif;
 	text-decoration: underline
+}
+
+.titleBig{
+	color:#ffffff;
+	text-align: center;
+}
+
+.crumbs{
+	color: #438eb9;
+	font-family: sans-serif;
+}
+.crumbs:hover{
+	color:#cecece;;
+}
+
+.arrows{color:#cecece;}
+
+.footer{
+	height:15%;
 }
