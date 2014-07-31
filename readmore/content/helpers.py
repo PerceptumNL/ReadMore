@@ -21,7 +21,11 @@ def process_wiki_page_html(html):
     #Find all external links and add target="_blank"
     external = soup.find_all("a", class_="external text")
     for link in external:
-    	link['target'] = '_blank'		
+    	link['target'] = '_blank'
+    #Get all info-tables and delete them
+    infoTables = soup.find_all("table", class_="infobox")		
+    for table in infoTables:
+        table.extract()
     return str(soup)
 
 def stripped(title):
