@@ -211,8 +211,12 @@ class WikiCategory(Category):
         # Retrieve any 'normal' articles
         articles = super(WikiCategory, self).get_articles(False)
         # Retrieve Wikipedia articles
-        members = wiki_api.get_category_members(self.identifier,
-                namespace=wiki_api.NS_PAGE)
+        if self.wiki_type == wiki_api.NS_CATEGORY:
+            members = wiki_api.get_category_members(self.get_identifier(),
+                    namespace=wiki_api.NS_PAGE)
+        else:
+            members = wiki_api.get_page_links(self.get_identifier())
+
         for member in members:
             articles.append(WikiArticle(
                 category=self,
