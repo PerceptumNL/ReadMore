@@ -114,3 +114,10 @@ html,body{
 .footer{
 	height:15%;
 }
+
+.wikiBlueLink{
+	color:#438eb9;
+}
+.wikiBlueLink:hover{
+	color:#438EB9;
+	text-decoration: underline;

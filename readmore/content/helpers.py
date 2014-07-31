@@ -16,6 +16,7 @@ def process_wiki_page_html(html):
     internal = soup.find_all("a")
     for link in internal:
     	source = link.get('href')
+        link['class'] = 'wikiBlueLink'
     	if source[0:5] == "/wiki":
     		link['href'] = reverse('wikipedia_article', args=(source[6:],)) + "?type=title"
     #Find all external links and add target="_blank"
