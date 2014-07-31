@@ -12,6 +12,8 @@
 	background-color: #f0f0f0;
 	border-radius:4px;
 	padding:1%;
+	height:85%;
+	overflow:scroll;
 }
 
 /* 
@@ -115,3 +117,7 @@ html,body{
 }
 
 .arrows{color:#cecece;}
+
+.footer{
+	height:15%;
+}
