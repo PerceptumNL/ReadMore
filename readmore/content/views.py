@@ -95,7 +95,9 @@ def article(request, identifier, source='local'):
     """
     # Resolve identified article
     if source == 'wikipedia':
-        article = WikiArticle.factory(identifier)
+        # Get/set identifier type
+        identifier_type = request.GET.get('type','auto')
+        article = WikiArticle.factory(identifier, identifier_type)
         if article is None:
             return HttpResponseNotFound('Unknown article')
     else:

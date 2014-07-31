@@ -46,7 +46,7 @@ def process_title(page):
     return title.encode('ascii','xmlcharrefreplace')
 
 def get_info(identifier):
-    if isinstance(identifier, int) or identifier.isdigit():
+    if isinstance(identifier, int):
         res = wiki_request({
             'action': 'query',
             'prop': 'info',
@@ -63,7 +63,7 @@ def get_info(identifier):
         return {'ns': info['ns'], 'title': info['title']}
 
 def get_page_extract(identifier, chars=100):
-    if isinstance(identifier, int) or identifier.isdigit():
+    if isinstance(identifier, int):
         res = wiki_request({
             'action': 'query',
             'pageids': identifier,
@@ -82,7 +82,7 @@ def get_page_extract(identifier, chars=100):
         return info['extract']
 
 def get_subcategories(identifier, recursive=False):
-    if isinstance(identifier, int) or identifier.isdigit():
+    if isinstance(identifier, int):
         res = wiki_request({
             'action': 'query',
             'list': 'categorymembers',
@@ -106,7 +106,7 @@ def get_subcategories(identifier, recursive=False):
     return subcategories
 
 def get_page_links(identifier):
-    if isinstance(identifier, int) or identifier.isdigit():
+    if isinstance(identifier, int):
         res = wiki_request({
             'action': 'query',
             'generator': 'links',
@@ -133,7 +133,7 @@ def get_page_links(identifier):
     return links
 
 def get_page_text(identifier):
-    if isinstance(identifier, int) or identifier.isdigit():
+    if isinstance(identifier, int):
         res = wiki_request({
             'action': 'parse',
             'pageid': identifier,

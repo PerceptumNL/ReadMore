@@ -245,9 +245,15 @@ class WikiArticle(Article):
     A WikiArticle has a title and a wikipedia identifier.
     Each WikiArticle object belongs to a category.
     """
+    TYPES = (
+        ('pageid', 'id'),
+        ('title', 'ti')
+    )
 
     # Identifier that corresponds to the identifier in the Wikipedia API
     identifier = models.CharField(max_length=255)
+    identifier_type = models.CharField(max_length=2, choices=TYPES,
+            default='ti', blank=True)
 
     def __repr__(self):
         return 'WikiArticle(%s)' % (self.identifier,)
@@ -256,18 +262,47 @@ class WikiArticle(Article):
         return unicode(self.title)
 
     @staticmethod
-    def factory(identifier):
+    def factory(identifier, identifier_type="auto"):
         """Return a WikiArticle instance based on the Wikipedia identifier.
         The title of the Wikipedia article refered to by the identifier is
         retrieved by *wiki_api.get_info*. The WikiArticle model instance
         returned is not saved to the database and will not have a primary key.
         If the identifier cannot be found on wikipedia, return None.
+
+        Keyword arguments:
+        identifier -- Identifier of the wikipedia article
+        identifier_type -- Type of identifier [pageid, title, auto]
         """
-        info = wiki_api.get_info(identifier)
+        types = dict(WikiArticle.TYPES)
+        if identifier_type == "auto" and identifier.isdigit():
+            identifier_type = types["pageid"]
+        elif identifier_type == "auto":
+            identifier_type = types["title"]
+        else:
+            try:
+                identifier_type = types[identifier_type]
+            except ValueError:
+                raise ValueError("%s is not a valid identifier type" %
+                        (identifier_type,))
+
+        if identifier_type == types["pageid"]:
+            info = wiki_api.get_info(int(identifier))
+        else:
+            info = wiki_api.get_info(identifier)
+
         if info is not None:
-            return WikiArticle(title=info['title'], identifier=identifier)
+            return WikiArticle(title=info['title'], identifier=identifier,
+                    identifier_type=identifier_type)
         else:
             return None
+
+    def get_identifier(self):
+        """Return a casted identifier, based on the identifier_type."""
+        types = dict(WikiArticle.TYPES)
+        if self.identifier_type == type['pageid']:
+            return int(self.identifier)
+        else:
+            return self.identifier
 
     def get_body(self):
         """Return the body of this article.
@@ -276,7 +311,8 @@ class WikiArticle(Article):
 
         The body text is retrieved using *wiki_api.get_page_text*.
         """
-        return process_wiki_page_html(wiki_api.get_page_text(self.identifier))
+        return process_wiki_page_html(
+                wiki_api.get_page_text(self.get_identifier()))
 
     def get_extract(self, chars=100):
         """Return an extract of given size from this article.
@@ -288,7 +324,7 @@ class WikiArticle(Article):
         Keywords arguments:
         chars -- Length of extract in number of characters (default 100)
         """
-        return wiki_api.get_page_extract(self.identifier, chars=chars)
+        return wiki_api.get_page_extract(self.get_identifier(), chars=chars)
 
     def get_absolute_url(self):
         """Return the URL identifiying this object.
