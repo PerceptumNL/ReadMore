@@ -88,9 +88,9 @@ class WikiCategory(Category):
 
     # Possible values for wiki_type
     TYPES = (
-        ('0', 'Page'),
-        ('14','Category'),
-        ('100', 'Portal')
+        (wiki_api.NS_PAGE, 'Page'),
+        (wiki_api.NS_CATEGORY,'Category'),
+        (wiki_api.NS_PORTAL, 'Portal')
     )
 
     ID_TYPES = (
@@ -106,7 +106,8 @@ class WikiCategory(Category):
             default='title', blank=True)
 
     # The type of this Wikipedia article.
-    wiki_type = models.CharField(max_length=3, choices=TYPES, default='14')
+    wiki_type = models.CharField(max_length=3, choices=TYPES,
+            default=wiki_api.NS_CATEGORY)
 
     class Meta:
         verbose_name_plural = "WikiCategories"
@@ -177,15 +178,16 @@ class WikiCategory(Category):
         # Retrieve any 'normal' subcategories
         subcategories = super(WikiCategory, self).get_subcategories(recursive)
         # Retrieve wikipedia subcategories if self is a wikipedia category
-        if self.wiki_type == '14':
-            subcats = wiki_api.get_subcategories(self.get_identifier(), recursive)
+        if self.wiki_type == wiki_api.NS_CATEGORY:
+            subcats = wiki_api.get_category_members(
+                    self.get_identifier(), recursive=recursive)
             for cat in subcats:
                 subcategories.append(WikiCategory(
                     parent=self,
                     title=stripped(cat['title']),
                     identifier=cat['pageid'],
                     identifier_type='pageid',
-                    wiki_type='14'))
+                    wiki_type=wiki_api.NS_CATEGORY))
         return subcategories
 
     def get_articles(self, recursive=False):
@@ -209,16 +211,17 @@ class WikiCategory(Category):
         # Retrieve any 'normal' articles
         articles = super(WikiCategory, self).get_articles(False)
         # Retrieve Wikipedia articles
-        links = wiki_api.get_page_links(self.identifier)
-        for link in links:
+        members = wiki_api.get_category_members(self.identifier,
+                namespace=wiki_api.NS_PAGE)
+        for member in members:
             articles.append(WikiArticle(
                 category=self,
-                title=link['title'],
-                identifier=link['pageid'],
+                title=member['title'],
+                identifier=member['pageid'],
                 identifier_type='pageid')),
         if recursive:
             # Retrieve articles from subcategories
-            categories = self.get_subcategories(False)
+            categories = self.get_category_members(recursive=False)
             for category in categories:
                 articles += category.get_articles(True)
         return articles

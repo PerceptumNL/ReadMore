@@ -1,6 +1,12 @@
 import requests
 from django.conf import settings
 
+# Define constants of the three used wikipedia namespaces
+# See http://meta.wikimedia.org/wiki/Help:Namespace for more information.
+NS_PAGE = '0'
+NS_CATEGORY = '14'
+NS_PORTAL = '100'
+
 def wiki_request(params):
     """
     Executes query to wikipedia api. Always returns JSON.
@@ -81,29 +87,29 @@ def get_page_extract(identifier, chars=100):
     else:
         return info['extract']
 
-def get_subcategories(identifier, recursive=False):
+def get_category_members(identifier, namespace=NS_CATEGORY, recursive=False):
     if isinstance(identifier, int):
         res = wiki_request({
             'action': 'query',
             'list': 'categorymembers',
             'cmpageid': identifier,
             'cmlimit':500,
-            'cmnamespace':'14'})
+            'cmnamespace':namespace})
     else:
         res = wiki_request({
             'action': 'query',
             'list': 'categorymembers',
             'cmtitle': identifier,
             'cmlimit':500,
-            'cmnamespace':'14'})
+            'cmnamespace':namespace})
     if res != [] and 'categorymembers' in res['query']:
-        subcategories = res['query']['categorymembers']
+        members = res['query']['categorymembers']
         if recursive:
-            for subcategory in subcategories:
-                subcategories += get_subcategories(subcategory, True)
+            for member in members:
+                members += get_category_members(member, namespace, True)
     else:
-        subcategories = []
-    return subcategories
+        members = []
+    return members
 
 def get_page_links(identifier):
     if isinstance(identifier, int):
@@ -113,7 +119,7 @@ def get_page_links(identifier):
             'pageids': identifier,
             'prop': 'info',
             'gpllimit': 500,
-            'gplnamespace': 0})
+            'gplnamespace': NS_PAGE})
     else:
         res = wiki_request({
             'action': 'query',
@@ -121,7 +127,7 @@ def get_page_links(identifier):
             'titles': identifier,
             'prop': 'info',
             'gpllimit': 500,
-            'gplnamespace': 0})
+            'gplnamespace': NS_PAGE})
     links = []
     if res != [] and 'pages' in res['query']:
         for link in res['query']['pages'].values():
