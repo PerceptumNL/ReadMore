@@ -23,3 +23,7 @@ def process_wiki_page_html(html):
     for link in external:
     	link['target'] = '_blank'		
     return str(soup)
+
+def stripped(title):
+    if(title[:10] == "Categorie:"):
+        return title[10:]
