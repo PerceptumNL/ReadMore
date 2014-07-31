@@ -93,8 +93,17 @@ class WikiCategory(Category):
         ('100', 'Portal')
     )
 
+    ID_TYPES = (
+        ('pageid', 'pageid'),
+        ('title', 'title')
+    )
+
     # Identifier that corresponds to the identifier in the Wikipedia API
     identifier = models.CharField(max_length=255)
+
+    # The type of identifier
+    identifier_type = models.CharField(max_length=6, choices=ID_TYPES,
+            default='title', blank=True)
 
     # The type of this Wikipedia article.
     wiki_type = models.CharField(max_length=3, choices=TYPES, default='14')
@@ -109,20 +118,44 @@ class WikiCategory(Category):
         return u'wikipedia::%s' % (self.title,)
 
     @staticmethod
-    def factory(identifier):
+    def factory(identifier, identifier_type='auto'):
         """Return a WikiCategory instance based on the Wikipedia identifier.
         The title and type of the Wikipedia document refered to by the
         identifier is retrieved by *wiki_api.get_info*. The WikiCategory model
         instance returned is not saved to the database and will not have a
         primary key. If the identifier cannot be found on wikipedia,
         return None.
+
+        Keyword arguments:
+        identifier -- Identifier of the wikipedia article
+        identifier_type -- Type of identifier [pageid, title, auto]
         """
-        info = wiki_api.get_info(identifier)
+        if identifier_type == "auto" and identifier.isdigit():
+            identifier_type = "pageid"
+        elif identifier_type == "auto":
+            identifier_type = "title"
+        elif identifier_type not in dict(WikiCategory.ID_TYPES):
+            raise ValueError("%s is not a valid identifier type" %
+                    (identifier_type,))
+
+        if identifier_type == "pageid":
+            info = wiki_api.get_info(int(identifier))
+        else:
+            info = wiki_api.get_info(identifier)
+
         if info is not None:
             return WikiCategory(title=info['title'], wiki_type=str(info['ns']),
                 identifier=identifier)
         else:
             return None
+
+    def get_identifier(self):
+        """Return a casted identifier, based on the identifier_type."""
+        types = dict(self.ID_TYPES)
+        if self.identifier_type == types['pageid']:
+            return int(self.identifier)
+        else:
+            return self.identifier
 
     def get_subcategories(self, recursive=False):
         """Return the list of subcategories.
@@ -145,12 +178,13 @@ class WikiCategory(Category):
         subcategories = super(WikiCategory, self).get_subcategories(recursive)
         # Retrieve wikipedia subcategories if self is a wikipedia category
         if self.wiki_type == '14':
-            subcats = wiki_api.get_subcategories(self.identifier, recursive)
+            subcats = wiki_api.get_subcategories(self.get_identifier(), recursive)
             for cat in subcats:
                 subcategories.append(WikiCategory(
                     parent=self,
                     title=stripped(cat['title']),
                     identifier=cat['pageid'],
+                    identifier_type='pageid',
                     wiki_type='14'))
         return subcategories
 
@@ -180,7 +214,8 @@ class WikiCategory(Category):
             articles.append(WikiArticle(
                 category=self,
                 title=link['title'],
-                identifier=link['pageid']))
+                identifier=link['pageid'],
+                identifier_type='pageid')),
         if recursive:
             # Retrieve articles from subcategories
             categories = self.get_subcategories(False)
@@ -195,7 +230,9 @@ class WikiCategory(Category):
         See also:
         https://docs.djangoproject.com/en/1.6/ref/models/instances/#django.db.models.Model.get_absolute_url
         """
-        return reverse('wikipedia_category', args=(self.identifier,))
+        return "%s?type=%s" % (
+                reverse('wikipedia_category', args=(self.identifier,)),
+                self.identifier_type)
 
 
 class Article(PolymorphicModel):
@@ -247,15 +284,15 @@ class WikiArticle(Article):
     A WikiArticle has a title and a wikipedia identifier.
     Each WikiArticle object belongs to a category.
     """
-    TYPES = (
-        ('pageid', 'id'),
-        ('title', 'ti')
+    ID_TYPES = (
+        ('pageid', 'pageid'),
+        ('title', 'title')
     )
 
     # Identifier that corresponds to the identifier in the Wikipedia API
     identifier = models.CharField(max_length=255)
-    identifier_type = models.CharField(max_length=2, choices=TYPES,
-            default='ti', blank=True)
+    identifier_type = models.CharField(max_length=6, choices=ID_TYPES,
+            default='title', blank=True)
 
     def __repr__(self):
         return 'WikiArticle(%s)' % (self.identifier,)
@@ -275,19 +312,15 @@ class WikiArticle(Article):
         identifier -- Identifier of the wikipedia article
         identifier_type -- Type of identifier [pageid, title, auto]
         """
-        types = dict(WikiArticle.TYPES)
         if identifier_type == "auto" and identifier.isdigit():
-            identifier_type = types["pageid"]
+            identifier_type = "pageid"
         elif identifier_type == "auto":
-            identifier_type = types["title"]
-        else:
-            try:
-                identifier_type = types[identifier_type]
-            except ValueError:
-                raise ValueError("%s is not a valid identifier type" %
-                        (identifier_type,))
+            identifier_type = "title"
+        elif identifier_type not in dict(WikiArticle.ID_TYPES):
+            raise ValueError("%s is not a valid identifier type" %
+                    (identifier_type,))
 
-        if identifier_type == types["pageid"]:
+        if identifier_type == "pageid":
             info = wiki_api.get_info(int(identifier))
         else:
             info = wiki_api.get_info(identifier)
@@ -300,8 +333,8 @@ class WikiArticle(Article):
 
     def get_identifier(self):
         """Return a casted identifier, based on the identifier_type."""
-        types = dict(WikiArticle.TYPES)
-        if self.identifier_type == type['pageid']:
+        types = dict(self.ID_TYPES)
+        if self.identifier_type == types['pageid']:
             return int(self.identifier)
         else:
             return self.identifier
@@ -335,4 +368,6 @@ class WikiArticle(Article):
         See also:
         https://docs.djangoproject.com/en/1.6/ref/models/instances/#django.db.models.Model.get_absolute_url
         """
-        return reverse('wikipedia_article', args=(self.identifier,))
+        return "%s?type=%s" % (
+                reverse('wikipedia_article', args=(self.identifier,)),
+                self.identifier_type)

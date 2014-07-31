@@ -24,7 +24,7 @@
 			{% for item in articles %}
 				<h3 class="title"> {{ item.title }} </h3>
 				<div class="content">
-					{{ item.get_body|safe }}
+					{{ item.get_extract|safe }}
 				</div>
 			{% endfor %}
 		</div>

@@ -49,7 +49,9 @@ def category(request, identifier, source='local'):
     """
     # Resolve identified category
     if source == "wikipedia":
-        category = WikiCategory.factory(identifier)
+        # Get/set identifier type
+        identifier_type = request.GET.get('type','auto')
+        category = WikiCategory.factory(identifier, identifier_type)
         if category is None:
             return HttpResponseNotFound('Unknown category.')
     else:
