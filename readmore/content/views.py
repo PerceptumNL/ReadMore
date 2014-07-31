@@ -64,17 +64,8 @@ def category(request, identifier, source='local'):
     # Fetch any subcategories and articles contained in the category.
     articles = category.get_articles()
     subcategories = category.get_subcategories()
-    # Render response
-    urlsNow = request.session['urls']
-    request.session['previous'] = urlsNow[-1] 
-    previous = urlsNow[-1]
-    current = [stripped(category.title), category.get_absolute_url()]
-    if(current == previous):
-        print "same"
-    else:
-        urlsNow.append((stripped(category.title), category.get_absolute_url()))
-        request.session['urls'] = urlsNow
 
+    # Render response
     if request.is_ajax():
         # Return JSON list of topics with their properties
         articles = [{'url': a.get_absolute_url(), 'title': a.title}
@@ -88,6 +79,20 @@ def category(request, identifier, source='local'):
             }),
             content_type='application/json')
     else:
+        # Update breadcrums
+        urls = request.session.get('urls',[])
+        if urls:
+            request.session['previous'] = previous = urls[-1]
+            current = [stripped(category.title), category.get_absolute_url()]
+            if not current == previous:
+                urls.append((stripped(category.title), category.get_absolute_url()))
+                request.session['urls'] = urls
+        else:
+            urls.append(("Index","/"))
+            urls.append((stripped(category.title), category.get_absolute_url()))
+            request.session['previous'] = ("", "")
+            request.session['urls'] = urls
+
         return render(request, 'navigation.html', {
             "crtCategory": category,
             "articles": articles,
