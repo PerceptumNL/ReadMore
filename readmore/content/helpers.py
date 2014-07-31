@@ -17,9 +17,13 @@ def process_wiki_page_html(html):
     for link in internal:
     	source = link.get('href')
     	if source[0:5] == "/wiki":
-    		link['href'] = reverse('wikipedia_article', args=(source[6:],))
+    		link['href'] = reverse('wikipedia_article', args=(source[6:],)) + "?type=title"
     #Find all external links and add target="_blank"
     external = soup.find_all("a", class_="external text")
     for link in external:
     	link['target'] = '_blank'		
     return str(soup)
+
+def stripped(title):
+    if(title[:10] == "Categorie:"):
+        return title[10:]

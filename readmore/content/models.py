@@ -2,7 +2,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from polymorphic import PolymorphicModel
 from readmore.content.thirdparty import wiki_api
-from readmore.content.helpers import process_wiki_page_html
+from readmore.content.helpers import *
 
 class Category(PolymorphicModel):
     """Basic DB model for categories.
@@ -17,6 +17,8 @@ class Category(PolymorphicModel):
     parent = models.ForeignKey('self', null=True, blank=True,
         related_name='children')
     title = models.CharField(max_length=255)
+    
+
 
     # Link to a remotely hosted image.
     image = models.URLField(max_length=255, null=True, blank=True)
@@ -147,7 +149,7 @@ class WikiCategory(Category):
             for cat in subcats:
                 subcategories.append(WikiCategory(
                     parent=self,
-                    title=cat['title'],
+                    title=stripped(cat['title']),
                     identifier=cat['pageid'],
                     wiki_type='14'))
         return subcategories
