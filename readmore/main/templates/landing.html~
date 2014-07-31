@@ -1,4 +1,4 @@
-{% extends "main_base.html" %}
+{% extends "mainbase.html" %}
 
 {% load staticfiles %}
 
