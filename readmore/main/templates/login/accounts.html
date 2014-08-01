@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 {% load i18n %}
-{% load account %}
 {% load url from future %}
 
+{% load account %}
+{% load staticfiles %}
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+  <script src="{% static 'js/animatedOpen.js' %}"></script>
 
 
 {% if request.user.is_authenticated %}
@@ -11,22 +15,47 @@
 	<button class="btn" type="submit">{% trans "Log Out" %}</button>
     </form>
     <div class="btn-group">
-    <button class="btn">
-    {% if request.user.first_name or request.user.last_name %}
-        {{ request.user.first_name }} {{ request.user.last_name }}
-    {% else %}
-        {{ request.user.username }}
-    {% endif %}
-    {% if request.user.is_staff %} 
-	(staff) 
-    {% endif %}
-    </button>
+	    <button class="btn">
+		    {% user_display user %}
+	    </button>
     </div>
 
 {% else %}
-    <form class="navbar-form navbar-left"> 
-	<button class="btn" type="submit">Nieuwe Gebruiker?</button>
-    </form>
+
+
+    <div id="dialog" title="Nieuwe Gebruiker">
+
+	<form id="signup_form" method="POST" action="{% url 'account_signup' %}">
+		{% csrf_token %}
+		<div class="form-group">
+		<div class="input-group">
+			<input id="id_username"  class="signup-input" name="username" placeholder="Gebruikersnaam" type="text" />{{ form.username.errors }}<br>
+		</div>
+		<div class="input-group">
+			<input id="id_email"  class="signup-input" name="email" placeholder="E-Mail" type="email" />{{ form.email.errors }}<br>
+		</div>
+		<div class="input-group">
+			<input id="id_password1"  class="signup-input" name="password1" placeholder="Wachtwoord" type="password" />{{ form.password1.errors }}<br>
+		</div>
+		<div class="input-group">
+			<input id="id_password2"  class="signup-input" name="password2" placeholder="Wachtwoord (controle)" type="password" />{{ form.password2.errors }}<br>
+		</div>
+		</div>
+		{% if redirect_field_value %}
+			<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+		{% endif %}
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit">{% trans "Schrijf je in" %}</button>
+		</div>
+
+<i class="fa fa-windows"></i> 
+
+	</form>
+
+    </div>
+    <div class="btn-group">
+	<button class="btn" id="opener">Nieuwe Gebruiker?</button>
+    </div>
 
     <!--<a href="/accounts/login/" class="pull-right">Login</a>-->
 	 <form class="login navbar-form navbar-right" method="POST" action="{% url 'account_login' %}"> 
