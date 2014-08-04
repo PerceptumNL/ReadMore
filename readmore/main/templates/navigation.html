@@ -11,26 +11,28 @@
 	</div>
 	<div class="col-md-6 cats">
 		<div class="subs">
-			<h3 class="titleBig">Subcategorie&euml;n</h3>
+			<h2 class="titleBig">Subcategorie&euml;n</h3>
 			{% for item in subcategories %}
-				<h3 class="title"> <a href = "{{ item.get_absolute_url }}" class="whiteLink"> {{ item.title }} </a></h3>
 				{% if item.get_articles %}
-				<div class="content">
-					<ul>
-						{% for sub in item.get_articles %}
-						<li>
-							<a href = "{{ sub.get_absolute_url }}" class="blueLink"> {{ sub.title }} </a>
-						</li>
-						{% endfor %}
-					</ul>
-				</div>
+					<h3 class="title"> <a href = "{{ item.get_absolute_url }}" class="whiteLink"> {{ item.title }} </a></h3>
+					<div class="content">
+						<ul>
+							{% for sub in item.get_random_articles %}
+							<li>
+								<a href = "{{ sub.get_absolute_url }}" class="blueLink"> {{ sub.title }} </a>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% else %}
+					<div> <a href = "{{ item.get_absolute_url }}" class="whiteLink"> <h3 class="titleEmpty"> {{ item.title }} </h3> </a></div>
 				{% endif %}
 			{% endfor %}
 		</div>
 	</div>
 	<div class="col-md-6 cats">
 		<div class="arts">
-			<h3 class="titleBig">Artikelen</h3>
+			<h2 class="titleBig">Artikelen</h3>
 			{% for item in articles %}
 				<h3 class="title"> {{ item.title }} </h3>
 				<div class="content">

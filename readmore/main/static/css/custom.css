@@ -50,16 +50,26 @@
 	color: #414141;
 	padding:10px;
 	border-radius:4px;
+	margin-bottom: 5%;
 }
 
 .title{
 	color: #ffffff;
 	background-color: #438eb9;
 	padding: 1%;
+	margin:0;
 	text-align: center;
 	border-radius: 4px;
 }
 
+.titleEmpty{
+	color: #ffffff;
+	background-color: #438eb9;
+	padding: 1%;
+	margin-bottom:5%;
+	text-align: center;
+	border-radius: 4px;
+}
 html,body{
 	height:100%;
 }
@@ -97,9 +107,13 @@ html,body{
 }
 
 .titleBig{
-	color:#ffffff;
+	color:#438eb9;
+	background-color: #ffffff;
 	text-align: center;
+	border-radius:4px;
+	padding:5%;
 }
+
 
 .crumbs{
 	color: #438eb9;
