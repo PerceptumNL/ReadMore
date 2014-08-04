@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from polymorphic import PolymorphicModel
 from readmore.content.thirdparty import wiki_api
 from readmore.content.helpers import *
+import random
 
 class Category(PolymorphicModel):
     """Basic DB model for categories.
@@ -67,6 +68,17 @@ class Category(PolymorphicModel):
             for category in categories:
                 articles += category.get_articles(True)
         return articles
+
+    def get_random_articles(self, amt=5):
+        article_list = self.get_articles()
+        random_list = []
+        if(len(article_list) >  amt):
+            for i in range(0, amt):
+                random_list.append(random.choice(article_list))
+            return random_list
+        else:
+            return article_list
+
 
     def get_absolute_url(self):
         """Return the URL identifiying this object.
