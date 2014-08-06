@@ -5,6 +5,9 @@ from django.conf import settings
 import json
 import requests
 from readmore.content.models import *
+import django.dispatch
+
+article_read = django.dispatch.Signal(providing_args=["user", "category", "article_id", "article"])
 
 def index(request):
     """Return response containing index of categories."""
@@ -133,4 +136,6 @@ def article(request, identifier, source='local'):
             }),
             content_type='application/json')
     else:
+        if request.user.is_authenticated():
+            article_read.send(sender=Article, user=request.user, category=None, article_id=identifier, article=article)
         return render(request, 'reader.html', { "article": article })
