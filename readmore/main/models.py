@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)        
-
+    badges = models.ManyToManyField('Badge')
     
 class Statistics(models.Model):
 

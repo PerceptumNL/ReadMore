@@ -12,6 +12,9 @@ class BadgeAdmin(admin.ModelAdmin):
         CounterBadgeInline,
     ]
     
+class StatisticsAdmin(admin.ModelAdmin):
+    base_model = Statistics
+    list_display = ('user', 'docsRead')
     
 admin.site.register(Badge, BadgeAdmin)    
-admin.site.register(Statistics)
+admin.site.register(Statistics, StatisticsAdmin)
