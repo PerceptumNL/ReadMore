@@ -81,6 +81,7 @@
 
 html,body{
 	height:100%;
+	font-family: sans-serif;
 }
 
 .wrapper{
@@ -149,7 +150,7 @@ html,body{
 
 /* User/login/newuser buttons */
 .newBtn{
-	background-color:white;
+	background-color:#ffffff;
 	border:none;
 	border-radius:4px;
 	margin:10px;
@@ -158,9 +159,16 @@ html,body{
 	color:#438eb9;
 }
 
+.newBtn:hover{
+	background-color: #438eb9;
+	color:#ffffff;
+	border: 1px solid white;
+	margin:9px;
+}
+
 /* Signup button */
 .signupBtn{
-	background-color:#4e8eb9;
+	background-color:#438eb9;
 	border:none;
 	border-radius: 4px;
 	margin:10px;
@@ -168,6 +176,14 @@ html,body{
 	font-family: sans-serif;
 	color:#ffffff;
 }
+
+.signupBtn:hover{
+	background-color: #ffffff;
+	color: #438eb9;
+	border: 1px solid #438eb9;
+	margin:9px;
+}
+
 .navbar-form{
 	margin:0;
 }
@@ -236,4 +252,18 @@ Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-i
 	background-color:#ffffff !important;
 	color:#438eb9 !important;
 	border:none !important;
+}
+
+/* Style login pages */
+.signup{
+	padding:10%;
+	height:85%;
+}
+
+.login{
+	text-align: center;
+}
+
+.errorlist{
+	list-style-type: none;
 }
