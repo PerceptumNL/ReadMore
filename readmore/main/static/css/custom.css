@@ -201,10 +201,15 @@ form {
 	padding:10px;
 	margin:5px;
 	background-color:#438eb9;
-	border:none;
+	border: none;
 	border-bottom-style:solid;
+	border-bottom-width:1px;
 	border-bottom-color:#ffffff;
-
+	border-radius: 5px;
+}
+.inp:hover{
+	padding: 9px;
+	border: 1px solid #ffffff;
 }
 
 /*
@@ -242,11 +247,24 @@ Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-i
 	text-align: center !important;
 }
 
+.input-group {
+	width:100% !important;
+}
 .signup-input {
 	border:none !important;
 	border-bottom-color: #438eb9 !important;
+	border-bottom-width: 1px !important;
 	border-bottom-style:solid !important;
+	border-radius: 5px !important; 
+	padding: 5px !important;
+	width:90% !important;
 }
+
+.signup-input:hover{
+	border: 1px solid #438eb9 !important;
+	padding: 4px !important;
+}
+
 .ui-button {
 	background:none !important;
 	background-color:#ffffff !important;
