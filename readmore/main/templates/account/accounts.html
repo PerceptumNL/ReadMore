@@ -10,15 +10,21 @@
 
 
 {% if request.user.is_authenticated %}
-    <form class="login navbar-form navbar-right" method="POST" action="{% url 'account_logout' %}"> 
-	{% csrf_token %}
-	<button class="btn" type="submit">{% trans "Log Out" %}</button>
-    </form>
-    <div class="btn-group">
-	    <button class="btn">
-		    {% user_display user %}
-	    </button>
-    </div>
+	<div class="container">
+	    <div class="col-md-2">
+			<button class="newBtn">
+		    	{% user_display user %}
+			</button>
+		</div>
+		<div class="col-md-8">
+		</div>
+		<div class="col-md-2">
+	    	<form method="POST" action="{% url 'account_logout' %}"> 
+			{% csrf_token %}
+			<button class="newBtn" type="submit">{% trans "Log Out" %}</button>
+	    	</form>
+	    </div>			
+	</div>
 
 {% else %}
 
@@ -45,7 +51,7 @@
 			<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
 		{% endif %}
 		<div class="form-actions">
-			<button class="btn btn-primary" type="submit">{% trans "Schrijf je in" %}</button>
+			<button class="signupBtn" type="submit">{% trans "Schrijf je in" %}</button>
 		</div>
 
 <i class="fa fa-windows"></i> 
@@ -53,24 +59,31 @@
 	</form>
 
     </div>
-    <div class="btn-group">
-	<button class="btn" id="opener">Nieuwe Gebruiker?</button>
-    </div>
-
-    <!--<a href="/accounts/login/" class="pull-right">Login</a>-->
-	 <form class="login navbar-form navbar-right" method="POST" action="{% url 'account_login' %}"> 
-		{% csrf_token %}
-		<div class="form-group">
-			<input id="id_login" class="login-input" maxlength="30" name="login" placeholder="Gebruikersnaam" type="text" />{{ form.login.errors }}
+    	<div class="col-md-3">
+			<button id="opener" class="newBtn">Nieuwe Gebruiker?</button>
 		</div>
-		<div class="form-group">
-			<input id="id_password"  class="login-input" name="password" placeholder="Wachtwoord" type="password" />{{ form.password.errors }}
-		</div>
-		{% if redirect_field_value %}
-			<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-		{% endif %}
-		<button class="btn" type="submit">{% trans "Log In" %}</button>
-	</form>
+	    <!--<a href="/accounts/login/" class="pull-right">Login</a>-->
+		<form method="POST" action="{% url 'account_login' %}"> 
+			<span class="col-md-2">
+			</span>
+			<span class="col-md-7">
+				{% csrf_token %}
+				<span class="form-group">
+					<input id="id_login" class="inp" maxlength="30" name="login" placeholder="Gebruikersnaam" type="text" />{{ form.login.errors }}
+				</span>
+				<span class="form-group">
+					<input id="id_password" class="inp" name="password" placeholder="Wachtwoord" type="password" />{{ form.password.errors }}
+				</span>
+			
+			<!--<span>-->
+				{% if redirect_field_value %}
+					<input type="hidden" class="inp" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+				{% endif %}
+				<button type="submit" class="newBtn">{% trans "Log In" %}</button>
+			<!--</span>-->
+			</span>
+		</form>
+	
 {% endif %}
 </p>
 
