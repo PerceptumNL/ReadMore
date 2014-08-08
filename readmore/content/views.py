@@ -9,6 +9,9 @@ import django.dispatch
 
 article_read = django.dispatch.Signal(providing_args=["user", "category", "article_id", "article"])
 
+def barrier(request):
+    return render(request, 'barrier.html')
+
 def index(request):
     """Return response containing index of categories."""
     # Only show top categories on the index page
