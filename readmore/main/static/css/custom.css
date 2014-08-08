@@ -12,7 +12,7 @@
 	background-color: #f0f0f0;
 	border-radius:4px;
 	padding:1%;
-	height:85%;
+	height:80%;
 	overflow:scroll;
 }
 
@@ -85,12 +85,12 @@ html,body{
 }
 
 .wrapper{
-	height:85%;
+	height:80%;
 }
 
 .inside{
 	background-color:#ffffff;
-	height:85%;
+	height:80%;
 }
 
 #reader{
@@ -142,7 +142,11 @@ html,body{
 .arrows{color:#cecece;}
 
 .footer{
-	height:15%;
+	height:10%;
+}
+
+#account{
+	height:10%;
 }
 
 .wikiBlueLink{
@@ -281,7 +285,7 @@ Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-i
 /* Style login pages */
 .signup{
 	padding:10%;
-	height:85%;
+	height:80%;
 }
 
 .login{
@@ -294,11 +298,26 @@ Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-i
 
 .logo{
 	text-align: center;
-	margin:1%;
+	margin:5px;
 	z-index:-10;
 	width:5%;
+	padding:5px;
 }
 
-#account{
+.logo:hover{
+	border: 1px solid #ffffff;
+	border-radius: 3px;
+	padding:4px;
+	
+}
+
+.header{
 	text-align: center;
+	height:10%;
+	color:white;
+}
+
+.header:hover{
+	color:white;
+	text-decoration: underline;
 }
