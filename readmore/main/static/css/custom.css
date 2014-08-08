@@ -92,6 +92,12 @@ html,body{
 	background-color:#ffffff;
 	height:85%;
 }
+
+#reader{
+	border-top:5px solid #438eb9;
+	padding:1%;
+}
+
 .landingText{
 	color:#ffffff;
 	font-family:sans-serif;
@@ -284,4 +290,15 @@ Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-i
 
 .errorlist{
 	list-style-type: none;
+}
+
+.logo{
+	text-align: center;
+	margin:1%;
+	z-index:-10;
+	width:5%;
+}
+
+#account{
+	text-align: center;
 }
