@@ -58,12 +58,12 @@ def category(request, identifier, source='local'):
         identifier_type = request.GET.get('type','auto')
         category = WikiCategory.factory(identifier, identifier_type)
         if category is None:
-            return HttpResponseNotFound('Unknown category.')
+            return render(request, 'unknowncategory.html')
     else:
         try:
             category = Category.objects.get(pk=int(identifier))
         except Category.DoesNotExist:
-            return HttpResponseNotFound('Unknown category.')
+            return render(request, 'unknowncategory.html')
     # Fetch any subcategories and articles contained in the category.
     articles = category.get_articles()
     subcategories = category.get_subcategories()
@@ -121,12 +121,12 @@ def article(request, identifier, source='local'):
         identifier_type = request.GET.get('type','auto')
         article = WikiArticle.factory(identifier, identifier_type)
         if article is None:
-            return HttpResponseNotFound('Unknown article')
+            return render(request, 'unknownarticle.html')
     else:
         try:
             article = Article.objects.get(pk=int(identifier))
         except Article.DoesNotExist:
-            return HttpResponseNotFound('Unknown article')
+            return render(request, 'unknownarticle.html')
     if request.is_ajax():
         # Return JSON with article properties
         return HttpResponse(
