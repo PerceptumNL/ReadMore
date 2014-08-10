@@ -1,3 +1,5 @@
+"""Wikipedia API module."""
+
 import requests
 from django.conf import settings
 
@@ -6,6 +8,12 @@ from django.conf import settings
 NS_PAGE = '0'
 NS_CATEGORY = '14'
 NS_PORTAL = '100'
+
+def process_title(title):
+    """Chop-off the first term before the ':'."""
+    title = title.split(":")[1]
+    return title.encode('ascii', 'xmlcharrefreplace')
+
 
 class MediaWikiAPI(object):
     _lang = u''
@@ -45,8 +53,8 @@ class MediaWikiAPI(object):
 
         print url, params
 
-        r = requests.get(url, params=params)
-        return r.json()
+        res = requests.get(url, params=params)
+        return res.json()
 
     def get_portal_url(self):
         if self._lang == 'en':
@@ -63,10 +71,6 @@ class MediaWikiAPI(object):
             return res['query']['pages']['2533281']['langlinks'][0]['*']
         except KeyError:
             return None
-
-    def process_title(self, page):
-        title = page.split(":")[1]
-        return title.encode('ascii','xmlcharrefreplace')
 
     def get_info(self, identifier):
         if isinstance(identifier, int):
@@ -124,7 +128,8 @@ class MediaWikiAPI(object):
             members = res['query']['categorymembers']
             if recursive:
                 for member in members:
-                    members += get_category_members(member, namespace, True)
+                    members += self.get_category_members(
+                            member, namespace, True)
         else:
             members = []
         return members

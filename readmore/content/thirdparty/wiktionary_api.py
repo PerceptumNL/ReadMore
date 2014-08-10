@@ -187,9 +187,7 @@ class TermForm(object):
         return '%s(%s)' % (self.__class__.__name__, self._main_term)
 
 class NounTermForm(TermForm):
-    _plural = False
-    _diminutive = False
-    _diminutive_plural = False
+    """Class for forms of a noun."""
 
     def __init__(self, main_term, form):
         """
@@ -202,55 +200,27 @@ class NounTermForm(TermForm):
         main_term - The word of which this is a form.
         form - The name of which form this is.
         """
-        super(NounTermForm, self).__init__(main_term, form)
-        if form == 'noun-pl':
-            self._plural = True
-        elif form == "noun-dim":
-            self._diminutive = True
-        elif form == "noun-dim-pl":
-            self._diminutive_plural = True
-        else:
+        if form not in ['noun-pl', 'noun-dim', 'noun-dim-pl']:
             raise ValueError("Unsupported form type")
+        super(NounTermForm, self).__init__(main_term, form)
 
     @property
     def is_plural(self):
-        return self._plural
+        """Return if this is the plural form."""
+        return self.form == 'noun-pl'
 
     @property
     def is_diminutive(self):
-        return self._diminutive
+        """Return if this is the diminutive form."""
+        return self.form == "noun-dim"
 
     @property
     def is_diminutive_plural(self):
-        return self._diminutive_plural
+        """Return if this is the diminutive form."""
+        return self.form == "noun-dim-pl"
 
 class VerbTermForm(TermForm):
-    # Present 1st person single
-    _present_1ps = False
-    # Present 2nd person single
-    _present_2ps = False
-    # Present 1st/2nd/3rd person single
-    _present_tps = False
-    # Subjunctive
-    _subjunctive = False
-    # Present participle
-    _present_participle = False
-    # Past participle
-    _past_participle = False
-    # Present 'Thou ..'
-    _present_thou = False
-    # Present plural
-    _present_plural = False
-    # Present impersonal
-    _present_impersonal = False
-    # Past single
-    _past_single = False
-    # Past 'Thou ...'
-    _past_thou = False
-    # Past plural
-    _past_plural = False
-    # Past impersonal
-    _past_impersonal = False
+    """Class for forms of a verb."""
 
     def __init__(self, main_term, form):
         """
@@ -273,88 +243,80 @@ class VerbTermForm(TermForm):
         main_term - The word of which this is a form.
         form - The name of which form this is.
         """
-        super(VerbTermForm, self).__init__(main_term, form)
-        if form in ['1ps', '1ps-ij', '1ps-bijz']:
-            self._present_1ps = True
-        elif form in ['2ps', '2ps-ij', '2ps-bijz']:
-            self._present_2ps = True
-        elif form in ['tps', 'tps-bijz']:
-            self._present_tps = True
-        elif form == 'aanv-w' or form == 'aanv-w-bijz':
-            self._subjunctive = True
-        elif form in ['nl-prcp', 'volt-d']:
-            self._past_participle = True
-        elif form == 'onv-d':
-            self._present_participle = True
-        elif form == 'ott-gij':
-            self._present_thou = True
-        elif form == 'ott-mv':
-            self._present_plural = True
-        elif form == 'ott-onp':
-            self._present_impersonal = True
-        elif form in ['ovt-enk', 'ovt-enk-bijz']:
-            self._past_single = True
-        elif form in ['ovt-gij', 'ovt-gij-bijz']:
-            self._past_thou = True
-        elif form in ['ovt-mv', 'ovt-mv-bijz']:
-            self._past_plural = True
-        elif form == 'ovt-onp':
-            self._past_impersonal = True
-        else:
+        if form not in [
+                '1ps', '1ps-ij', '1ps-bijz', '2ps', '2ps-ij', '2ps-bijz',
+                'tps', 'tps-bijz', 'aanv-w', 'aanv-w-bijz', 'nl-prcp',
+                'volt-d', 'onv-d', 'ott-gij', 'ott-mv', 'ott-onp', 'ovt-enk',
+                'ovt-enk-bijz', 'ovt-gij', 'ovt-gij-bijz', 'ovt-mv',
+                'ovt-mv-bijz', 'ovt-onp'
+                ]:
             raise ValueError("Unsupported form type")
+        super(VerbTermForm, self).__init__(main_term, form)
 
     @property
     def is_present_1ps(self):
-        return self._present_1ps
+        """Return if this is the present 1st person single form."""
+        return self.form in ['1ps', '1ps-ij', '1ps-bijz']
 
     @property
     def is_present_2ps(self):
-        return self._present_2ps
+        """Return if this is the present 2nd person single form."""
+        return self.form in ['2ps', '2ps-ij', '2ps-bijz']
 
     @property
     def is_present_tps(self):
-        return self._present_tps
+        """Return if this is the present 1st/2nd/3rd person single form."""
+        return self.form in ['tps', 'tps-bijz']
 
     @property
     def is_subjunctive(self):
-        return self._subjunctive
+        """Return if this is the subjunctive form."""
+        return self.form in ['aanv-w', 'aanv-w-bijz']
 
     @property
     def is_past_participle(self):
-        return self._past_participle
+        """Return if this is the past participle form."""
+        return self.form in ['nl-prcp', 'volt-d']
 
     @property
     def is_present_participle(self):
-        return self._present_participle
+        """Return if this is the present participle form."""
+        return self.form == 'onv-d'
 
     @property
     def is_present_thou(self):
-        return self._present_thou
+        """Return if this is the present 'Thou ..' form."""
+        return self.form == 'ott-gij'
 
     @property
     def is_present_plural(self):
-        return self._present_plural
+        """Return if this is the present plural form."""
+        return self.form == 'ott-mv'
 
     @property
     def is_present_impersonal(self):
-        return self._present_impersonal
+        """Return if this is the present impersonal form."""
+        return self.form == 'ott-onp'
 
     @property
     def is_past_single(self):
-        return self._past_single
+        """Return if this is the past single form."""
+        return self.form in ['ovt-enk', 'ovt-enk-bijz']
 
     @property
     def is_past_thou(self):
-        return self._past_thou
+        """Return if this is the past 'Thou ..' form."""
+        return self.form in ['ovt-gij', 'ovt-gij-bijz']
 
     @property
     def is_past_plural(self):
-        return self._past_plural
+        """Return if this is the past plural form."""
+        return self.form in ['ovt-mv', 'ovt-mv-bijz']
 
     @property
     def is_past_impersonal(self):
-        return self._past_impersonal
-
+        """Return if this is the past impersonal form."""
+        return self.form == 'ovt-onp'
 
 
 class NounTerm(Term):
@@ -541,37 +503,38 @@ class WiktionaryParser(object):
         self._termsets = []
         self._warnings = []
         self.re_ignore = re.compile(
-            ("^"
-                "(?:<!--.+-->)|"
-                "(?:{{rel-top[0-9]?}})|"
-                "(?:{{rel-mid[0-9]?}})|"
-                "(?:{{rel-bottom[0-9]?}})|"
-                "(?:{{top[0-9]?}})|"
-                "(?:{{mid[0-9]?}})|"
-                "(?:{{bottom}})|"
-                "(?:{{trans-top}})|"
-                "(?:{{trans-mid}})|"
-                "(?:{{trans-bottom}})|"
-                "(?:{{\(\(}})|"
-                "(?:{{\)\)}})|"
-                "(?:{{=}})"
-            "$"))
-        self.re_lang = re.compile("^{{=(\w+)=}}$")
-        self.re_header = re.compile("^{{-(\w+)-\|?(.+)?}}$")
-        self.re_pron_sound = re.compile("^\*{{sound}}: {{audio\|(.+)\|.+}}$")
-        self.re_pron_ipa = re.compile("^\*{{WikiW\|IPA}}: {{IPA\|/(.+)/.*$")
-        self.re_syll = re.compile("^\*(.+)$")
-        self.re_nlnoun = re.compile("^([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)$")
-        self.re_nlstam = re.compile("([^|]+)")
-        self.re_form = re.compile("^{{([^|]+)\|(.+)}}$")
-        self.re_meaning_entry = re.compile("^(?:\[[A-Z]\] )?'''(.+)''' ?(.+)?$")
-        self.re_meaning_def = re.compile("^#(.+)$")
-        self.re_meaning_eg = re.compile("^{{bijv-1\|(.+)}}$")
-        self.re_syn_ref = re.compile("^\*\[([0-9]+)\]:? (.+)$")
-        self.re_syn_list = re.compile("\[\[([^]]+)\]\]")
-        self.re_ant_ref = re.compile("^\*\[([0-9]+)\]:? (.+)$")
-        self.re_ant_list = re.compile("\[\[([^]]+)\]\]")
-        self.re_hypo = re.compile("^\*\[\[(.+)\]\]$")
+            (r"^"
+                r"(?:<!--.+-->)|"
+                r"(?:{{rel-top[0-9]?}})|"
+                r"(?:{{rel-mid[0-9]?}})|"
+                r"(?:{{rel-bottom[0-9]?}})|"
+                r"(?:{{top[0-9]?}})|"
+                r"(?:{{mid[0-9]?}})|"
+                r"(?:{{bottom}})|"
+                r"(?:{{trans-top}})|"
+                r"(?:{{trans-mid}})|"
+                r"(?:{{trans-bottom}})|"
+                r"(?:{{\(\(}})|"
+                r"(?:{{\)\)}})|"
+                r"(?:{{=}})"
+            r"$"))
+        self.re_lang = re.compile(r"^{{=(\w+)=}}$")
+        self.re_header = re.compile(r"^{{-(\w+)-\|?(.+)?}}$")
+        self.re_pron_sound = re.compile(r"^\*{{sound}}: {{audio\|(.+)\|.+}}$")
+        self.re_pron_ipa = re.compile(r"^\*{{WikiW\|IPA}}: {{IPA\|/(.+)/.*$")
+        self.re_syll = re.compile(r"^\*(.+)$")
+        self.re_nlnoun = re.compile(r"^([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)$")
+        self.re_nlstam = re.compile(r"([^|]+)")
+        self.re_form = re.compile(r"^{{([^|]+)\|(.+)}}$")
+        self.re_meaning_entry = re.compile(
+                r"^(?:\[[A-Z]\] )?'''(.+)''' ?(.+)?$")
+        self.re_meaning_def = re.compile(r"^#(.+)$")
+        self.re_meaning_eg = re.compile(r"^{{bijv-1\|(.+)}}$")
+        self.re_syn_ref = re.compile(r"^\*\[([0-9]+)\]:? (.+)$")
+        self.re_syn_list = re.compile(r"\[\[([^]]+)\]\]")
+        self.re_ant_ref = re.compile(r"^\*\[([0-9]+)\]:? (.+)$")
+        self.re_ant_list = re.compile(r"\[\[([^]]+)\]\]")
+        self.re_hypo = re.compile(r"^\*\[\[(.+)\]\]$")
 
     def _warn(self, warning, line=None):
         """Add a warning string to the list of warnings."""
@@ -676,7 +639,7 @@ class WiktionaryParser(object):
         if languages == '*':
             return self._termsets
         else:
-            return filter(lambda x: x.lang in languages, self._termsets)
+            return [x for x in self._termsets if x.lang in languages]
 
     def _add_term(self, term):
         """Add term to the current termset."""
@@ -765,8 +728,8 @@ class WiktionaryParser(object):
         try:
             # Create term of the given class with the parsed form
             term = termcls(main_term=main_term, form=form)
-        except ValueError as e:
-            self._warn(e, form)
+        except ValueError as err:
+            self._warn(err, form)
             return
         else:
             self._add_term(term)
@@ -855,7 +818,7 @@ class WiktionaryParser(object):
                             line)
                     continue
                 else:
-                    meaning.synonyms = re.findall(self.re_syn_list, line)
+                    meaning.synonyms = re.findall(self.re_syn_list, syn_list)
             else:
                 self._warn('Unexpected synonym line', line)
 
@@ -879,7 +842,7 @@ class WiktionaryParser(object):
                             line)
                     continue
                 else:
-                    meaning.antonyms = re.findall(self.re_ant_list, line)
+                    meaning.antonyms = re.findall(self.re_ant_list, ant_list)
             else:
                 self._warn('Unexpected antonym line', line)
 
