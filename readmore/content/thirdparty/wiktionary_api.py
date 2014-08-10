@@ -1,5 +1,42 @@
-"""Wiktionary API.
+"""Wiktionary API module.
+
+The Wiktionary API module provides a main class WiktionaryAPI, through which
+information from a wiktionary site about a word can be retrieved, and a set of
+classes in which this information is represented. In order to understand the
+purpose of each of these representation classes, it is useful to first
+understand what information needs to be represented.
+
+First of all, a word can have multiple meanings. For each of these meanings,
+one might give an example sentence or there might be synonyms or antonyms.
+However, words can not only have multiple meanings. Words can also be used in
+the role of different lexical categories, e.g. `bank' can be used as both a
+noun and a verb. Furthermore, the word `bank' is part of multiple languages.
+
+In this module, all information about the word within the context of a specific
+language is stored in a TermSet object. Specifically it contains a list of Term
+objects. A Term object represents all information of the word within the
+context of one lexical category (e.g. noun). It contains various information
+depending on the lexical category it represents, including a list of
+Meaning objects. Each Meaning object represents one particular meaning of the
+word, linking definitions, synonyms, antonyms and example sentences. See the
+docstrings of the individual classes for more details.
+
+In many cases, a word is not in its normal form. For example, a noun might be
+in its plural form. In this module the word `banks' is referred to a form or
+the word `bank'. Where the word `bank' was represented by a (subclass of a)
+Term object, the word 'banks' is represented by a (subclass of a) TermForm
+object. These objects contain the form they are, and of which word. See the
+docstrings of the individual classes for more details.
+
+The representation classes are created by the WiktionaryParser, which parses
+raw wikitext. Normally you would not need to interact with this parser object.
+This module provides a WiktionaryAPI class that combines retreving the wikitext
+from a wiktionary site with executing the parser. Calling the `get_info'
+method will return all wiktionary information about a given word.
+
 Known issues:
+    * Does not support any other wiktionary formats than the Dutch one.
+    * Does not support other lexical categories than nouns and verbs
     * Does not support different conjugations per meaning of a term
     * Does not support different antonyms per meaning
     * Does not support stress homographs
@@ -17,6 +54,13 @@ class Meaning(object):
 
     def __init__(self, definition=u'', example=u'', synonyms=None,
             antonyms=None):
+        """
+        Keyword arguments:
+        definition - The definition of this meaning. (Default u'')
+        example - The example sentence of this meaning. (Default u'')
+        synonyms - A list of synonyms of this meaning. (Default [])
+        antonyms - A list of antonyms of this meaning. (Default [])
+        """
         self._definition = definition
         self._example = example
         self._synonyms = [] if synonyms is None else synonyms
@@ -24,34 +68,42 @@ class Meaning(object):
 
     @property
     def definition(self):
+        """Return the definition of this meaning."""
         return self._definition
 
     @definition.setter
     def definition(self, value):
+        """Set the definition of this meaning."""
         self._definition = value
 
     @property
     def example(self):
+        """Return an example sentence of this meaning."""
         return self._example
 
     @example.setter
     def example(self, value):
+        """Set an example sentence of this meaning."""
         self._example = value
 
     @property
     def synonyms(self):
+        """Return the list of synonyms for this meaning."""
         return self._synonyms
 
     @synonyms.setter
     def synonyms(self, value):
+        """Set the list of synonyms for this meaning."""
         self._synonyms = value
 
     @property
     def antonyms(self):
+        """Return the list of antonyms for this meaning."""
         return self._antonyms
 
     @antonyms.setter
     def antonyms(self, value):
+        """Set the list of antonyms for this meaning."""
         self._antonyms = value
 
     def __repr__(self):
@@ -59,12 +111,7 @@ class Meaning(object):
 
 
 class Term(object):
-    """Base class for a term.
-    In a language a word may exist in multiple categories, e.g. verb and noun.
-    For each of these, a separate term is used. Within a category, e.g. noun, a
-    word can still have multiple meanings (e.g. bank). These meanings are
-    are represented by a Meaning object and linked to this term.
-    """
+    """Base class for a term, combining meanings per lexical category."""
     # Term entry
     _entry = u''
     # Meanings
@@ -78,24 +125,32 @@ class Term(object):
 
     @property
     def entry(self):
+        """Return the wiktionary entry of the word
+        NOTE: This is probably always the same as the word.
+        """
         return self._entry
 
     @entry.setter
     def entry(self, value):
+        """Set the wiktionary entry of the word."""
         self._entry = value
 
     @property
     def meanings(self):
+        """Return a list of the meanings of this word."""
         return self._meanings
 
     def add_meaning(self, meaning):
+        """Add a meanings of this word."""
         self._meanings.append(meaning)
 
     @property
     def hyponyms(self):
+        """Return a list of the hyponyms of this word."""
         return self._hyponyms
 
     def add_hyponym(self, hyponym):
+        """Add a hyponym of this word."""
         self._hyponyms.append(hyponym)
 
     def __repr__(self):
@@ -103,22 +158,29 @@ class Term(object):
 
 
 class TermForm(object):
-    """Base class for terms that are a specific variant of a main term"""
+    """Base class for terms that are a specific variant of a main term."""
     # The main term
     _main_term = None
     # The provided form type
     _form = None
 
     def __init__(self, main_term, form):
+        """
+        Keyword arguments:
+        main_term - The word of which this is a form.
+        form - The name of which form this is.
+        """
         self._main_term = main_term
         self._form = form
 
     @property
     def main_term(self):
+        """Return the main term of which is a form."""
         return self._main_term
 
     @property
     def form(self):
+        """Return which form of the main term this is."""
         return self._form
 
     def __repr__(self):
@@ -130,6 +192,16 @@ class NounTermForm(TermForm):
     _diminutive_plural = False
 
     def __init__(self, main_term, form):
+        """
+        Supported noun forms are:
+          * noun-pl (plural)
+          * noun-dim (dimunitive)
+          * noun-dim-pl (dimunitive plural)
+
+        Keyword arguments:
+        main_term - The word of which this is a form.
+        form - The name of which form this is.
+        """
         super(NounTermForm, self).__init__(main_term, form)
         if form == 'noun-pl':
             self._plural = True
@@ -181,6 +253,26 @@ class VerbTermForm(TermForm):
     _past_impersonal = False
 
     def __init__(self, main_term, form):
+        """
+        Supported verb forms are:
+          * 1ps or 1ps-ij or 1ps-bijz (present 1st person single)
+          * 2ps or 2ps-ij or 2ps-bijz (present 2st person single)
+          * tps or tps-bijz (present 1st/2nd/3rd person single)
+          * aanv-w or aanv-w-bijz (Subjunctive)
+          * nl-prcp or volt-d (Past participle)
+          * onv-d (Present participle)
+          * ott-gij (Present 'Thou ..')
+          * ott-mv (Present plural)
+          * ott-onp (Present impersonal)
+          * ovt-enk or ovt-enk-bijz (Past single)
+          * ovt-gij or ovt-gij-bijz (Past 'Thou ..')
+          * ovt-mv or ovt-mv-bijz (Past plural)
+          * ovt-onp (Past impersonal)
+
+        Keyword arguments:
+        main_term - The word of which this is a form.
+        form - The name of which form this is.
+        """
         super(VerbTermForm, self).__init__(main_term, form)
         if form in ['1ps', '1ps-ij', '1ps-bijz']:
             self._present_1ps = True
@@ -266,7 +358,7 @@ class VerbTermForm(TermForm):
 
 
 class NounTerm(Term):
-    """The term class for nouns"""
+    """The term class for nouns."""
     # Gender of the term
     _gender = ''
     # single form
@@ -280,68 +372,83 @@ class NounTerm(Term):
 
     @property
     def gender(self):
+        """Return the gender of the noun."""
         return self._gender
 
     @gender.setter
     def gender(self, value):
+        """Set the gender of the noun."""
         self._gender = value
 
     @property
     def single(self):
+        """Return the single form of the noun."""
         return self._single
 
     @single.setter
     def single(self, value):
+        """Set the single form of the noun."""
         self._single = value
 
     @property
     def plural(self):
+        """Return the plural form of the noun."""
         return self._plural
 
     @plural.setter
     def plural(self, value):
+        """Set the plural form of the noun."""
         self._plural = value
 
     @property
     def diminutive(self):
+        """Return the diminutive form of the noun."""
         return self._diminutive
 
     @diminutive.setter
     def diminutive(self, value):
+        """Set the diminutive form of the noun."""
         self._diminutive = value
 
     @property
     def diminutive_plural(self):
+        """Return the diminutive plural form of the noun."""
         return self._diminutive_plural
 
     @diminutive_plural.setter
     def diminutive_plural(self, value):
+        """Set the diminutive plural form of the noun."""
         self._diminutive_plural = value
 
 
 class VerbTerm(Term):
+    """The term class for verbs."""
     _past_tense = u''
     _past_participle_tense = u''
 
     @property
     def past_tense(self):
+        """Return the past tense form of the noun."""
         return self._past_tense
 
     @past_tense.setter
     def past_tense(self, value):
+        """Set the past tense form of the noun."""
         self._past_tense = value
 
     @property
     def past_participle_tense(self):
+        """Return the past participle tense form of the noun."""
         return self._past_participle_tense
 
     @past_participle_tense.setter
     def past_participle_tense(self, value):
+        """Set the past participle tense form of the noun."""
         self._past_participle_tense = value
 
 
 class TermSet(object):
-    """Collection of all terms within a language"""
+    """Collection of all terms within a language."""
     # Language of the terms in this set
     lang = None
     # Sound file containing the pronunciation
@@ -354,38 +461,53 @@ class TermSet(object):
     _terms = None
 
     def __init__(self, lang):
+        """
+        Supported language codes can be found here:
+        https://nl.wiktionary.org/wiki/Categorie:Taalsjablonen
+
+        Keyword arguments
+        lang - The language code for this termset.
+        """
         self.lang = lang
         self._terms = []
 
     @property
     def sound(self):
+        """Return the link to the pronunciation sound file."""
         return self._sound
 
     @sound.setter
     def sound(self, value):
+        """Set the link to the pronunciation sound file."""
         self._sound = value
 
     @property
     def ipa(self):
+        """Return the IPA description of the pronunciation."""
         return self._ipa
 
     @ipa.setter
     def ipa(self, value):
+        """Set the IPA description of the pronunciation."""
         self._ipa = value
 
     @property
     def syllables(self):
+        """Return the description of the word in syllables."""
         return self._syllables
 
     @syllables.setter
     def syllables(self, value):
+        """Set the description of the word in syllables."""
         self._syllables = value
 
     @property
     def terms(self):
+        """Return the list of terms containing in this termset."""
         return self._terms
 
     def add_term(self, term):
+        """Add a term to this termset."""
         self._terms.append(term)
 
     def __repr__(self):
@@ -394,6 +516,7 @@ class TermSet(object):
 
 
 class WiktionaryParser(object):
+    """Parser class that parses raw wikitext"""
     # The word the parsed document is about
     word = None
     # Temporary buffer of lines
@@ -451,6 +574,7 @@ class WiktionaryParser(object):
         self.re_hypo = re.compile("^\*\[\[(.+)\]\]$")
 
     def _warn(self, warning, line=None):
+        """Add a warning string to the list of warnings."""
         if line is None:
             self._warnings.append("%s" % (warning,))
         else:
@@ -458,9 +582,17 @@ class WiktionaryParser(object):
 
     @property
     def warnings(self):
+        """Get the list of warnings."""
         return self._warnings
 
     def parse(self, lines, word=None, languages='*'):
+        """Parse the provided wikitext.
+
+        Keyword arguments:
+        lines - The wikitext to parse, either one string or a list of lines.
+        word - The word this wikitext is about. (Default None)
+        languages - A list of languages it should return or '*'. (Default '*')
+        """
         self._termsets = []
         if isinstance(lines, str) or isinstance(lines, unicode):
             lines = lines.split("\n")
@@ -547,18 +679,20 @@ class WiktionaryParser(object):
             return filter(lambda x: x.lang in languages, self._termsets)
 
     def _add_term(self, term):
+        """Add term to the current termset."""
         self._term = term
         self._termset.add_term(self._term)
         return self._term
 
     def _ensure_term(self, cls):
-        """Ensure the current term is of the right type"""
+        """Ensure the current term is of the right type."""
         if not isinstance(self._term, cls):
             self._term = cls()
             self._termset.add_term(self._term)
         return self._term
 
     def _trigger_header_parse(self):
+        """Trigger the right header parse function."""
         if self._header == 'pron':
             self._parse_pronunciation()
         elif self._header == 'syll':
@@ -587,6 +721,7 @@ class WiktionaryParser(object):
             self._warn("Unsupported header '%s'" % (self._header,))
 
     def _parse_pronunciation(self):
+        """Parse info under the pronunciation header."""
         for line in self._buff:
             # Test for sound line
             sound_match = re.search(self.re_pron_sound, line)
@@ -602,6 +737,7 @@ class WiktionaryParser(object):
                 self._warn("Unexpected pronunciation line", line)
 
     def _parse_syllables(self):
+        """Parse info under the syllables header."""
         for line in self._buff:
             match = re.search(self.re_syll, line)
             if match:
@@ -611,6 +747,7 @@ class WiktionaryParser(object):
                 self._warn("Unexpected syllable line", line)
 
     def _parse_form(self, termcls):
+        """Parse info under the form of ... header."""
         # Check the size of the buffer
         if not self._buff:
             self._warn("No buffer found to parse form from", self._header)
@@ -635,6 +772,7 @@ class WiktionaryParser(object):
             self._add_term(term)
 
     def _parse_nlnoun(self):
+        """Parse info under the nlnoun header."""
         # Create new current term
         term = self._ensure_term(NounTerm)
         # Match different forms of the noun
@@ -651,6 +789,7 @@ class WiktionaryParser(object):
             self._warn("Unexpected buffer content for nlnoun")
 
     def _parse_nlstam(self):
+        """Parse info under the nlstam header."""
         # Create new current term
         term = self._ensure_term(VerbTerm)
         # Match different forms of the verb
@@ -665,6 +804,7 @@ class WiktionaryParser(object):
             self._warn("Unexpected buffer content for nlstam")
 
     def _parse_meaning(self, termcls):
+        """Parse info under the meaning header."""
         meaning = None
         # Create new current term
         term = self._ensure_term(termcls)
@@ -696,6 +836,7 @@ class WiktionaryParser(object):
             term.add_meaning(meaning)
 
     def _parse_synonyms(self):
+        """Parse info under the synonyms header."""
         if self._term is None:
             self._warn("Synonyms found without current term")
             return
@@ -719,6 +860,7 @@ class WiktionaryParser(object):
                 self._warn('Unexpected synonym line', line)
 
     def _parse_antonyms(self):
+        """Parse info under the antonyms header."""
         if self._term is None:
             self._warn("Antonyms found without current term")
             return
@@ -742,6 +884,7 @@ class WiktionaryParser(object):
                 self._warn('Unexpected antonym line', line)
 
     def _parse_hyponyms(self):
+        """Parse info under the hyponyms header."""
         if self._term is None:
             self._warn("Hyponyms found without current term")
             return
@@ -756,12 +899,30 @@ class WiktionaryParser(object):
 
 
 class WiktionaryAPI(MediaWikiAPI):
+    """Main WiktionaryAPI entry point."""
     _termsets = None
     _languages = None
     _parser = None
 
     def __init__(self, lang=None, base_url=None, languages='*', parser=None,
             **kwargs):
+        """
+        Settings:
+        The lang parameter can also be set by the CONTENT_WIKTIONARY_LANG
+        setting. If this is not set and the parameter value is also not
+        provided as keyword argument, then the default value of the
+        MediaWikiAPI will be used. The base_url parameter can also be set by the
+        CONTENT_WIKTIONARY_API_URL setting.
+
+        A base_url should contain one string wildcard ("%s"), where the
+        language code of the site can be inserted.
+
+        Keyword arguments:
+        lang - Which language of wiktionary to use. (Default: MediaWikiAPI)
+        base_url - Which url to use. (Default '%s.wiktionary.org/w/api.php')
+        languages - A list of languages it should return or '*'. (Default '*')
+        parser - The parse to use. (Default WiktionaryParser())
+        """
         if lang is None and hasattr(settings, "CONTENT_WIKTIONARY_LANG"):
             lang = settings.CONTENT_WIKTIONARY_LANG
 
@@ -770,6 +931,8 @@ class WiktionaryAPI(MediaWikiAPI):
                 base_url = settings.CONTENT_WIKTIONARY_API_URL
             else:
                 base_url = 'http://%s.wiktionary.org/w/api.php'
+            if base_url[0] != 'h':
+                base_url = 'http://%s' % (base_url,)
 
         super(WiktionaryAPI, self).__init__(lang, base_url, **kwargs)
 
@@ -778,13 +941,21 @@ class WiktionaryAPI(MediaWikiAPI):
         self._termsets = {}
 
     def _load(self, word):
+        """Retrieve wikitext about the word or load from cache."""
         if word not in self._termsets:
             wikitext = self.get_page_wikitext(word)
             self._termsets[word] = self._parser.parse(lines=wikitext,
                     word=word, languages=self._languages)
         return self._termsets[word]
 
-    def get_terms(self, word):
+    def get_info(self, word):
+        """Return termsets contained in the wikitext about the word.
+        When the list of languages provided at initialization only covers one
+        language, the terms of the only termset are directly returned.
+
+        Keyword arguments:
+        word - The word about which you want the information.
+        """
         termsets = self._load(word)
         if isinstance(self._languages, list) and len(self._languages) == 1:
             return termsets[0].terms
@@ -793,4 +964,5 @@ class WiktionaryAPI(MediaWikiAPI):
 
     @property
     def parser_warnings(self):
+        """Return the warnings collected during parsing."""
         return self._parser.warnings
