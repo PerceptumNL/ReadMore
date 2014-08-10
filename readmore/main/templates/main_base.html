@@ -35,11 +35,16 @@
 
 </head>
 <body class="body-background">
+
 	
 	<!-- Header -->
 	<!-- Body begin-->
-
-
+	<div class="header">
+		<div class="col-md-12">
+			<a href="/"><img src="{% static 'img/layout/logo_robrecht.png' %}" class="logo"></a><br>
+			<a href="/" class="header">Index</a> | <a href="/about" class="header">Info</a>
+		</div>
+	</div>
 	
 	{% block body %}
 
@@ -48,10 +53,12 @@
 	<!-- Body end-->
 
 	<div class="footer">
+
 		<div class="container" id="account">
 			<div class="col-md-12">
 				{% include "account/accounts.html" %}
 			</div>
+		
 		</div>
 	</div>
 

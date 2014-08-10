@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from allauth.account.signals import user_signed_up
+from readmore.content.views import article_read
 from django.dispatch import receiver
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)        
-
+    badges = models.ManyToManyField('Badge')
     
 class Statistics(models.Model):
 
@@ -30,6 +31,18 @@ def connect_statistics_to_user(sender, request, user, **kw):
     statistics.save()
     #print "Created Statistics for %s" % (user)
 
+@receiver(article_read)
+def add_to_statistics(sender, user, category, article_id, article, **kw):
+    try:
+        statistics_of_user = Statistics.objects.get(user=user)
+        statistics_of_user.docsRead += 1
+        statistics_of_user.save()
+        print "Article Read Signal received for %s with id=%s" % (user, article.title)
+        print "Total articles read by %s  is now (%s)" % (user, str(statistics_of_user.docsRead))
+    except:
+        print "No statistics in database for (%s)" % (user)
+        pass
+        
 # Create your models here.
 class Badge(models.Model):
     title = models.CharField(max_length=255)

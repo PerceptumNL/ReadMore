@@ -5,6 +5,12 @@ from django.conf import settings
 import json
 import requests
 from readmore.content.models import *
+import django.dispatch
+
+article_read = django.dispatch.Signal(providing_args=["user", "category", "article_id", "article"])
+
+def barrier(request):
+    return render(request, 'barrier.html')
 
 def index(request):
     """Return response containing index of categories."""
@@ -55,12 +61,12 @@ def category(request, identifier, source='local'):
         identifier_type = request.GET.get('type','auto')
         category = WikiCategory.factory(identifier, identifier_type)
         if category is None:
-            return HttpResponseNotFound('Unknown category.')
+            return render(request, 'unknowncategory.html')
     else:
         try:
             category = Category.objects.get(pk=int(identifier))
         except Category.DoesNotExist:
-            return HttpResponseNotFound('Unknown category.')
+            return render(request, 'unknowncategory.html')
     # Fetch any subcategories and articles contained in the category.
     articles = category.get_articles()
     subcategories = category.get_subcategories()
@@ -118,12 +124,12 @@ def article(request, identifier, source='local'):
         identifier_type = request.GET.get('type','auto')
         article = WikiArticle.factory(identifier, identifier_type)
         if article is None:
-            return HttpResponseNotFound('Unknown article')
+            return render(request, 'unknownarticle.html')
     else:
         try:
             article = Article.objects.get(pk=int(identifier))
         except Article.DoesNotExist:
-            return HttpResponseNotFound('Unknown article')
+            return render(request, 'unknownarticle.html')
     if request.is_ajax():
         # Return JSON with article properties
         return HttpResponse(
@@ -133,4 +139,9 @@ def article(request, identifier, source='local'):
             }),
             content_type='application/json')
     else:
+        if request.user.is_authenticated():
+            article_read.send(sender=Article, user=request.user, category=None, article_id=identifier, article=article)
         return render(request, 'reader.html', { "article": article })
+
+def about(request):
+    return render(request, 'about.html')

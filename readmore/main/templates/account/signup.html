@@ -6,19 +6,16 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block body %}
-<div class="container">
-	<div class="well">
-		<h1>{% trans "Er ging iets mis met inschrijven" %}</h1>
-
-	
-
+<div class="container background login">
+	<h1 class="title">{% trans "Er ging iets mis met inschrijven" %}</h1>
+	<div class="content">
 		<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
 		  {% csrf_token %}
 		  {{ form.as_p }}
 		  {% if redirect_field_value %}
 		  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
 		  {% endif %}
-		  <button type="submit">{% trans "Schrijf je in" %} &raquo;</button>
+		  <button type="submit" class="signupBtn">{% trans "Schrijf je in" %} &raquo;</button>
 		</form>
 	</div>
 </div>

@@ -59,9 +59,9 @@
 	</form>
 
     </div>
-    	<div class="col-md-3">
+    	<!--<div class="col-md-3">
 			<button id="opener" class="newBtn">Nieuwe Gebruiker?</button>
-		</div>
+		</div>-->
 	    <!--<a href="/accounts/login/" class="pull-right">Login</a>-->
 		<form method="POST" action="{% url 'account_login' %}"> 
 			<span class="col-md-2">
@@ -69,10 +69,10 @@
 			<span class="col-md-7">
 				{% csrf_token %}
 				<span class="form-group">
-					<input id="id_login" class="inp" maxlength="30" name="login" placeholder="Gebruikersnaam" type="text" />{{ form.login.errors }}
+					<input id="id_login" class="inp" maxlength="30" name="login" placeholder="Gebruikersnaam" type="text" />
 				</span>
 				<span class="form-group">
-					<input id="id_password" class="inp" name="password" placeholder="Wachtwoord" type="password" />{{ form.password.errors }}
+					<input id="id_password" class="inp" name="password" placeholder="Wachtwoord" type="password" />
 				</span>
 			
 			<!--<span>-->

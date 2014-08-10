@@ -79,6 +79,9 @@ AUTHENTICATION_BACKENDS = (
 # Settings for social providers
 # Note: Windows Live requires no settings
 LOGIN_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_REQUIRED = 'True'
+ACCOUNT_EMAIL_VERIFICATION = 'False'
+AUTH_PROFILE_MODULE = 'main.UserProfile'
 
 
 # Template Context
