@@ -51,8 +51,6 @@ class MediaWikiAPI(object):
         except TypeError:
             url = self._base_url
 
-        print url, params
-
         res = requests.get(url, params=params)
         return res.json()
 
