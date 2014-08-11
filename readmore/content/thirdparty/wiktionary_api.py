@@ -163,6 +163,8 @@ class TermForm(object):
     _main_term = None
     # The provided form type
     _form = None
+    # A dictionary translating form codes to human-readable text
+    _form_rewrites = {}
 
     def __init__(self, main_term, form):
         """
@@ -182,6 +184,31 @@ class TermForm(object):
     def form(self):
         """Return which form of the main term this is."""
         return self._form
+
+    def add_form_rewrite_rule(self, lang, form, rule):
+        """Add a rewrite rule to create a human readable form description."""
+        if lang not in self._form_rewrites:
+            self._form_rewrites[lang] = {form: [rule]}
+        elif form not in self._form_rewrites[lang]:
+            self._form_rewrites[lang][form] = [rule]
+        else:
+            self._form_rewrites[lang][form].append(rule)
+
+    def form2text(self, lang='nl'):
+        """Return the human-readable text description(s) of the form.
+
+        Keyword arguments:
+        lang - The language of the text. (Default 'nl')
+        """
+        text = []
+        # Check if we have a rewrite rule for this language and form.
+        if (lang in self._form_rewrites and
+            self.form in self._form_rewrites[lang]):
+            for rule in self._form_rewrites[lang][self.form]:
+                text.append(rule(self))
+            return text
+        else:
+            return []
 
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, self._main_term)
@@ -203,6 +230,7 @@ class NounTermForm(TermForm):
         if form not in ['noun-pl', 'noun-dim', 'noun-dim-pl']:
             raise ValueError("Unsupported form type")
         super(NounTermForm, self).__init__(main_term, form)
+        self._init_rewrite_rules()
 
     @property
     def is_plural(self):
@@ -218,6 +246,19 @@ class NounTermForm(TermForm):
     def is_diminutive_plural(self):
         """Return if this is the diminutive form."""
         return self.form == "noun-dim-pl"
+
+    def _init_rewrite_rules(self):
+        """Initialize rewrite rules for each form."""
+        # Define template rule
+        rule_template = lambda s: (lambda x: s % (x.main_term, ))
+        #Add Dutch rewrite rules
+        self.add_form_rewrite_rule('nl', 'noun-pl', rule_template(
+            "meervoud van het zelfstandig naamwoord %s"))
+        self.add_form_rewrite_rule('nl', 'noun-dim', rule_template(
+            "verkleinwoord enkelvoud van het zelfstandig naamwoord %s"))
+        self.add_form_rewrite_rule('nl', 'noun-dim-pl', rule_template(
+            "verkleinwoord meervoud van het zelfstandig naamwoord %s"))
+
 
 class VerbTermForm(TermForm):
     """Class for forms of a verb."""
@@ -252,6 +293,7 @@ class VerbTermForm(TermForm):
                 ]:
             raise ValueError("Unsupported form type")
         super(VerbTermForm, self).__init__(main_term, form)
+        self._init_rewrite_rules()
 
     @property
     def is_present_1ps(self):
@@ -317,6 +359,71 @@ class VerbTermForm(TermForm):
     def is_past_impersonal(self):
         """Return if this is the past impersonal form."""
         return self.form == 'ovt-onp'
+
+    def _init_rewrite_rules(self):
+        """Initialize rewrite rules for each form."""
+        # Define template rule
+        rule_template = lambda s: (lambda x: s % (x.main_term, ))
+        ### Add Dutch rewrite rules
+        # Present 1ps family
+        for form in ['1ps', '1ps-ij', '1ps-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "eerste persoon enkelvoud tegenwoordige tijd van %s"))
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "gebiedende wijs van %s"))
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                ("(bij inversie) tweede persoon enkelvoud "
+                 "tegenwoordige tijd van %s")
+                ))
+        # Present 2ps family
+        for form in ['2ps', '2ps-ij', '2ps-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "tweede persoon enkelvoud tegenwoordige tijd van %s"))
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "derde persoon enkelvoud tegenwoordige tijd van %s"))
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "verouderde gebiedende wijs meervoud van %s"))
+        # Present tps family
+        for form in ['tps', 'tps-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "enkelvoud tegenwoordige tijd van %s"))
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "gebiedende wijs van %s"))
+        # Subjunctive family
+        for form in ['aanv-w', 'aan-v-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "aanvoegende wijs van %s"))
+        # Past participle family
+        for form in ['nl-prcp', 'volt-d']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "voltooid deelwoord van %s"))
+        # Present participle
+        self.add_form_rewrite_rule('nl', 'onv-d', rule_template(
+            "onvoltooid deelwoord van %s"))
+        # Present thou
+        self.add_form_rewrite_rule('nl', 'ott-gij', rule_template(
+            "gij-vorm tegenwoordige tijd van %s"))
+        # Present plural
+        self.add_form_rewrite_rule('nl', 'ott-mv', rule_template(
+            "meervoud tegenwoordige tijd van %s"))
+        # Present impersonal
+        self.add_form_rewrite_rule('nl', 'ott-onp', rule_template(
+            "onpersoonlijke tegenwoordige tijd van %s"))
+        # Past single family
+        for form in ['ovt-enk', 'ovt-enk-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "enkelvoud verleden tijd van %s"))
+        # Past thou family
+        for form in ['ovt-gij', 'ovt-gij-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "gij-vorm verleden tijd van %s"))
+        # Past plural family
+        for form in ['ovt-mv', 'ovt-mv-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "meervoud verleden tijd van %s"))
+        # Past impersonal
+        self.add_form_rewrite_rule('nl', 'ovt-onp', rule_template(
+            "onpersoonlijke verleden tijd van %s"))
 
 
 class NounTerm(Term):
