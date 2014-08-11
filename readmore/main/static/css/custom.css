@@ -342,9 +342,24 @@ Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-i
 
 .right{
 	overflow:scroll;
+	height:100%;
+	border-left: 2px solid #438eb9;
+	border-top: 5px solid #438eb9;
+	background-color: #cecece;
 }
 
 .text{
 	overflow: scroll;
 	height:100%;
+}
+
+/* Widget styling */
+.widget{
+	background-color: #ffffff;
+	height: 30%;
+	margin: 2%;
+	padding: 1%;
+	border: 2px solid #438eb9;
+	border-radius: 4px;
+	overflow: scroll;
 }
