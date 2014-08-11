@@ -5,7 +5,17 @@ import json
 
 # Create your views here.
 def process(request):
-    print "hi"
     word = request.GET.get('word',"No word given")
-    return HttpResponse(json.dumps({'word':word}),
+    print "word: " + str(word)
+    api = WiktionaryAPI(languages=['nld'])
+    info = api.get_info(word)
+    betekenis = []
+    print 'inf ' + str(info)
+    for i in info:
+        bla = i.meanings
+        for k in bla:
+            print "def: " + str(k.definition)
+            betekenis.append(k.definition)
+    print betekenis
+    return HttpResponse(json.dumps({'word':betekenis}),
             content_type='application/json')

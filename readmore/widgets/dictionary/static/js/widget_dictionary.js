@@ -5,7 +5,6 @@ $.widget( "readmore.dictionary", {
 	},
 	_create: function(){
 		var _self = this
-		console.log("hello");
 		// Find any instance of the controlwidget and
 		// bind to the `wordclick' event
 		$(":readmore-"+this.options.controlwidget).bind(
@@ -16,7 +15,6 @@ $.widget( "readmore.dictionary", {
 		)
 	},
     load: function(word){
-    	console.log("bye");
 		var _self = this
 		api_call(
 			"/widgets/dictionary/?word="+word,

@@ -64,6 +64,8 @@ class Category(PolymorphicModel):
         recursive -- Search for articles recursively (default False)
         """
         articles = list(self.articles.all())
+        print "sub: " + str(self)
+        print "articles: " + str(articles)
         if recursive:
             categories = self.get_subcategories(False)
             for category in categories:

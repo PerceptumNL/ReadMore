@@ -866,7 +866,6 @@ class WiktionaryAPI(MediaWikiAPI):
     _termsets = None
     _languages = None
     _parser = None
-
     def __init__(self, lang=None, base_url=None, languages='*', parser=None,
             **kwargs):
         """
