@@ -13,7 +13,7 @@
 	border-radius:4px;
 	padding:1%;
 	height:80%;
-	overflow:scroll;
+	/*overflow:scroll;*/
 }
 
 /* 
@@ -338,4 +338,13 @@ Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-i
 
 .person{
 	text-align: center;
+}
+
+.right{
+	overflow:scroll;
+}
+
+.text{
+	overflow: scroll;
+	height:100%;
 }
