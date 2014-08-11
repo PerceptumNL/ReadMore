@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'readmore.widgets',
     'readmore.widgets.articleviewer',
     'readmore.widgets.dummy',
+    'readmore.widgets.dictionary',
     'readmore.content',
     'allauth',
     'allauth.account',
