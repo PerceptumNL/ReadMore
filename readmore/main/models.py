@@ -37,10 +37,10 @@ def add_to_statistics(sender, user, category, article_id, article, **kw):
         statistics_of_user = Statistics.objects.get(user=user)
         statistics_of_user.docsRead += 1
         statistics_of_user.save()
-        print "Article Read Signal received for %s with id=%s" % (user, article.title)
-        print "Total articles read by %s  is now (%s)" % (user, str(statistics_of_user.docsRead))
+        #print "Article Read Signal received for %s with id=%s" % (user, article.title)
+        #print "Total articles read by %s  is now (%s)" % (user, str(statistics_of_user.docsRead))
     except:
-        print "No statistics in database for (%s)" % (user)
+        #print "No statistics in database for (%s)" % (user)
         pass
         
 # Create your models here.
