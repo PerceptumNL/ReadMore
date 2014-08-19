@@ -23,6 +23,7 @@ def process(request):
         for types in info:
         	# If types is a Form, get the main term and append
             if isinstance(types, TermForm):
+                # TODO: Use types.form2text() to get human-readable text
                 term = api.get_info(types.main_term)
                 mainterm.append(term)
         	# If types is a term, append
