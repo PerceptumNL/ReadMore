@@ -25,21 +25,23 @@ def process(request):
             if isinstance(types, TermForm):
                 term = api.get_info(types.main_term)
                 mainterm.append(term)
-                print "term: " + str(term)
         	# If types is a term, append
             else:
                 mainterm.append(info)
-        
+        print "mainterm: " + str(mainterm)
         betekenis = [str(word) + " >> "]
 
         for termlist in mainterm:
             for term in termlist:
-                betekenis.append(term.entry)
-                meaninglist = term.meanings
-                betekenis.append('<ul>')
-                for meaning in meaninglist:
-                    betekenis.append('<li>' + str(meaning.definition) + '</li>')
-                betekenis.append('</ul>')
+                if(isinstance(term, TermForm)):
+                    pass
+                else:
+                    betekenis.append(term.entry)
+                    meaninglist = term.meanings
+                    betekenis.append('<ul>')
+                    for meaning in meaninglist:
+                        betekenis.append('<li>' + str(meaning.definition) + '</li>')
+                    betekenis.append('</ul>')
     else:
         betekenis = "Woord is niet gevonden!"
     return HttpResponse(json.dumps({'word':betekenis}),
