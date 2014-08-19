@@ -41,7 +41,9 @@ def process(request):
                     meaninglist = term.meanings
                     betekenis.append('<ul>')
                     for meaning in meaninglist:
-                        betekenis.append('<li>' + str(meaning.definition) + '</li>')
+                        betekenis.append('<li>%s</li>' % (
+                            meaning.definition.encode('ascii',
+                                'xmlcharrefreplace')))
                     betekenis.append('</ul>')
     else:
         betekenis = "Woord is niet gevonden!"
