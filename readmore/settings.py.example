@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'readmore.widgets',
     'readmore.widgets.articleviewer',
     'readmore.widgets.dummy',
+    'readmore.widgets.dictionary',
     'readmore.content',
     'allauth',
     'allauth.account',
@@ -122,5 +123,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = 'collectstatic'
 
-# Wikipedia source
-SOURCE_WIKIPEDIA_LANG = "nl"
+# Mediawiki content settings
+CONTENT_MEDIAWIKI_LANG = "nl"

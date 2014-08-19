@@ -12,7 +12,7 @@
 	background-color: #f0f0f0;
 	border-radius:4px;
 	padding:1%;
-	height:85%;
+	height:80%;
 	overflow:scroll;
 }
 
@@ -85,13 +85,19 @@ html,body{
 }
 
 .wrapper{
-	height:85%;
+	height:80%;
 }
 
 .inside{
 	background-color:#ffffff;
-	height:85%;
+	height:80%;
 }
+
+#reader{
+	border-top:5px solid #438eb9;
+	padding:1%;
+}
+
 .landingText{
 	color:#ffffff;
 	font-family:sans-serif;
@@ -136,7 +142,11 @@ html,body{
 .arrows{color:#cecece;}
 
 .footer{
-	height:15%;
+	height:10%;
+}
+
+#account{
+	height:10%;
 }
 
 .wikiBlueLink{
@@ -275,7 +285,7 @@ Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-i
 /* Style login pages */
 .signup{
 	padding:10%;
-	height:85%;
+	height:80%;
 }
 
 .login{
@@ -284,4 +294,80 @@ Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-i
 
 .errorlist{
 	list-style-type: none;
+}
+
+.logo{
+	text-align: center;
+	margin:5px;
+	z-index:-10;
+	width:100px;
+	padding:5px;
+}
+
+.logo:hover{
+	border: 1px solid #ffffff;
+	border-radius: 3px;
+	padding:4px;
+	
+}
+
+.header{
+	text-align: center;
+	height:10%;
+	color:white;
+}
+
+.header:hover{
+	color:white;
+	text-decoration: underline;
+}
+
+.titleSmall{
+	color: #438eb9;
+	background-color: #ffffff;
+	padding: 1%;
+	margin-bottom:5%;
+	text-align: center;
+	border-radius: 4px;
+}
+
+.img-circle{
+	height:200px;
+	border-radius: 50%;
+}
+
+.person{
+	text-align: center;
+}
+
+.right{
+	overflow:scroll;
+	height:100%;
+	border-left: 2px solid #438eb9;
+	border-top: 5px solid #438eb9;
+	background-color: #cecece;
+}
+
+.text{
+	overflow: scroll;
+	height:100%;
+}
+
+/* Widget styling */
+.widget{
+	background-color: #ffffff;
+	height: 30%;
+	margin: 2%;
+	padding: 1%;
+	border: 2px solid #438eb9;
+	border-radius: 4px;
+	overflow: scroll;
+}
+
+.barrier{
+	margin-top: 15%;
+	margin-bottom: 15%;
+	margin-left: 25%;
+	margin-right: 25%;
+	text-align: center;
 }

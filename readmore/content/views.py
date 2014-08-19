@@ -6,9 +6,14 @@ import json
 import requests
 from readmore.content.models import *
 import django.dispatch
+from django.contrib.auth.decorators import login_required
 
 article_read = django.dispatch.Signal(providing_args=["user", "category", "article_id", "article"])
 
+def barrier(request):
+    return render(request, 'barrier.html')
+
+@login_required
 def index(request):
     """Return response containing index of categories."""
     # Only show top categories on the index page
@@ -40,6 +45,7 @@ def index(request):
             catList.append(miniList)
         return render(request, 'landing.html', { "categories": catList })
 
+@login_required
 def category(request, identifier, source='local'):
     """Return response containing contents of identified category.
 
@@ -58,12 +64,12 @@ def category(request, identifier, source='local'):
         identifier_type = request.GET.get('type','auto')
         category = WikiCategory.factory(identifier, identifier_type)
         if category is None:
-            return HttpResponseNotFound('Unknown category.')
+            return render(request, 'unknowncategory.html')
     else:
         try:
             category = Category.objects.get(pk=int(identifier))
         except Category.DoesNotExist:
-            return HttpResponseNotFound('Unknown category.')
+            return render(request, 'unknowncategory.html')
     # Fetch any subcategories and articles contained in the category.
     articles = category.get_articles()
     subcategories = category.get_subcategories()
@@ -103,6 +109,7 @@ def category(request, identifier, source='local'):
             "crumbs": request.session['urls']
     })
 
+@login_required
 def article(request, identifier, source='local'):
     """Return response containing the identified article.
 
@@ -121,12 +128,12 @@ def article(request, identifier, source='local'):
         identifier_type = request.GET.get('type','auto')
         article = WikiArticle.factory(identifier, identifier_type)
         if article is None:
-            return HttpResponseNotFound('Unknown article')
+            return render(request, 'unknownarticle.html')
     else:
         try:
             article = Article.objects.get(pk=int(identifier))
         except Article.DoesNotExist:
-            return HttpResponseNotFound('Unknown article')
+            return render(request, 'unknownarticle.html')
     if request.is_ajax():
         # Return JSON with article properties
         return HttpResponse(
@@ -139,7 +146,13 @@ def article(request, identifier, source='local'):
         if request.user.is_authenticated():
             article_read.send(sender=Article, user=request.user, category=None, article_id=identifier, article=article)
         return render(request, 'reader.html', { "article": article })
+<<<<<<< HEAD
         
 
 
 
+=======
+
+def about(request):
+    return render(request, 'about.html')
+>>>>>>> e30c0fb0109fbe52066462e1e55521edfdfe6746

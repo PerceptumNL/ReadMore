@@ -24,6 +24,7 @@
 	<script src="{% static 'js/interface.js' %}"></script>
 	<script src="{% static 'js/widget_articleviewer.js' %}"></script>
 	<script src="{% static 'js/widget_dummy.js' %}"></script>
+	<script src="{% static 'js/widget_dictionary.js' %}"></script>
 	<script src="{% static 'js/custom.js' %}"></script>
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -35,11 +36,16 @@
 
 </head>
 <body class="body-background">
+
 	
 	<!-- Header -->
 	<!-- Body begin-->
-
-
+	<div class="header">
+		<div class="col-md-12">
+			<a href="/"><img src="{% static 'img/layout/logo_robrecht.png' %}" class="logo"></a><br>
+			<a href="/index" class="header">Index</a> | <a href="/about" class="header">Info</a>
+		</div>
+	</div>
 	
 	{% block body %}
 
@@ -48,10 +54,12 @@
 	<!-- Body end-->
 
 	<div class="footer">
+
 		<div class="container" id="account">
 			<div class="col-md-12">
 				{% include "account/accounts.html" %}
 			</div>
+		
 		</div>
 	</div>
 

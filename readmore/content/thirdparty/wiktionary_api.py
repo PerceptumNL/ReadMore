@@ -1,48 +1,117 @@
-"""Wiktionary API.
+"""Wiktionary API module.
+
+The Wiktionary API module provides a main class WiktionaryAPI, through which
+information from a wiktionary site about a word can be retrieved, and a set of
+classes in which this information is represented. In order to understand the
+purpose of each of these representation classes, it is useful to first
+understand what information needs to be represented.
+
+First of all, a word can have multiple meanings. For each of these meanings,
+one might give an example sentence or there might be synonyms or antonyms.
+However, words can not only have multiple meanings. Words can also be used in
+the role of different lexical categories, e.g. `bank' can be used as both a
+noun and a verb. Furthermore, the word `bank' is part of multiple languages.
+
+In this module, all information about the word within the context of a specific
+language is stored in a TermSet object. Specifically it contains a list of Term
+objects. A Term object represents all information of the word within the
+context of one lexical category (e.g. noun). It contains various information
+depending on the lexical category it represents, including a list of
+Meaning objects. Each Meaning object represents one particular meaning of the
+word, linking definitions, synonyms, antonyms and example sentences. See the
+docstrings of the individual classes for more details.
+
+In many cases, a word is not in its normal form. For example, a noun might be
+in its plural form. In this module the word `banks' is referred to a form or
+the word `bank'. Where the word `bank' was represented by a (subclass of a)
+Term object, the word 'banks' is represented by a (subclass of a) TermForm
+object. These objects contain the form they are, and of which word. See the
+docstrings of the individual classes for more details.
+
+The representation classes are created by the WiktionaryParser, which parses
+raw wikitext. Normally you would not need to interact with this parser object.
+This module provides a WiktionaryAPI class that combines retreving the wikitext
+from a wiktionary site with executing the parser. Calling the `get_info'
+method will return all wiktionary information about a given word.
+
 Known issues:
+    * Does not support any other wiktionary formats than the Dutch one.
+    * Does not support other lexical categories than nouns and verbs
     * Does not support different conjugations per meaning of a term
     * Does not support different antonyms per meaning
     * Does not support stress homographs
 """
 import re
+from django.conf import settings
+from readmore.content.thirdparty.wiki_api import MediaWikiAPI
 
-class Meaning:
+class Meaning(object):
     """Representation of a particular meaning of a term."""
     _definition = u''
     _example = u''
     _synonyms = None
+    _antonyms = None
 
-    def __init__(self, definition=u'', example=u'', synonyms=None):
+    def __init__(self, definition=u'', example=u'', synonyms=None,
+            antonyms=None):
+        """
+        Keyword arguments:
+        definition - The definition of this meaning. (Default u'')
+        example - The example sentence of this meaning. (Default u'')
+        synonyms - A list of synonyms of this meaning. (Default [])
+        antonyms - A list of antonyms of this meaning. (Default [])
+        """
         self._definition = definition
         self._example = example
         self._synonyms = [] if synonyms is None else synonyms
+        self._antonyms = [] if antonyms is None else antonyms
 
-    def definition(self, value=None):
-        if value is None:
-            return self._definition
-        else:
-            self._definition = value
+    @property
+    def definition(self):
+        """Return the definition of this meaning."""
+        return self._definition
 
-    def example(self, value=None):
-        if value is None:
-            return self._example
-        else:
-            self._example = value
+    @definition.setter
+    def definition(self, value):
+        """Set the definition of this meaning."""
+        self._definition = value
 
-    def synonyms(self, value=None):
-        if value is None:
-            return self._synonyms
-        else:
-            self._synonyms = value
+    @property
+    def example(self):
+        """Return an example sentence of this meaning."""
+        return self._example
+
+    @example.setter
+    def example(self, value):
+        """Set an example sentence of this meaning."""
+        self._example = value
+
+    @property
+    def synonyms(self):
+        """Return the list of synonyms for this meaning."""
+        return self._synonyms
+
+    @synonyms.setter
+    def synonyms(self, value):
+        """Set the list of synonyms for this meaning."""
+        self._synonyms = value
+
+    @property
+    def antonyms(self):
+        """Return the list of antonyms for this meaning."""
+        return self._antonyms
+
+    @antonyms.setter
+    def antonyms(self, value):
+        """Set the list of antonyms for this meaning."""
+        self._antonyms = value
+
+    def __repr__(self):
+        return '%s("%s...")' % (self.__class__.__name__, self._definition[:20])
 
 
-class Term:
-    """Base class for a term.
-    In a language a word may exist in multiple categories, e.g. verb and noun.
-    For each of these, a separate term is used. Within a category, e.g. noun, a
-    word can still have multiple meanings (e.g. bank). These meanings are
-    are represented by a Meaning object and linked to this term.
-    """
+class Term(object):
+    """Base class for a term, combining meanings per lexical category."""
     # Term entry
     _entry = u''
     # Meanings
@@ -54,32 +123,311 @@ class Term:
         self._meanings = []
         self._hyponyms = []
 
-    def entry(self, value=None):
-        if value is None:
-            return self._entry
-        else:
-            self._entry = value
+    @property
+    def entry(self):
+        """Return the wiktionary entry of the word
+        NOTE: This is probably always the same as the word.
+        """
+        return self._entry
 
-    def add_meaning(self, meaning):
-        self._meanings.append(meaning)
+    @entry.setter
+    def entry(self, value):
+        """Set the wiktionary entry of the word."""
+        self._entry = value
 
+    @property
     def meanings(self):
+        """Return a list of the meanings of this word."""
         return self._meanings
 
-    def add_hyponym(self, hyponym):
-        self._hyponyms.append(hyponym)
+    def add_meaning(self, meaning):
+        """Add a meanings of this word."""
+        self._meanings.append(meaning)
 
+    @property
     def hyponyms(self):
+        """Return a list of the hyponyms of this word."""
         return self._hyponyms
 
+    def add_hyponym(self, hyponym):
+        """Add a hyponym of this word."""
+        self._hyponyms.append(hyponym)
 
-class TermForm:
-    """Base class for terms that are a specific variant of a main term"""
+    def __repr__(self):
+        return '%s(%s)' % (self.__class__.__name__, self._entry)
+
+
+class TermForm(object):
+    """Base class for terms that are a specific variant of a main term."""
     # The main term
     _main_term = None
+    # The provided form type
+    _form = None
+    # A dictionary translating form codes to human-readable text
+    _form_rewrites = {}
+
+    def __init__(self, main_term, form):
+        """
+        Keyword arguments:
+        main_term - The word of which this is a form.
+        form - The name of which form this is.
+        """
+        self._main_term = main_term
+        self._form = form
+
+    @property
+    def main_term(self):
+        """Return the main term of which is a form."""
+        return self._main_term
+
+    @property
+    def form(self):
+        """Return which form of the main term this is."""
+        return self._form
+
+    def add_form_rewrite_rule(self, lang, form, rule):
+        """Add a rewrite rule to create a human readable form description."""
+        if lang not in self._form_rewrites:
+            self._form_rewrites[lang] = {form: [rule]}
+        elif form not in self._form_rewrites[lang]:
+            self._form_rewrites[lang][form] = [rule]
+        else:
+            self._form_rewrites[lang][form].append(rule)
+
+    def form2text(self, lang='nl'):
+        """Return the human-readable text description(s) of the form.
+
+        Keyword arguments:
+        lang - The language of the text. (Default 'nl')
+        """
+        text = []
+        # Check if we have a rewrite rule for this language and form.
+        if (lang in self._form_rewrites and
+            self.form in self._form_rewrites[lang]):
+            for rule in self._form_rewrites[lang][self.form]:
+                text.append(rule(self))
+            return text
+        else:
+            return []
+
+    def __repr__(self):
+        return '%s(%s)' % (self.__class__.__name__, self._main_term)
+
+class NounTermForm(TermForm):
+    """Class for forms of a noun."""
+
+    def __init__(self, main_term, form):
+        """
+        Supported noun forms are:
+          * noun-pl (plural)
+          * noun-dim (dimunitive)
+          * noun-dim-pl (dimunitive plural)
+
+        Keyword arguments:
+        main_term - The word of which this is a form.
+        form - The name of which form this is.
+        """
+        if form not in ['noun-pl', 'noun-dim', 'noun-dim-pl']:
+            raise ValueError("Unsupported form type")
+        super(NounTermForm, self).__init__(main_term, form)
+        self._init_rewrite_rules()
+
+    @property
+    def is_plural(self):
+        """Return if this is the plural form."""
+        return self.form == 'noun-pl'
+
+    @property
+    def is_diminutive(self):
+        """Return if this is the diminutive form."""
+        return self.form == "noun-dim"
+
+    @property
+    def is_diminutive_plural(self):
+        """Return if this is the diminutive form."""
+        return self.form == "noun-dim-pl"
+
+    def _init_rewrite_rules(self):
+        """Initialize rewrite rules for each form."""
+        # Define template rule
+        rule_template = lambda s: (lambda x: s % (x.main_term, ))
+        #Add Dutch rewrite rules
+        self.add_form_rewrite_rule('nl', 'noun-pl', rule_template(
+            "meervoud van het zelfstandig naamwoord %s"))
+        self.add_form_rewrite_rule('nl', 'noun-dim', rule_template(
+            "verkleinwoord enkelvoud van het zelfstandig naamwoord %s"))
+        self.add_form_rewrite_rule('nl', 'noun-dim-pl', rule_template(
+            "verkleinwoord meervoud van het zelfstandig naamwoord %s"))
+
+
+class VerbTermForm(TermForm):
+    """Class for forms of a verb."""
+
+    def __init__(self, main_term, form):
+        """
+        Supported verb forms are:
+          * 1ps or 1ps-ij or 1ps-bijz (present 1st person single)
+          * 2ps or 2ps-ij or 2ps-bijz (present 2st person single)
+          * tps or tps-bijz (present 1st/2nd/3rd person single)
+          * aanv-w or aanv-w-bijz (Subjunctive)
+          * nl-prcp or volt-d (Past participle)
+          * onv-d (Present participle)
+          * ott-gij (Present 'Thou ..')
+          * ott-mv (Present plural)
+          * ott-onp (Present impersonal)
+          * ovt-enk or ovt-enk-bijz (Past single)
+          * ovt-gij or ovt-gij-bijz (Past 'Thou ..')
+          * ovt-mv or ovt-mv-bijz (Past plural)
+          * ovt-onp (Past impersonal)
+
+        Keyword arguments:
+        main_term - The word of which this is a form.
+        form - The name of which form this is.
+        """
+        if form not in [
+                '1ps', '1ps-ij', '1ps-bijz', '2ps', '2ps-ij', '2ps-bijz',
+                'tps', 'tps-bijz', 'aanv-w', 'aanv-w-bijz', 'nl-prcp',
+                'volt-d', 'onv-d', 'ott-gij', 'ott-mv', 'ott-onp', 'ovt-enk',
+                'ovt-enk-bijz', 'ovt-gij', 'ovt-gij-bijz', 'ovt-mv',
+                'ovt-mv-bijz', 'ovt-onp'
+                ]:
+            raise ValueError("Unsupported form type")
+        super(VerbTermForm, self).__init__(main_term, form)
+        self._init_rewrite_rules()
+
+    @property
+    def is_present_1ps(self):
+        """Return if this is the present 1st person single form."""
+        return self.form in ['1ps', '1ps-ij', '1ps-bijz']
+
+    @property
+    def is_present_2ps(self):
+        """Return if this is the present 2nd person single form."""
+        return self.form in ['2ps', '2ps-ij', '2ps-bijz']
+
+    @property
+    def is_present_tps(self):
+        """Return if this is the present 1st/2nd/3rd person single form."""
+        return self.form in ['tps', 'tps-bijz']
+
+    @property
+    def is_subjunctive(self):
+        """Return if this is the subjunctive form."""
+        return self.form in ['aanv-w', 'aanv-w-bijz']
+
+    @property
+    def is_past_participle(self):
+        """Return if this is the past participle form."""
+        return self.form in ['nl-prcp', 'volt-d']
+
+    @property
+    def is_present_participle(self):
+        """Return if this is the present participle form."""
+        return self.form == 'onv-d'
+
+    @property
+    def is_present_thou(self):
+        """Return if this is the present 'Thou ..' form."""
+        return self.form == 'ott-gij'
+
+    @property
+    def is_present_plural(self):
+        """Return if this is the present plural form."""
+        return self.form == 'ott-mv'
+
+    @property
+    def is_present_impersonal(self):
+        """Return if this is the present impersonal form."""
+        return self.form == 'ott-onp'
+
+    @property
+    def is_past_single(self):
+        """Return if this is the past single form."""
+        return self.form in ['ovt-enk', 'ovt-enk-bijz']
+
+    @property
+    def is_past_thou(self):
+        """Return if this is the past 'Thou ..' form."""
+        return self.form in ['ovt-gij', 'ovt-gij-bijz']
+
+    @property
+    def is_past_plural(self):
+        """Return if this is the past plural form."""
+        return self.form in ['ovt-mv', 'ovt-mv-bijz']
+
+    @property
+    def is_past_impersonal(self):
+        """Return if this is the past impersonal form."""
+        return self.form == 'ovt-onp'
+
+    def _init_rewrite_rules(self):
+        """Initialize rewrite rules for each form."""
+        # Define template rule
+        rule_template = lambda s: (lambda x: s % (x.main_term, ))
+        ### Add Dutch rewrite rules
+        # Present 1ps family
+        for form in ['1ps', '1ps-ij', '1ps-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "eerste persoon enkelvoud tegenwoordige tijd van %s"))
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "gebiedende wijs van %s"))
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                ("(bij inversie) tweede persoon enkelvoud "
+                 "tegenwoordige tijd van %s")
+                ))
+        # Present 2ps family
+        for form in ['2ps', '2ps-ij', '2ps-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "tweede persoon enkelvoud tegenwoordige tijd van %s"))
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "derde persoon enkelvoud tegenwoordige tijd van %s"))
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "verouderde gebiedende wijs meervoud van %s"))
+        # Present tps family
+        for form in ['tps', 'tps-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "enkelvoud tegenwoordige tijd van %s"))
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "gebiedende wijs van %s"))
+        # Subjunctive family
+        for form in ['aanv-w', 'aan-v-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "aanvoegende wijs van %s"))
+        # Past participle family
+        for form in ['nl-prcp', 'volt-d']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "voltooid deelwoord van %s"))
+        # Present participle
+        self.add_form_rewrite_rule('nl', 'onv-d', rule_template(
+            "onvoltooid deelwoord van %s"))
+        # Present thou
+        self.add_form_rewrite_rule('nl', 'ott-gij', rule_template(
+            "gij-vorm tegenwoordige tijd van %s"))
+        # Present plural
+        self.add_form_rewrite_rule('nl', 'ott-mv', rule_template(
+            "meervoud tegenwoordige tijd van %s"))
+        # Present impersonal
+        self.add_form_rewrite_rule('nl', 'ott-onp', rule_template(
+            "onpersoonlijke tegenwoordige tijd van %s"))
+        # Past single family
+        for form in ['ovt-enk', 'ovt-enk-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "enkelvoud verleden tijd van %s"))
+        # Past thou family
+        for form in ['ovt-gij', 'ovt-gij-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "gij-vorm verleden tijd van %s"))
+        # Past plural family
+        for form in ['ovt-mv', 'ovt-mv-bijz']:
+            self.add_form_rewrite_rule('nl', form, rule_template(
+                "meervoud verleden tijd van %s"))
+        # Past impersonal
+        self.add_form_rewrite_rule('nl', 'ovt-onp', rule_template(
+            "onpersoonlijke verleden tijd van %s"))
+
 
 class NounTerm(Term):
-    """The term class for nouns"""
+    """The term class for nouns."""
     # Gender of the term
     _gender = ''
     # single form
@@ -91,54 +439,85 @@ class NounTerm(Term):
     # diminutive plural form
     _diminutive_plural = u''
 
-    def gender(self, value=None):
-        if value is None:
-            return self._gender
-        else:
-            self._gender = value
+    @property
+    def gender(self):
+        """Return the gender of the noun."""
+        return self._gender
 
-    def single_form(self, value=None):
-        if value is None:
-            return self._single
-        else:
-            self._single = value
+    @gender.setter
+    def gender(self, value):
+        """Set the gender of the noun."""
+        self._gender = value
 
-    def plural_form(self, value=None):
-        if value is None:
-            return self._plural
-        else:
-            self._plural = value
+    @property
+    def single(self):
+        """Return the single form of the noun."""
+        return self._single
 
-    def diminutive_form(self, value=None):
-        if value is None:
-            return self._diminutive
-        else:
-            self._diminutive = value
+    @single.setter
+    def single(self, value):
+        """Set the single form of the noun."""
+        self._single = value
 
-    def diminutive_plural_form(self, value=None):
-        if value is None:
-            return self._diminutive_plural
-        else:
-            self._diminutive_plural = value
+    @property
+    def plural(self):
+        """Return the plural form of the noun."""
+        return self._plural
+
+    @plural.setter
+    def plural(self, value):
+        """Set the plural form of the noun."""
+        self._plural = value
+
+    @property
+    def diminutive(self):
+        """Return the diminutive form of the noun."""
+        return self._diminutive
+
+    @diminutive.setter
+    def diminutive(self, value):
+        """Set the diminutive form of the noun."""
+        self._diminutive = value
+
+    @property
+    def diminutive_plural(self):
+        """Return the diminutive plural form of the noun."""
+        return self._diminutive_plural
+
+    @diminutive_plural.setter
+    def diminutive_plural(self, value):
+        """Set the diminutive plural form of the noun."""
+        self._diminutive_plural = value
+
 
 class VerbTerm(Term):
+    """The term class for verbs."""
     _past_tense = u''
     _past_participle_tense = u''
 
-    def past_tense(self, value=None):
-        if value is None:
-            return self._past_tense
-        else:
-            self._past_tense = value
+    @property
+    def past_tense(self):
+        """Return the past tense form of the noun."""
+        return self._past_tense
 
-    def past_participle_tense(self, value=None):
-        if value is None:
-            return self._past_participle_tense
-        else:
-            self._past_participle_tense = value
+    @past_tense.setter
+    def past_tense(self, value):
+        """Set the past tense form of the noun."""
+        self._past_tense = value
 
-class TermSet:
-    """Collection of all terms within a language"""
+    @property
+    def past_participle_tense(self):
+        """Return the past participle tense form of the noun."""
+        return self._past_participle_tense
+
+    @past_participle_tense.setter
+    def past_participle_tense(self, value):
+        """Set the past participle tense form of the noun."""
+        self._past_participle_tense = value
+
+
+class TermSet(object):
+    """Collection of all terms within a language."""
     # Language of the terms in this set
     lang = None
     # Sound file containing the pronunciation
@@ -151,35 +530,62 @@ class TermSet:
     _terms = None
 
     def __init__(self, lang):
+        """
+        Supported language codes can be found here:
+        https://nl.wiktionary.org/wiki/Categorie:Taalsjablonen
+
+        Keyword arguments
+        lang - The language code for this termset.
+        """
         self.lang = lang
         self._terms = []
 
-    def sound(self, value=None):
-        if value is None:
-            return self._sound
-        else:
-            self._sound = value
+    @property
+    def sound(self):
+        """Return the link to the pronunciation sound file."""
+        return self._sound
 
-    def ipa(self, value=None):
-        if value is None:
-            return self._ipa
-        else:
-            self._ipa = value
+    @sound.setter
+    def sound(self, value):
+        """Set the link to the pronunciation sound file."""
+        self._sound = value
 
-    def syllables(self, value=None):
-        if value is None:
-            return self._syllables
-        else:
-            self._syllables = value
+    @property
+    def ipa(self):
+        """Return the IPA description of the pronunciation."""
+        return self._ipa
 
-    def add_term(self, term):
-        self._terms.append(term)
+    @ipa.setter
+    def ipa(self, value):
+        """Set the IPA description of the pronunciation."""
+        self._ipa = value
 
+    @property
+    def syllables(self):
+        """Return the description of the word in syllables."""
+        return self._syllables
+
+    @syllables.setter
+    def syllables(self, value):
+        """Set the description of the word in syllables."""
+        self._syllables = value
+
+    @property
     def terms(self):
+        """Return the list of terms containing in this termset."""
         return self._terms
 
+    def add_term(self, term):
+        """Add a term to this termset."""
+        self._terms.append(term)
 
-class WiktionaryParser:
+    def __repr__(self):
+        return '{%s::%s}(%s)' % (self.__class__.__name__, self.lang,
+                repr(self._terms))
+
+
+class WiktionaryParser(object):
+    """Parser class that parses raw wikitext"""
     # The word the parsed document is about
     word = None
     # Temporary buffer of lines
@@ -199,43 +605,46 @@ class WiktionaryParser:
     # List of parser warnings
     _warnings = None
 
-    def __init__(self, word):
-        self.word = word
+    def __init__(self):
         self._buff = []
         self._termsets = []
         self._warnings = []
         self.re_ignore = re.compile(
-            ("^"
-                "(?:<!--.+-->)|"
-                "(?:{{rel-top[0-9]?}})|"
-                "(?:{{rel-mid[0-9]?}})|"
-                "(?:{{rel-bottom[0-9]?}})|"
-                "(?:{{top[0-9]?}})|"
-                "(?:{{mid[0-9]?}})|"
-                "(?:{{bottom}})|"
-                "(?:{{trans-top}})|"
-                "(?:{{trans-mid}})|"
-                "(?:{{trans-bottom}})|"
-                "(?:{{\(\(}})|"
-                "(?:{{\)\)}})|"
-                "(?:{{=}})"
-            "$"))
-        self.re_lang = re.compile("^{{=(\w+)=}}$")
-        self.re_header = re.compile("^{{-(\w+)-\|?(.+)?}}$")
-        self.re_pron_sound = re.compile("^\*{{sound}}: {{audio\|(.+)\|.+}}$")
-        self.re_pron_ipa = re.compile("^\*{{WikiW\|IPA}}: {{IPA\|/(.+)/.*$")
-        self.re_syll = re.compile("^\*(.+)$")
-        self.re_nlnoun = re.compile("^([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)$")
-        self.re_nlstam = re.compile("([^|]+)")
-        self.re_meaning_entry = re.compile("^'''(.+)''' ?(.+)?$")
-        self.re_meaning_def = re.compile("^#(.+)$")
-        # TODO: check if this is language dependent
-        self.re_meaning_eg = re.compile("^{{bijv-1\|(.+)}}$")
-        self.re_syn_ref = re.compile("^\*\[([0-9]+)\]: (.+)$")
-        self.re_syn_list = re.compile("\[\[([^]]+)\]\]")
-        self.re_hypo = re.compile("^\*\[\[(.+)\]\]$")
+            (r"^"
+                r"(?:<!--.+-->)|"
+                r"(?:{{rel-top[0-9]?}})|"
+                r"(?:{{rel-mid[0-9]?}})|"
+                r"(?:{{rel-bottom[0-9]?}})|"
+                r"(?:{{top[0-9]?}})|"
+                r"(?:{{mid[0-9]?}})|"
+                r"(?:{{bottom}})|"
+                r"(?:{{trans-top}})|"
+                r"(?:{{trans-mid}})|"
+                r"(?:{{trans-bottom}})|"
+                r"(?:{{\(\(}})|"
+                r"(?:{{\)\)}})|"
+                r"(?:{{=}})"
+            r"$"))
+        self.re_lang = re.compile(r"^{{=(\w+)=}}$")
+        self.re_header = re.compile(r"^{{-(\w+)-\|?(.+)?}}$")
+        self.re_pron_sound = re.compile(r"^\*{{sound}}: {{audio\|(.+)\|.+}}$")
+        self.re_pron_ipa = re.compile(r"^\*{{WikiW\|IPA}}: {{IPA\|/(.+)/.*$")
+        self.re_syll = re.compile(r"^\*(.+)$")
+        self.re_nlnoun = re.compile(r"^([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)$")
+        self.re_nlstam = re.compile(r"([^|]+)")
+        self.re_form = re.compile(r"^{{([^|]+)\|(.+)}}$")
+        self.re_meaning_entry = re.compile(
+                r"^(?:\[[A-Z]\] )?'''(.+)''' ?(.+)?$")
+        self.re_meaning_def = re.compile(r"^#(.+)$")
+        self.re_meaning_eg = re.compile(r"^{{bijv-1\|(.+)}}$")
+        self.re_syn_ref = re.compile(r"^\*\[([0-9]+)\]:? (.+)$")
+        self.re_syn_list = re.compile(r"\[\[([^]]+)\]\]")
+        self.re_ant_ref = re.compile(r"^\*\[([0-9]+)\]:? (.+)$")
+        self.re_ant_list = re.compile(r"\[\[([^]]+)\]\]")
+        self.re_hypo = re.compile(r"^\*\[\[(.+)\]\]$")
 
     def _warn(self, warning, line=None):
+        """Add a warning string to the list of warnings."""
         if line is None:
             self._warnings.append("%s" % (warning,))
         else:
@@ -243,11 +652,37 @@ class WiktionaryParser:
 
     @property
     def warnings(self):
+        """Get the list of warnings."""
         return self._warnings
 
-    def parse(self, lines):
+    def parse(self, lines, word=None, languages='*'):
+        """Parse the provided wikitext.
+
+        Keyword arguments:
+        lines - The wikitext to parse, either one string or a list of lines.
+        word - The word this wikitext is about. (Default None)
+        languages - A list of languages it should return or '*'. (Default '*')
+        """
+        self._termsets = []
+        if isinstance(lines, str) or isinstance(lines, unicode):
+            lines = lines.split("\n")
         for line in lines:
-            line = line.strip().replace("{{pn}}", self.word)
+            if word is not None:
+                line = line.strip().replace("{{pn}}", word)
+            else:
+                line = line.strip()
+            # Test for an empty line, which should close a header
+            if line == "":
+                if self._header is not None:
+                    # Finish parsing current header
+                    self._trigger_header_parse()
+                    # Clear buffer
+                    self._buff = []
+                    # Clear header and header params
+                    self._header = self._header_params = None
+                else:
+                    self._warn("Unexpected empty line without a current header")
+                continue
             # Test if line should be ignored
             if re.search(self.re_ignore, line):
                 continue
@@ -268,6 +703,8 @@ class WiktionaryParser:
                     self._termsets.append(self._termset)
                 # Create new termset for found language
                 self._termset = TermSet(lang_match.group(1))
+                # Clear reference to current term
+                self._term = None
                 continue
             # If there is no current term either, skip line
             if self._termset is None:
@@ -306,16 +743,26 @@ class WiktionaryParser:
         self._termset = self._term = None
         self._header = self._header_params = None
         # Return found terms
-        return self._termsets
+        if languages == '*':
+            return self._termsets
+        else:
+            return [x for x in self._termsets if x.lang in languages]
+
+    def _add_term(self, term):
+        """Add term to the current termset."""
+        self._term = term
+        self._termset.add_term(self._term)
+        return self._term
 
     def _ensure_term(self, cls):
-        """Ensure the current term is of the right type"""
+        """Ensure the current term is of the right type."""
         if not isinstance(self._term, cls):
             self._term = cls()
             self._termset.add_term(self._term)
         return self._term
 
     def _trigger_header_parse(self):
+        """Trigger the right header parse function."""
         if self._header == 'pron':
             self._parse_pronunciation()
         elif self._header == 'syll':
@@ -323,19 +770,28 @@ class WiktionaryParser:
         elif self._header == 'nlnoun':
             self._parse_nlnoun()
         elif self._header == 'noun':
-            self._parse_meaning(NounTerm)
+            if self._header_params == "0":
+                self._parse_form(NounTermForm)
+            else:
+                self._parse_meaning(NounTerm)
         elif self._header == 'nlstam':
             self._parse_nlstam()
         elif self._header == 'verb':
-            self._parse_meaning(VerbTerm)
+            if self._header_params == "0":
+                self._parse_form(VerbTermForm)
+            else:
+                self._parse_meaning(VerbTerm)
         elif self._header == 'syn':
             self._parse_synonyms()
+        elif self._header == 'ant':
+            self._parse_antonyms()
         elif self._header == 'hypo':
             self._parse_hyponyms()
         else:
             self._warn("Unsupported header '%s'" % (self._header,))
 
     def _parse_pronunciation(self):
+        """Parse info under the pronunciation header."""
         for line in self._buff:
             # Test for sound line
             sound_match = re.search(self.re_pron_sound, line)
@@ -343,32 +799,59 @@ class WiktionaryParser:
             ipa_match = re.search(self.re_pron_ipa, line)
             if sound_match:
                 # Store sound file in term
-                self._termset.sound(sound_match.group(1))
+                self._termset.sound = sound_match.group(1)
             elif ipa_match:
                 # Store IPA description in term
-                self._termset.ipa(ipa_match.group(1))
+                self._termset.ipa = ipa_match.group(1)
             else:
                 self._warn("Unexpected pronunciation line", line)
 
     def _parse_syllables(self):
+        """Parse info under the syllables header."""
         for line in self._buff:
             match = re.search(self.re_syll, line)
             if match:
-                self._termset.syllables(match.group(1))
+                self._termset.syllables = match.group(1)
                 return
             else:
                 self._warn("Unexpected syllable line", line)
 
+    def _parse_form(self, termcls):
+        """Parse info under the form of ... header."""
+        # Check the size of the buffer
+        if not self._buff:
+            self._warn("No buffer found to parse form from", self._header)
+            return
+        elif len(self._buff) > 1:
+            self._warn("Unexpected extra buffer content", self._buff[1])
+
+        # Match the form line
+        form_match = re.search(self.re_form, self._buff[0])
+        if form_match:
+            form, main_term = form_match.groups()
+        else:
+            self._warn("Unexpected form line", self._buff[0])
+            return
+        try:
+            # Create term of the given class with the parsed form
+            term = termcls(main_term=main_term, form=form)
+        except ValueError as err:
+            self._warn(err, form)
+            return
+        else:
+            self._add_term(term)
+
     def _parse_nlnoun(self):
+        """Parse info under the nlnoun header."""
         # Create new current term
         term = self._ensure_term(NounTerm)
         # Match different forms of the noun
         nlnoun_match = re.search(self.re_nlnoun, self._header_params)
         if nlnoun_match:
-            term.single_form(nlnoun_match.group(1))
-            term.plural_form(nlnoun_match.group(2))
-            term.diminutive_form(nlnoun_match.group(3))
-            term.diminutive_plural_form(nlnoun_match.group(4))
+            term.single = nlnoun_match.group(1)
+            term.plural = nlnoun_match.group(2)
+            term.diminutive = nlnoun_match.group(3)
+            term.diminutive_plural = nlnoun_match.group(4)
         else:
             self._warn("Unexpected nlnoun params", self._header_params)
 
@@ -376,13 +859,14 @@ class WiktionaryParser:
             self._warn("Unexpected buffer content for nlnoun")
 
     def _parse_nlstam(self):
+        """Parse info under the nlstam header."""
         # Create new current term
         term = self._ensure_term(VerbTerm)
         # Match different forms of the verb
         nlstam_list = re.findall(self.re_nlstam, self._header_params)
         if len(nlstam_list) > 2:
-            term.past_tense(nlstam_list[1])
-            term.past_participle_tense(nlstam_list[2])
+            term.past_tense = nlstam_list[1]
+            term.past_participle_tense = nlstam_list[2]
         else:
             self._warn("Unexpected nlstam line", self._header_params)
 
@@ -390,6 +874,7 @@ class WiktionaryParser:
             self._warn("Unexpected buffer content for nlstam")
 
     def _parse_meaning(self, termcls):
+        """Parse info under the meaning header."""
         meaning = None
         # Create new current term
         term = self._ensure_term(termcls)
@@ -398,9 +883,9 @@ class WiktionaryParser:
             entry_match = re.search(self.re_meaning_entry, line)
             if entry_match:
                 entry, gender = entry_match.groups()
-                term.entry(entry)
+                term.entry = entry
                 if gender is not None:
-                    term.gender(gender)
+                    term.gender = gender
             # Test for definition
             def_match = re.search(self.re_meaning_def, line)
             if def_match:
@@ -416,11 +901,12 @@ class WiktionaryParser:
                     continue
                 else:
                     # At the example sentence to the current meaning
-                    meaning.example(eg_match.group(1))
+                    meaning.example = eg_match.group(1)
         if meaning is not None:
             term.add_meaning(meaning)
 
     def _parse_synonyms(self):
+        """Parse info under the synonyms header."""
         if self._term is None:
             self._warn("Synonyms found without current term")
             return
@@ -430,7 +916,7 @@ class WiktionaryParser:
             if ref_match:
                 ref, syn_list = ref_match.groups()
                 try:
-                    meaning = self._term.meanings()[int(ref)-1]
+                    meaning = self._term.meanings[int(ref)-1]
                 except ValueError:
                     self._warn("Synonym reference is not a number", line)
                     continue
@@ -439,9 +925,36 @@ class WiktionaryParser:
                             line)
                     continue
                 else:
-                    meaning.synonyms(re.findall(self.re_syn_list, line))
+                    meaning.synonyms = re.findall(self.re_syn_list, syn_list)
+            else:
+                self._warn('Unexpected synonym line', line)
+
+    def _parse_antonyms(self):
+        """Parse info under the antonyms header."""
+        if self._term is None:
+            self._warn("Antonyms found without current term")
+            return
+
+        for line in self._buff:
+            ref_match = re.search(self.re_ant_ref, line)
+            if ref_match:
+                ref, ant_list = ref_match.groups()
+                try:
+                    meaning = self._term.meanings[int(ref)-1]
+                except ValueError:
+                    self._warn("Antonym reference is not a number", line)
+                    continue
+                except IndexError:
+                    self._warn("Antonym reference does not match a definition",
+                            line)
+                    continue
+                else:
+                    meaning.antonyms = re.findall(self.re_ant_list, ant_list)
+            else:
+                self._warn('Unexpected antonym line', line)
 
     def _parse_hyponyms(self):
+        """Parse info under the hyponyms header."""
         if self._term is None:
             self._warn("Hyponyms found without current term")
             return
@@ -454,5 +967,71 @@ class WiktionaryParser:
                 self._warn("Unexpected hyponym line", line)
                 continue
 
-    def _parse_etymology(self):
-        pass
+
+class WiktionaryAPI(MediaWikiAPI):
+    """Main WiktionaryAPI entry point."""
+    _termsets = None
+    _languages = None
+    _parser = None
+    def __init__(self, lang=None, base_url=None, languages='*', parser=None,
+            **kwargs):
+        """
+        Settings:
+        The lang parameter can also be set by the CONTENT_WIKTIONARY_LANG
+        setting. If this is not set and the parameter value is also not
+        provided as keyword argument, then the default value of the
+        MediaWikiAPI will be used. The base_url parameter can also be set by the
+        CONTENT_WIKTIONARY_API_URL setting.
+
+        A base_url should contain one string wildcard ("%s"), where the
+        language code of the site can be inserted.
+
+        Keyword arguments:
+        lang - Which language of wiktionary to use. (Default: MediaWikiAPI)
+        base_url - Which url to use. (Default '%s.wiktionary.org/w/api.php')
+        languages - A list of languages it should return or '*'. (Default '*')
+        parser - The parse to use. (Default WiktionaryParser())
+        """
+        if lang is None and hasattr(settings, "CONTENT_WIKTIONARY_LANG"):
+            lang = settings.CONTENT_WIKTIONARY_LANG
+
+        if base_url is None:
+            if hasattr(settings, "CONTENT_WIKTIONARY_API_URL"):
+                base_url = settings.CONTENT_WIKTIONARY_API_URL
+            else:
+                base_url = 'http://%s.wiktionary.org/w/api.php'
+            if base_url[0] != 'h':
+                base_url = 'http://%s' % (base_url,)
+
+        super(WiktionaryAPI, self).__init__(lang, base_url, **kwargs)
+
+        self._parser = WiktionaryParser() if parser is None else parser
+        self._languages = languages
+        self._termsets = {}
+
+    def _load(self, word):
+        """Retrieve wikitext about the word or load from cache."""
+        if word not in self._termsets:
+            wikitext = self.get_page_wikitext(word)
+            self._termsets[word] = self._parser.parse(lines=wikitext,
+                    word=word, languages=self._languages)
+        return self._termsets[word]
+
+    def get_info(self, word):
+        """Return termsets contained in the wikitext about the word.
+        When the list of languages provided at initialization only covers one
+        language, the terms of the only termset are directly returned.
+
+        Keyword arguments:
+        word - The word about which you want the information.
+        """
+        termsets = self._load(word)
+        if isinstance(self._languages, list) and len(self._languages) == 1:
+            return termsets[0].terms
+        else:
+            return termsets
+
+    @property
+    def parser_warnings(self):
+        """Return the warnings collected during parsing."""
+        return self._parser.warnings
