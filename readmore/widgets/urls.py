@@ -4,5 +4,7 @@ urlpatterns = patterns('',
     url(r'dummy/?$', 'readmore.widgets.dummy.views.process',
         name='widget_dummy'), 
     url(r'dictionary/?$', 'readmore.widgets.dictionary.views.process',
-        name='widget_dictionary'))
+        name='widget_dictionary'),
+    url(r'seemore/', 'readmore.widgets.seemore.views.process', 
+    	name='widget_seemore'))
 
