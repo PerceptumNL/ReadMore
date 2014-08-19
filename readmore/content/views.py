@@ -139,3 +139,7 @@ def article(request, identifier, source='local'):
         if request.user.is_authenticated():
             article_read.send(sender=Article, user=request.user, category=None, article_id=identifier, article=article)
         return render(request, 'reader.html', { "article": article })
+        
+
+
+
