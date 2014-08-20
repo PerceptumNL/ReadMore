@@ -13,13 +13,12 @@ def process(request):
     try: 
         info = api.get_info(word)
     except Exception:
-        info = "none"
-    print "INFO: " + str(info)
+        info = []
     
     mainterm = []
 
     # For every Term and Form
-    if(info != "none" and info != []):
+    if(info != []):
         for types in info:
         	# If types is a Form, get the main term and append
             if isinstance(types, TermForm):
@@ -29,7 +28,7 @@ def process(request):
         	# If types is a term, append
             else:
                 mainterm.append(info)
-        print "mainterm: " + str(mainterm)
+        
         betekenis = [str(word) + " >> "]
 
         for termlist in mainterm:

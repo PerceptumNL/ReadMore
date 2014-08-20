@@ -15,15 +15,7 @@ $.widget( "readmore.seemore", {
 			}
 		)
 	},
-    load: function(word){
-		var _self = this
-		api_call(
-			"/widgets/seemore/?word="+word,
-			{},
-			'GET',
-			function(data, xhr){
-				_self.element.html(data['word']);
-			}
-		);
+	load: function(){
+		console.log('loaded');
 	}
 })
