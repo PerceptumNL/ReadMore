@@ -4,7 +4,10 @@ from polymorphic import PolymorphicModel
 from readmore.content.thirdparty.wiki_api import MediaWikiAPI, NS_PAGE, \
         NS_CATEGORY, NS_PORTAL
 from readmore.content.helpers import *
+import lxml
 import random
+import urllib
+from bs4 import BeautifulSoup
 
 MWAPI = MediaWikiAPI()
 
@@ -393,3 +396,10 @@ class WikiArticle(Article):
         return "%s?type=%s" % (
                 reverse('wikipedia_article', args=(self.identifier,)),
                 self.identifier_type)
+
+    def get_categories(self):
+        """Return the categories that contain this object."""
+        self.soup = BeautifulSoup(urllib.urlopen('https://nl.wikipedia.org/w/api.php?action=query&format=xml&titles=' + self.identifier +'&prop=categories').read(), 'xml')
+        spans = self.soup.findAll('cl')
+        self.categories = [ i['title'] for i in spans]
+        return self.categories
