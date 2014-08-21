@@ -21,7 +21,6 @@ $.widget( "readmore.dictionary", {
 			{},
 			'GET',
 			function(data, xhr){
-				console.log(data['word']);
 				_self.element.html(data['word']);
 			}
 		);

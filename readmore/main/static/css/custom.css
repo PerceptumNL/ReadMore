@@ -392,3 +392,24 @@ input + input {
     float: left;
 }
 
+.word{
+	padding:1px;
+}
+
+.word:hover{
+	padding: 0px;
+	border-radius: 3px;
+	border: 1px dotted #438eb9;
+}
+
+.word:active, .word:focus{
+	padding: 0px;
+	border-radius: 3px;
+	border: 1px dotted #438eb9;
+}
+
+#selected{
+	padding: 0px;
+	border-radius: 3px;
+	border: 1px solid #438eb9;
+}

@@ -57,6 +57,10 @@ $.widget( "readmore.articleviewer", {
 		})
 		// Add onclick events on each word
 		$(".word").click(function(e){
+			//Remove #selected from previously clicked word
+			$('#selected').attr('id', '');
+			//Add #selected to current clicked word
+			this.setAttribute('id', 'selected');
 			// Trigger wordclick event, providing the word that was clicked on.
 			_self._trigger("wordclick", e, {"word": $(this).text()})
 		})

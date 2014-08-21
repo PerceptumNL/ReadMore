@@ -16,6 +16,5 @@ $.widget( "readmore.seemore", {
 		)
 	},
 	load: function(){
-		console.log('loaded');
 	}
 })
