@@ -129,7 +129,6 @@ def article(request, identifier, source='local'):
         identifier_type = request.GET.get('type','auto')
         article = WikiArticle.factory(identifier, identifier_type)
         spans = BeautifulSoup(urllib.urlopen('https://nl.wikipedia.org/w/api.php?action=query&format=xml&titles=' + identifier +'&prop=categories').read(), 'xml').findAll('cl')
-        #categories = [ i['title'] for i in spans]
         random_articles = []
         for x in spans:
             random_articles += WikiCategory.factory(x['title']).get_random_articles(2)

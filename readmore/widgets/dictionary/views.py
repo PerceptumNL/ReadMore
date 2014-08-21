@@ -28,15 +28,13 @@ def process(request):
         	# If types is a term, append
             else:
                 mainterm.append(info)
-        
-        betekenis = [str(word) + " >> "]
 
         for termlist in mainterm:
             for term in termlist:
                 if(isinstance(term, TermForm)):
                     pass
                 else:
-                    betekenis.append(term.entry)
+                    betekenis = ["<h3 class='title'>" + str(word) + " >> " + str(term.entry) + "</h3>"]
                     meaninglist = term.meanings
                     betekenis.append('<ul>')
                     for meaning in meaninglist:
@@ -44,6 +42,7 @@ def process(request):
                             meaning.definition.encode('ascii',
                                 'xmlcharrefreplace')))
                     betekenis.append('</ul>')
+
     else:
         betekenis = "Woord is niet gevonden!"
     return HttpResponse(json.dumps({'word':betekenis}),
