@@ -122,11 +122,18 @@ def article(request, identifier, source='local'):
     identifier -- Number or string identifying the category
     source -- The source the identifier belongs to ( default 'local' )
     """
+    categories = []
     # Resolve identified article
     if source == 'wikipedia':
         # Get/set identifier type
         identifier_type = request.GET.get('type','auto')
         article = WikiArticle.factory(identifier, identifier_type)
+        spans = BeautifulSoup(urllib.urlopen('https://nl.wikipedia.org/w/api.php?action=query&format=xml&titles=' + identifier +'&prop=categories').read(), 'xml').findAll('cl')
+        #categories = [ i['title'] for i in spans]
+        random_articles = []
+        for x in spans:
+            random_articles += WikiCategory.factory(x['title']).get_random_articles(2)
+
         if article is None:
             return render(request, 'unknownarticle.html')
     else:
@@ -134,6 +141,8 @@ def article(request, identifier, source='local'):
             article = Article.objects.get(pk=int(identifier))
         except Article.DoesNotExist:
             return render(request, 'unknownarticle.html')
+
+
     if request.is_ajax():
         # Return JSON with article properties
         return HttpResponse(
@@ -145,7 +154,7 @@ def article(request, identifier, source='local'):
     else:
         if request.user.is_authenticated():
             article_read.send(sender=Article, user=request.user, category=None, article_id=identifier, article=article)
-        return render(request, 'reader.html', { "article": article })
+        return render(request, 'reader.html', { "article": article, "random_articles": random_articles })
 
 def about(request):
     return render(request, 'about.html')

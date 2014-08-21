@@ -12,7 +12,14 @@
 	<div class="col-md-4 right">
 		<div id="dictionary" class="row widget">Geen woord geselecteerd</div>
 		<script>$( $("#dictionary").dictionary() )</script>
-		<div id="seemore" class="row widget">{{ article.get_categories }}</div>
+		<div id="seemore" class="row widget">
+			<h3 class="title">Ook interessant:</h3>
+			<ul>
+			{% for art in random_articles %}
+			<li><a href="{{ art.get_absolute_url }}" class="blueLink">{{ art }}</a></li>
+			{% endfor %}
+			</ul>
+		</div>
 		<script>$( $("#seemore").seemore() )</script>
 		
 	</div>

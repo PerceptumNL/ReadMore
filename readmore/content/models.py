@@ -397,9 +397,3 @@ class WikiArticle(Article):
                 reverse('wikipedia_article', args=(self.identifier,)),
                 self.identifier_type)
 
-    def get_categories(self):
-        """Return the categories that contain this object."""
-        self.soup = BeautifulSoup(urllib.urlopen('https://nl.wikipedia.org/w/api.php?action=query&format=xml&titles=' + self.identifier +'&prop=categories').read(), 'xml')
-        spans = self.soup.findAll('cl')
-        self.categories = [ i['title'] for i in spans]
-        return self.categories
