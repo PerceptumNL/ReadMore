@@ -157,3 +157,4 @@ def article(request, identifier, source='local'):
 
 def about(request):
     return render(request, 'about.html')
+

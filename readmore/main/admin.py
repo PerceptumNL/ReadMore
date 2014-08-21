@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from models import *
 
-
+class InstituteAdmin(admin.ModelAdmin):
+    base_model = Institute
+    list_display = ('title', 'provider')
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
@@ -30,5 +32,7 @@ class StatisticsAdmin(admin.ModelAdmin):
     
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
+
+admin.site.register(Institute, InstituteAdmin)
 admin.site.register(Badge, BadgeAdmin)    
 admin.site.register(Statistics, StatisticsAdmin)
