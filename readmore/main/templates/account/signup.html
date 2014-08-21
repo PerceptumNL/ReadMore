@@ -7,7 +7,7 @@
 
 {% block body %}
 <div class="container background login">
-	<h1 class="title">{% trans "Er ging iets mis met inschrijven" %}</h1>
+	<h1 class="title">{% trans "Schrijf je in voor Lees Meer" %}</h1>
 	<div class="content">
 		<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
 		  {% csrf_token %}
@@ -19,6 +19,7 @@
 		</form>
 	</div>
 </div>
+
 {% endblock %}
 
 
