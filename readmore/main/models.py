@@ -1,15 +1,30 @@
+from __future__ import absolute_import
+
 from django.db import models
 from django.contrib.auth.models import User
 from allauth.account.signals import user_signed_up
 from readmore.content.views import article_read
 from django.dispatch import receiver
 
+import allauth.app_settings
+from allauth.socialaccount import providers
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True)       
     badges = models.ManyToManyField('Badge')
     school = models.CharField(max_length=255)
     
-    
+class Institute(models.Model):
+    title = models.CharField(max_length=255)
+    provider = models.CharField(verbose_name=('provider'),
+                                max_length=30,
+                                choices = providers.registry.as_choices())
+    def __repr__(self):
+        return '%s' % (self.title)
+
+    def __unicode__(self):
+        return unicode(self.title)
+
 class Statistics(models.Model):
     STATS = [('docsRead','docsRead')]
 
