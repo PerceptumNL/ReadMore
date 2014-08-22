@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% extends "main_base.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% load account %}
+{% load staticfiles %}
+
+
+{% block body %}
+
+<div class="container background inside">
+    <!--{% if request.user.is_authenticated %} -->
+        <div class="row">
+            <div class="col-lg-10">
+                <h1>{{user_details}}</h1>
+                <h4> {{user_details.userprofile.school}}</h4>
+            </div>
+            <div class="col-lg-2">
+                {% if profileImage != ""%}
+                    <img src="{{profileImage}}" style="width:100%">
+                {% endif %}
+            </div>       
+        </div>
+        <div class="container">
+            <h2> Badges </h2>
+            {% for badge in badges %}
+            <div class="col-lg-3">
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">{{badge}}</h3>
+                  </div>
+                  <div class="panel-body">
+                    {{ statistics.docsRead }}
+                  </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <h1> History </h1>
+            </div>
+            <div class="col-lg-6">
+                <h1> Favourites </h1>
+            </div>
+        
+        </div>
+
+
+
+    
+
+    
+    
+   <!-- {% endif %} -->
+
+
+</div>
+
+{% endblock body %}
