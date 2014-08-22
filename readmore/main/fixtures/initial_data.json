@@ -7,5 +7,32 @@
 				"domain": "http://127.0.0.1:8000", 
 				"name": "leesmeer"
 			}
-	}
+	},
+	{
+	    "pk": 1, 
+        "model": "socialaccount.socialapp", 
+        "fields": 
+            {
+                "name": "Lees Meer", 
+                "sites": [1], 
+                "secret": "ask Robrecht", 
+                "client_id": "ask Robrecht", 
+                "key": "", 
+                "provider": "google"
+            }
+    },
+	{
+	    "pk": 2, 
+        "model": "socialaccount.socialapp", 
+        "fields": 
+            {
+                "name": "Lees Meer", 
+                "sites": [1], 
+                "secret": "ask Robrecht", 
+                "client_id": "ask Robrecht", 
+                "key": "", 
+                "provider": "windowslive"
+            }
+    }
 ]
+
