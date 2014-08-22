@@ -44,6 +44,6 @@ def process(request):
                     betekenis.append('</ul>')
 
     else:
-        betekenis = "<h3 class='title'>Woordenboek</h3><p>Woord niet is niet gevonden!</p>"
+        betekenis = "<h3 class='title'>Woordenboek</h3><p><span class='notfound'>" + str(word) + "</span> is niet gevonden!</p>"
     return HttpResponse(json.dumps({'word':betekenis}),
             content_type='application/json')

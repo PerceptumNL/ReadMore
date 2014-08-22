@@ -64,5 +64,14 @@ $.widget( "readmore.articleviewer", {
 			// Trigger wordclick event, providing the word that was clicked on.
 			_self._trigger("wordclick", e, {"word": $(this).text()})
 		})
+
+		$(".wikiBlueLink").click(function(e){
+			e.preventDefault();
+			var link = this.getAttribute('href');
+			$(this).wrap("<span class='neutral'></span>")
+			console.log(link);
+			$(".openlink").remove();
+			$("<span class='openlink'><a href='" + link + "''><img src='/static/img/layout/link.png'></a></span>").appendTo($(this).parent());
+		})
 	}
 })

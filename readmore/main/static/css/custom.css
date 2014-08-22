@@ -393,23 +393,33 @@ input + input {
 }
 
 .word{
-	padding:1px;
+	margin:1px;
 }
 
 .word:hover{
-	padding: 0px;
+	margin: 0px;
 	border-radius: 3px;
 	border: 1px dotted #438eb9;
 }
 
 .word:active, .word:focus{
-	padding: 0px;
+	margin: 0px;
 	border-radius: 3px;
 	border: 1px dotted #438eb9;
 }
 
 #selected{
-	padding: 0px;
+	margin: 0px;
 	border-radius: 3px;
-	border: 1px solid #438eb9;
+	border: 1px dotted #438eb9;
 }
+
+.notfound {
+	font-weight: bold;
+}
+
+.openlink {
+	color: #438eb9;
+	font-size: 80%;
+	margin: 0;
+	padding: 0;
