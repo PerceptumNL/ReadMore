@@ -45,6 +45,8 @@ function api_call(endpoint, data, method, cb_success, cb_error, cb_cancel)
 	// Set default method
 	if( method == undefined && data == null)  method = "get"
 	else if( method == undefined) method = "post"
+	// Ensure method is in lower case
+	method = method.toLowerCase()
 	// Setup attempt to execute post call to api
 	if(method == "post"){
 		if(data == null) data = {}
@@ -54,7 +56,7 @@ function api_call(endpoint, data, method, cb_success, cb_error, cb_cancel)
 		var jqxhr = $.post(endpoint, data);
 	}else if(method == "get" && data != null){
 		var jqxhr = $.get(endpoint, data);
-  }else{
+	}else{
 		var jqxhr = $.get(endpoint);
 	}
 	// Add handler for the success case
