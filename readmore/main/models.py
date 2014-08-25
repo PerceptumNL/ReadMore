@@ -13,7 +13,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True)       
     badges = models.ManyToManyField('Badge')
     school = models.CharField(max_length=255)
-    
+
 class Institute(models.Model):
     title = models.CharField(max_length=255)
     provider = models.CharField(verbose_name=('provider'),
@@ -42,10 +42,19 @@ class Statistics(models.Model):
         return unicode(name)
         
 class History(models.Model):
-    user = models.ForeignKey(User, unique=True)
+    user = models.ForeignKey(User)
     opened = models.DateTimeField(auto_now_add=True)        
     article_id = models.CharField(max_length=255)
+    class Meta:
+        verbose_name_plural = "Article History"
+
+    def __repr__(self):
+        return self.article_id
+
+    def __unicode__(self):
+        return unicode(self.article_id)   
         
+    
 @receiver(user_signed_up)
 def connect_statistics_to_user(sender, request, user, **kw):
     statistics = Statistics(user=user)
@@ -62,12 +71,11 @@ def add_to_statistics(sender, user, category, article_id, article, **kw):
         #print "No statistics in database for (%s)" % (user)
         pass
     try:
-        article_in_current_history = History.objects.filter(user=user, article_id=article_id)
-        if not article_in_current_history:
-            new_history_of_user = History.objects.create(user=user, article_id=article_id)
-            new_history_of_user.save()
-    except:
-        pass
+        article_in_current_history = History.objects.get(user=user, article_id=article_id)       
+    except History.DoesNotExist:
+        new_history_of_user = History.objects.create(user = user)
+        new_history_of_user.article_id = article_id
+        new_history_of_user.save()
         
 # Create your models here.
 class Badge(models.Model):
