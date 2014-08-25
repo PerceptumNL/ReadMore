@@ -392,30 +392,31 @@ input + input {
     float: left;
 }
 
-.word{
+/* Margin of 1px, to change to 0px and 1px border upon hover, 
+to prevent shifting of words */
+.word {
 	margin:1px;
 }
 
-.word:hover{
-	margin: 0px;
-	border-radius: 3px;
-	border: 1px dotted #438eb9;
-}
-
-.word:active, .word:focus{
-	margin: 0px;
-	border-radius: 3px;
-	border: 1px dotted #438eb9;
-}
-
-#selected{
-	margin: 0px;
-	border-radius: 3px;
-	border: 1px dotted #438eb9;
-}
-
+/* Visual emphasis on the word that was not found */
 .notfound {
 	font-weight: bold;
+}
+
+/**/
+#selected {
+	margin: 0px;
+	border-radius: 3px;
+	border: 1px dashed #438eb9;
+}
+
+.neutral * #selected {
+	border: none;
+}
+
+.neutral {
+	border:1px dashed #438eb9;
+	position:relative;
 }
 
 .openlink {
@@ -423,3 +424,11 @@ input + input {
 	font-size: 80%;
 	margin: 0;
 	padding: 0;
+	position:relative;
+}
+.linkimg {
+	background-color: #438eb9;
+	border-radius: 5px;
+	padding:1px;
+	margin:1px;
+}
