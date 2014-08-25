@@ -24,12 +24,20 @@ def profile(request, user_id):
         statistics = Statistics.objects.create(user=user)
     
    
+    article_history = []
+    try:
+        article_history = History.objects.filter(user=user)
+    except:
+        # No user history
+        pass
+   
     return render(request, 'account/profile.html', 
         { 
             "user_details": user,
             "badges": badges,
             "statistics": statistics,
             "profileImage": google_image,
+            "articleHistory": article_history,
             
         }
     )

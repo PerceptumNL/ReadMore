@@ -40,6 +40,9 @@
         <div class="row">
             <div class="col-lg-6">
                 <h1> History </h1>
+                {% for article in articleHistory %}
+                    <p> {{ article }} </p>
+                {% endfor %}
             </div>
             <div class="col-lg-6">
                 <h1> Favourites </h1>
