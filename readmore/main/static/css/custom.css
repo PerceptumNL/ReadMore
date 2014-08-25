@@ -94,8 +94,9 @@ html,body{
 }
 
 #reader{
-	border-top:5px solid #438eb9;
-	padding:1%;
+	border-top:5px solid #cecece;
+	border-bottom: 5px solid #cecece;
+	padding:5px;
 }
 
 .landingText{
@@ -343,9 +344,10 @@ Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-i
 .right{
 	overflow:scroll;
 	height:100%;
-	border-left: 2px solid #438eb9;
-	border-top: 5px solid #438eb9;
-	background-color: #cecece;
+	border-left: 2px solid #cecece;
+	border-top: 5px solid #cecece;
+	border-bottom: 5px solid #cecece;
+	background-color: #ffffff;
 }
 
 .text{
@@ -359,7 +361,7 @@ Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-i
 	height: 30%;
 	margin: 2%;
 	padding: 1%;
-	border: 2px solid #438eb9;
+	border: 2px solid #cecece;
 	border-radius: 4px;
 	overflow: scroll;
 }
