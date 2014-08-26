@@ -11,7 +11,7 @@ from allauth.socialaccount import providers
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True)       
-    badges = models.ManyToManyField('Badge')
+    badges = models.ManyToManyField('Badge', blank='True')
     school = models.CharField(max_length=255)
 
 class Institute(models.Model):
@@ -28,7 +28,7 @@ class Institute(models.Model):
 class Statistics(models.Model):
     STATS = [('docsRead','docsRead')]
 
-    user = models.ForeignKey(User, unique=True)
+    user = models.ForeignKey(User, unique=True, related_name='statistics')
     docsRead = models.IntegerField(default=0)
     
     class Meta:
@@ -70,6 +70,16 @@ def add_to_statistics(sender, user, category, article_id, article, **kw):
     except:
         #print "No statistics in database for (%s)" % (user)
         pass
+        
+    # Check for new badges
+    all_badges = Badge.objects.all()
+    statistics = Statistics.objects.get(user=user)
+    for badge in all_badges:
+        counter_badges = CounterBadge.objects.filter(badge=badge)
+        statistic = getattr(statistics, badge.field_to_listen_to)
+        if(statistic>=counter_badges[0].trigger_at_greater_than):
+            user.userprofile.badges.add(badge)       
+        
     try:
         article_in_current_history = History.objects.get(user=user, article_id=article_id)       
     except History.DoesNotExist:
@@ -92,8 +102,20 @@ class Badge(models.Model):
     def __unicode__(self):
         return unicode(self.title)
 
+    def current_image(self, user):
+        badge_image = self.default_image
+        statistics = Statistics.objects.get(user=user)
+        statistic = getattr(statistics, self.field_to_listen_to)
+        counter_badges = CounterBadge.objects.filter(badge=self)
+        for counter_badge in counter_badges.reverse():
+            if counter_badge.trigger_at_greater_than <= statistic:
+                badge_image = counter_badge.image
+                break
+        return badge_image
+        
+
 class CounterBadge(models.Model):
-    badge = models.ForeignKey(Badge)
+    badge = models.ForeignKey(Badge, related_name='counter_badges')
     trigger_at_greater_than = models.IntegerField(default=0)
     image = models.URLField(max_length=255, null=True, blank=True)
     

@@ -12,7 +12,8 @@ def profile(request, user_id):
     badges = Badge.objects.filter(userprofile=user)
     if not badges:
         badges = []
-      
+    badges = [badge.current_image(user) for badge in badges]
+        
     google_uid = SocialAccount.objects.filter(user_id=user.id, provider='google')  
     google_image = ""
     if len(google_uid):
