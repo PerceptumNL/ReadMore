@@ -76,9 +76,10 @@ def add_to_statistics(sender, user, category, article_id, article, **kw):
     statistics = Statistics.objects.get(user=user)
     for badge in all_badges:
         counter_badges = CounterBadge.objects.filter(badge=badge)
-        statistic = getattr(statistics, badge.field_to_listen_to)
-        if(statistic>=counter_badges[0].trigger_at_greater_than):
-            user.userprofile.badges.add(badge)       
+        if len(counter_badges)>0:
+            statistic = getattr(statistics, badge.field_to_listen_to)
+            if(statistic>=counter_badges[0].trigger_at_greater_than):
+                user.userprofile.badges.add(badge)       
         
     try:
         article_in_current_history = History.objects.get(user=user, article_id=article_id)       
