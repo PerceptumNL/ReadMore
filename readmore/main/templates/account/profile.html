@@ -12,15 +12,29 @@
 <div class="container background inside">
     <!--{% if request.user.is_authenticated %} -->
         <div class="row">
-            <div class="col-lg-10">
+            <div class="col-lg-6">
+                {% if profileImage != ""%}
+                    <img src="{{profileImage}}" style="width:100%">
+                {% else %}
+                    <img src="{% static 'img/layout/profilepic.png' %}">
+                {% endif %}
+            </div>
+
+            <div class="col-lg-6">
                 <h1>{{user_details}}</h1>
                 <h4> {{user_details.userprofile.school}}</h4>
             </div>
-            <div class="col-lg-2">
-                {% if profileImage != ""%}
-                    <img src="{{profileImage}}" style="width:100%">
-                {% endif %}
-            </div>       
+            <div class="row">
+            <div class="col-lg-3"> 
+                <h1> History </h1>
+                {% for article in articleHistory %}
+                    <p> {{ article }} </p>
+                {% endfor %}
+            </div>
+            <div class="col-lg-6">
+                <h1> Favourites </h1>
+            </div>
+        </div>
         </div>
         <div class="container">
             <h2> Badges </h2>
@@ -37,22 +51,7 @@
             </div>
             {% endfor %}
         </div>
-        <div class="row">
-            <div class="col-lg-6">
-                <h1> History </h1>
-                {% for article in articleHistory %}
-                    <p> {{ article }} </p>
-                {% endfor %}
-            </div>
-            <div class="col-lg-6">
-                <h1> Favourites </h1>
-            </div>
-        
-        </div>
 
-
-
-    
 
     
     

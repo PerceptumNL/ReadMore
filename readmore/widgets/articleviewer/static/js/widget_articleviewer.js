@@ -57,6 +57,10 @@ $.widget( "readmore.articleviewer", {
 		})
 		// Add onclick events on each word
 		$(".word").click(function(e){
+			//Remove selected link feedback, if any
+			$('.neutral').children().unwrap();
+			//Remove linked image, if any
+			$(".linkimg").remove();
 			//Remove #selected from previously clicked word
 			$('#selected').attr('id', '');
 			//Add #selected to current clicked word
@@ -66,12 +70,14 @@ $.widget( "readmore.articleviewer", {
 		})
 
 		$(".wikiBlueLink").click(function(e){
+			//Prevent triggering url
 			e.preventDefault();
+			//Save article url
 			var link = this.getAttribute('href');
+			//Wrap link in container span
 			$(this).wrap("<span class='neutral'></span>")
-			console.log(link);
-			$(".openlink").remove();
-			$("<span class='openlink'><a href='" + link + "''><img src='/static/img/layout/link.png'></a></span>").appendTo($(this).parent());
+			//Append linked image to article
+			$("<a class='linkimg' href='" + link + "''><img src='/static/img/layout/link_nobg.png'></a>").appendTo($(this).parent());
 		})
 	}
 })
