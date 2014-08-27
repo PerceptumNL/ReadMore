@@ -393,3 +393,11 @@ class WikiArticle(Article):
         return "%s?type=%s" % (
                 reverse('wikipedia_article', args=(self.identifier,)),
                 self.identifier_type)
+
+
+class PDFArticle(Article):
+    """Model for PDF articles.
+
+    A PDF article has a title and a source.
+    """
+    source = models.FileField(upload_to='n/a')
