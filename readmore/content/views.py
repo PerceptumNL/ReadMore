@@ -140,7 +140,9 @@ def article(request, identifier, source='local'):
             article = Article.objects.get(pk=int(identifier))
         except Article.DoesNotExist:
             return render(request, 'unknownarticle.html')
-
+        random_articles = article.category.get_random_articles()
+        if article in random_articles:
+            random_articles.remove(article)
 
     if request.is_ajax():
         # Return JSON with article properties
