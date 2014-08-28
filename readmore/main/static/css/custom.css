@@ -452,15 +452,19 @@ to prevent shifting of words */
 
 /* Styling for id-card style profile container */
 .profilepage {
-	background-color: #cecece;
+	color: #333333;
+	background-color: #333333;
 	height:80%;
 	border-radius: 50px;
+	overflow: auto;
+
 }
 
 /* Make top grey */
 .toprow {
-	height:10%;
-	background-color: #cecece;
+	height: 75px;
+	color: #ffffff;
+	background-color: #333333;
 	text-align: center;
 	border-top-left-radius: 50px;
 	border-top-right-radius: 50px;
@@ -468,13 +472,15 @@ to prevent shifting of words */
 
 /* Style info part */
 .pr {
-	height: 65%;
+	height: 470px;
 	background-color: #ffffff;
+	overflow: auto;
+	border: 3px solid #333333;
 }
 
 /* Extra row for positioning */
 .bufferrow {
-	height: 10%;
+	height: 30px;
 	background-color: #ffffff;
 }
 
@@ -488,3 +494,29 @@ to prevent shifting of words */
 	font-size: 100%;
 	text-align: right;
 }
+
+/* Styling for link container in profile */
+.linkrow {
+	background-color: #ffffff;
+}
+
+/* Styling for links in profiles */
+.pa {
+	color: #438EB9;
+}
+
+.pa:hover {
+	color: #333333;
+	text-decoration: none;
+}
+
+.barcode {
+	text-align: center;
+	font-size: 40px;
+	color: #ffffff;
+	letter-spacing: 15px;
+	margin:10px;
+}
+
+
+
