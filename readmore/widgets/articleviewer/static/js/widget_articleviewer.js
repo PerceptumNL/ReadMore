@@ -7,7 +7,7 @@ $.widget( "readmore.articleviewer", {
 		var _self = this
 		api_call(
 			this.options.article,
-			{},
+			{'format':'json'},
 			'GET',
 			function(data, xhr){
 				_self.element.html(data['body']);

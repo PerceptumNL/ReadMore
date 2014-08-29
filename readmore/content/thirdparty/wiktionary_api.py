@@ -44,6 +44,7 @@ Known issues:
 import re
 from django.conf import settings
 from readmore.content.thirdparty.wiki_api import MediaWikiAPI
+from string import whitespace, punctuation
 
 class Meaning(object):
     """Representation of a particular meaning of a term."""
@@ -966,6 +967,37 @@ class WiktionaryParser(object):
             else:
                 self._warn("Unexpected hyponym line", line)
                 continue
+
+    @staticmethod
+    def clean_wikitext(text, convert_template_fn=None,
+            convert_link_fn=None):
+        """Clean wikitext occurences from text.
+        Templates and links are replaced from the provided text. If a function
+        is provided for replacing template and/or link occurences, then that
+        function will be called for each occurence. Default behavior is
+        removing all templates entirely and replacing each link with the word
+        in plain text.
+
+        Keyword arguments:
+        text - The text that should be cleaned.
+        convert_template_fn - A function that returns the replacement for each
+                              occurence of a wikitext template (Default None)
+        convert_link_fn - A function that returns the replacement for each
+                          occurence of a wikitext link (Default None)
+        """
+        # Convert template occurences
+        if convert_template_fn is None:
+            text = re.sub(r'{{[^}]+}}', '', text)
+        else:
+            text = re.sub(r'{{[^}]+}}', convert_template_fn, text)
+        # Convert link occurences
+        if convert_link_fn is None:
+            text = re.sub(r'\[\[([^]]+)\]\]', '\g<1>', text)
+        else:
+            text = re.sub(r'\[\[[^]]+\]\]', convert_link_fn, text)
+        # Remove any whitespace or interpunction at the beginning of the text
+        text = text.lstrip(whitespace+punctuation)
+        return text
 
 
 class WiktionaryAPI(MediaWikiAPI):

@@ -6,15 +6,13 @@ import json
 # Create your views here.
 def process(request):
     word = request.GET.get('word',"No word given")
-    
     api = WiktionaryAPI(languages=['nld'])
 
     # Get list of Terms and Forms for word
-    try: 
+    try:
         info = api.get_info(word)
     except Exception:
         info = []
-    
     mainterm = []
 
     # For every Term and Form
@@ -38,8 +36,10 @@ def process(request):
                     meaninglist = term.meanings
                     betekenis.append('<ul>')
                     for meaning in meaninglist:
+                        definition = WiktionaryParser.clean_wikitext(
+                                meaning.definition)
                         betekenis.append('<li>%s</li>' % (
-                            meaning.definition.encode('ascii',
+                            definition.encode('ascii',
                                 'xmlcharrefreplace')))
                     betekenis.append('</ul>')
 
