@@ -518,5 +518,10 @@ to prevent shifting of words */
 	margin:10px;
 }
 
+.edit {
+	height:25px;
+	position:absolute;
+	right:30px;
+}
 
 
