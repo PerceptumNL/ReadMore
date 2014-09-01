@@ -429,11 +429,129 @@ class VerbTermForm(TermForm):
 
 class ConjunctiveTerm(Term):
     """The term class for conjunctives."""
-    pass
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "conjunctive"
+
 
 class DemonstrativePronounTerm(Term):
     """The term class for demonstrative pronouns."""
-    pass
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "demonstrative pronoun"
+
+
+class PrepositionTerm(Term):
+    """The term class for prepositions."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "preposition"
+
+
+class AbbreviationTerm(Term):
+    """The term class for abbreviations."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "abbreviation"
+
+
+class AdjectiveTerm(Term):
+    """The term class for adjectives."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "adjective"
+
+
+class AdverbTerm(Term):
+    """The term class for adverbs."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "adverb"
+
+
+class AdverbNumberTerm(Term):
+    """The term class for adverbial numbers."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "adverbial number"
+
+
+class ArticleTerm(Term):
+    """The term class for articles."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "article"
+
+
+class PronnounTerm(Term):
+    """The term class for pronouns."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "pronoun"
+
+
+class NumberTerm(Term):
+    """The term class for number."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "number"
+
+
+class IndefiniteNumeralTerm(Term):
+    """The term class for indefinite numerals."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "indefinite numeral"
+
+
+class InterrogativeNumeralTerm(Term):
+    """The term class for interrogative numerals."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "interrogative numeral"
+
+
+class OrdinalTerm(Term):
+    """The term class for ordinals."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "ordinal"
+
+
+class IndefiniteOrdinalTerm(Term):
+    """The term class for indefinite ordinals."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "indefinite ordinal"
+
 
 class NounTerm(Term):
     """The term class for nouns."""
@@ -447,6 +565,11 @@ class NounTerm(Term):
     _diminutive = u''
     # diminutive plural form
     _diminutive_plural = u''
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "noun"
 
     @property
     def gender(self):
@@ -503,6 +626,11 @@ class VerbTerm(Term):
     """The term class for verbs."""
     _past_tense = u''
     _past_participle_tense = u''
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "noun"
 
     @property
     def past_tense(self):
@@ -776,10 +904,12 @@ class WiktionaryParser(object):
             self._parse_pronunciation()
         elif self._header == 'syll':
             self._parse_syllables()
-        elif self._header == 'conj':
-            self._parse_meaning(ConjunctiveTerm)
-        elif self._header == 'pronom-dem':
-            self._parse_meaning(DemonstrativePronounTerm)
+        elif self._header == 'syn':
+            self._parse_synonyms()
+        elif self._header == 'ant':
+            self._parse_antonyms()
+        elif self._header == 'hypo':
+            self._parse_hyponyms()
         elif self._header == 'nlnoun':
             self._parse_nlnoun()
         elif self._header == 'noun':
@@ -796,12 +926,32 @@ class WiktionaryParser(object):
                 self._parse_form(VerbTermForm)
             else:
                 self._parse_meaning(VerbTerm)
-        elif self._header == 'syn':
-            self._parse_synonyms()
-        elif self._header == 'ant':
-            self._parse_antonyms()
-        elif self._header == 'hypo':
-            self._parse_hyponyms()
+        elif self._header == 'abbr':
+            self._parse_meaning(AbbreviationTerm)
+        elif self._header == 'adverb':
+            self._parse_meaning(AdverbTerm)
+        elif self._header == 'adjc':
+            self._parse_meaning(AdjectiveTerm)
+        elif self._header == 'art':
+            self._parse_meaning(ArticleTerm)
+        elif self._header == 'conj':
+            self._parse_meaning(ConjunctiveTerm)
+        elif self._header in ('cijfer', 'num'):
+            self._parse_meaning(NumberTerm)
+        elif self._header == 'name':
+            self._parse_meaning(PronounTerm)
+        elif self._header == 'num-indef':
+            self._parse_meaning(IndefiniteNumeralTerm)
+        elif self._header == 'num-int':
+            self._parse_meaning(InterrogativeNumeralTerm)
+        elif self._header == 'ordn':
+            self._parse_meaning(OrdinalTerm)
+        elif self._header == 'ordn_indef':
+            self._parse_meaning(IndefiniteOrdinalTerm)
+        elif self._header == 'prep':
+            self._parse_meaning(PrepositionTerm)
+        elif self._header == 'pronom-dem':
+            self._parse_meaning(DemonstrativePronounTerm)
         else:
             self._warn("Unsupported header '%s'" % (self._header,))
 
