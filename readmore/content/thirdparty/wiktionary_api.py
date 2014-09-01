@@ -427,6 +427,14 @@ class VerbTermForm(TermForm):
             "onpersoonlijke verleden tijd van %s"))
 
 
+class ConjunctiveTerm(Term):
+    """The term class for conjunctives."""
+    pass
+
+class DemonstrativePronounTerm(Term):
+    """The term class for demonstrative pronouns."""
+    pass
+
 class NounTerm(Term):
     """The term class for nouns."""
     # Gender of the term
@@ -627,13 +635,13 @@ class WiktionaryParser(object):
                 r"(?:{{=}})"
             r"$"))
         self.re_lang = re.compile(r"^{{=(\w+)=}}$")
-        self.re_header = re.compile(r"^{{-(\w+)-\|?(.+)?}}$")
+        self.re_header = re.compile(r"^{{-([\w-]+)-(?:\|(.+))?}}$")
         self.re_pron_sound = re.compile(r"^\*{{sound}}: {{audio\|(.+)\|.+}}$")
         self.re_pron_ipa = re.compile(r"^\*{{WikiW\|IPA}}: {{IPA\|/(.+)/.*$")
         self.re_syll = re.compile(r"^\*(.+)$")
         self.re_nlnoun = re.compile(r"^([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)$")
         self.re_nlstam = re.compile(r"([^|]+)")
-        self.re_form = re.compile(r"^{{([^|]+)\|(.+)}}$")
+        self.re_form = re.compile(r"^{{([^|]+)\|([^|]+).*}}$")
         self.re_meaning_entry = re.compile(
                 r"^(?:\[[A-Z]\] )?'''(.+)''' ?(.+)?$")
         self.re_meaning_def = re.compile(r"^#(.+)$")
@@ -768,6 +776,10 @@ class WiktionaryParser(object):
             self._parse_pronunciation()
         elif self._header == 'syll':
             self._parse_syllables()
+        elif self._header == 'conj':
+            self._parse_meaning(ConjunctiveTerm)
+        elif self._header == 'pronom-dem':
+            self._parse_meaning(DemonstrativePronounTerm)
         elif self._header == 'nlnoun':
             self._parse_nlnoun()
         elif self._header == 'noun':
@@ -777,6 +789,8 @@ class WiktionaryParser(object):
                 self._parse_meaning(NounTerm)
         elif self._header == 'nlstam':
             self._parse_nlstam()
+        elif self._header == 'prcp':
+            self._parse_form(VerbTermForm)
         elif self._header == 'verb':
             if self._header_params == "0":
                 self._parse_form(VerbTermForm)
@@ -996,7 +1010,7 @@ class WiktionaryParser(object):
         else:
             text = re.sub(r'\[\[[^]]+\]\]', convert_link_fn, text)
         # Remove any whitespace or interpunction at the beginning of the text
-        text = text.lstrip(whitespace+punctuation)
+        text = text.lstrip(whitespace+"!#$%&*+,-./:;<=>?@\\^_`|})~")
         return text
 
 
