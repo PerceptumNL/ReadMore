@@ -436,15 +436,6 @@ class ConjunctiveTerm(Term):
         return "conjunctive"
 
 
-class DemonstrativePronounTerm(Term):
-    """The term class for demonstrative pronouns."""
-
-    @property
-    def category_description(self):
-        """Return human-readable description of the term category."""
-        return "demonstrative pronoun"
-
-
 class PrepositionTerm(Term):
     """The term class for prepositions."""
 
@@ -499,13 +490,103 @@ class ArticleTerm(Term):
         return "article"
 
 
-class PronnounTerm(Term):
+class ProperNameTerm(Term):
+    """The term class for proper names."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "proper name"
+
+
+class PronounTerm(Term):
     """The term class for pronouns."""
 
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
         return "pronoun"
+
+
+class DemonstrativePronounTerm(PronounTerm):
+    """The term class for demonstrative pronouns."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "demonstrative pronoun"
+
+
+class ExclaimingPronounTerm(PronounTerm):
+    """The term class for exclaming pronouns."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "exclaiming pronoun"
+
+
+class IndefinitePronounTerm(PronounTerm):
+    """The term class for indefinite pronouns."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "indefinite pronoun"
+
+
+class InterrogativePronounTerm(PronounTerm):
+    """The term class for interrogative pronouns."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "interrogative pronoun"
+
+
+class PersonalPronounTerm(PronounTerm):
+    """The term class for personal pronouns."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "personal pronoun"
+
+
+class PossesivePronounTerm(PronounTerm):
+    """The term class for possesive pronouns."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "possesive pronoun"
+
+
+class ReciprocalPronounTerm(PronounTerm):
+    """The term class for reciprocal pronouns."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "reciprocal pronoun"
+
+
+class ReflexivePronounTerm(PronounTerm):
+    """The term class for reflexive pronouns."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "reflexive pronoun"
+
+
+class RelativePronounTerm(PronounTerm):
+    """The term class for relative pronouns."""
+
+    @property
+    def category_description(self):
+        """Return human-readable description of the term category."""
+        return "relative pronoun"
 
 
 class NumberTerm(Term):
@@ -674,7 +755,7 @@ class TermSet(object):
         Keyword arguments
         lang - The language code for this termset.
         """
-        self.lang = lang
+        self.lang = lang.lower()
         self._terms = []
 
     @property
@@ -746,6 +827,7 @@ class WiktionaryParser(object):
         self._buff = []
         self._termsets = []
         self._warnings = []
+        self._universal_langs = ['universeel', 'translingual']
         self.re_ignore = re.compile(
             (r"^"
                 r"(?:<!--.+-->)|"
@@ -883,7 +965,8 @@ class WiktionaryParser(object):
         if languages == '*':
             return self._termsets
         else:
-            return [x for x in self._termsets if x.lang in languages]
+            return [x for x in self._termsets if x.lang in languages or
+                    x.lang in self._universal_langs]
 
     def _add_term(self, term):
         """Add term to the current termset."""
@@ -939,7 +1022,7 @@ class WiktionaryParser(object):
         elif self._header in ('cijfer', 'num'):
             self._parse_meaning(NumberTerm)
         elif self._header == 'name':
-            self._parse_meaning(PronounTerm)
+            self._parse_meaning(ProperNameTerm)
         elif self._header == 'num-indef':
             self._parse_meaning(IndefiniteNumeralTerm)
         elif self._header == 'num-int':
@@ -950,8 +1033,26 @@ class WiktionaryParser(object):
             self._parse_meaning(IndefiniteOrdinalTerm)
         elif self._header == 'prep':
             self._parse_meaning(PrepositionTerm)
+        elif self._header == 'pronoun':
+            self._parse_meaning(PronounTerm)
         elif self._header == 'pronom-dem':
             self._parse_meaning(DemonstrativePronounTerm)
+        elif self._header == 'pronom-excl':
+            self._parse_meaning(ExclaimingPronounTerm)
+        elif self._header == 'pronom-indef':
+            self._parse_meaning(IndefinitePronounTerm)
+        elif self._header == 'pronom-int':
+            self._parse_meaning(InterrogativePronounTerm)
+        elif self._header == 'pronom-pers':
+            self._parse_meaning(PersonalPronounTerm)
+        elif self._header == 'pronom-pos':
+            self._parse_meaning(PossesivePronounTerm)
+        elif self._header == 'pronom-rec':
+            self._parse_meaning(ReciprocalPronounTerm)
+        elif self._header == 'pronom-refl':
+            self._parse_meaning(ReflexivePronounTerm)
+        elif self._header == 'pronom-rel':
+            self._parse_meaning(RelativePronounTerm)
         else:
             self._warn("Unsupported header '%s'" % (self._header,))
 
