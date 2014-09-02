@@ -294,6 +294,13 @@ class Article(PolymorphicModel):
         """
         return self.body[:chars-3]+"..."
 
+    def get_categories(self):
+        """Return the categories this articles is in.
+        Use this method to retrieve the categories as it can be overriden by
+        subclasses to contain the right information for each type of article.
+        """
+        return self.category.all()
+
     def get_absolute_url(self):
         """Return the URL identifiying this object.
         Use this method to form an identification URL as it can be overriden by
@@ -385,6 +392,13 @@ class WikiArticle(Article):
         chars -- Length of extract in number of characters (default 100)
         """
         return MWAPI.get_page_extract(self.get_identifier(), chars=chars)
+
+    def get_categories(self):
+        """Return the categories this articles is in.
+        Use this method to retrieve the categories as it can be overriden by
+        subclasses to contain the right information for each type of article.
+        """
+        return MWAPI.get_page_categories(self.get_identifier())
 
     def get_absolute_url(self):
         """Return the URL identifiying this object.

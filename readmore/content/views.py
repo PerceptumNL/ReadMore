@@ -122,29 +122,47 @@ def article(request, identifier, source='local'):
     identifier -- Number or string identifying the category
     source -- The source the identifier belongs to ( default 'local' )
     """
-    categories = []
     # Resolve identified article
     if source == 'wikipedia':
         # Get/set identifier type
         identifier_type = request.GET.get('type','auto')
+        # Attempt to retrieve the article
         article = WikiArticle.factory(identifier, identifier_type)
-        spans = BeautifulSoup(urllib.urlopen('https://nl.wikipedia.org/w/api.php?action=query&format=xml&titles=' + identifier +'&prop=categories').read(), 'xml').findAll('cl')
-        random_articles = []
-        for x in spans:
-            random_articles += WikiCategory.factory(x['title']).get_random_articles(2)
-
         if article is None:
             return render(request, 'unknownarticle.html')
     else:
         try:
+            # Attempt to retrieve the article
             article = Article.objects.get(pk=int(identifier))
         except Article.DoesNotExist:
             return render(request, 'unknownarticle.html')
-        random_articles = article.category.get_random_articles()
+
+    # Retrieve the categories that this article belongs to.
+    categories = article.get_categories()
+
+    if not request.is_ajax():
+        # Fetch random articles from the same categories for reading suggestions.
+        random_articles = []
+        for category in categories:
+            random_articles += category.get_random_articles(2)
+
+        # Ensure the current article is not suggested again
         if article in random_articles:
             random_articles.remove(article)
 
-    if request.is_ajax():
+        # For all categories this article belongs to
+        for category in categories:
+            # If the category was stored in the database
+            if category.pk is not None:
+                article_read.send(
+                        sender=Article,
+                        user=request.user,
+                        category=category,
+                        article_id=identifier,
+                        article=article)
+        return render(request, 'reader.html',
+                {"article": article, "random_articles": random_articles})
+    else:
         # Return JSON with article properties
         return HttpResponse(
             json.dumps({
@@ -152,10 +170,6 @@ def article(request, identifier, source='local'):
                 'body': article.get_body()
             }),
             content_type='application/json')
-    else:
-        if request.user.is_authenticated():
-            article_read.send(sender=Article, user=request.user, category=None, article_id=identifier, article=article)
-        return render(request, 'reader.html', { "article": article, "random_articles": random_articles })
 
 def about(request):
     return render(request, 'about.html')

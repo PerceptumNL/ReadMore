@@ -106,6 +106,25 @@ class MediaWikiAPI(object):
         else:
             return info['extract']
 
+    def get_page_categories(self, identifier):
+        if isinstance(identifier, int):
+            res = self._request({
+                'action': 'query',
+                'pageids': identifier,
+                'prop': 'categories',
+                'clshow': '!hidden'})
+        else:
+            res = self._request({
+                'action': 'query',
+                'titles': identifier,
+                'prop': 'categories',
+                'clshow': '!hidden'})
+        info = res['query']['pages'].values()[0]
+        if 'missing' in info:
+            return None
+        else:
+            return info['extract']
+
     def get_category_members(self, identifier, namespace=NS_CATEGORY,
             recursive=False):
         if isinstance(identifier, int):
