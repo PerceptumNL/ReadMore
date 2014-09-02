@@ -1310,23 +1310,31 @@ class WiktionaryAPI(MediaWikiAPI):
         """Retrieve wikitext about the word or load from cache."""
         if word not in self._termsets:
             wikitext = self.get_page_wikitext(word)
-            self._termsets[word] = self._parser.parse(lines=wikitext,
-                    word=word, languages=self._languages)
+            if wikitext is not None:
+                self._termsets[word] = self._parser.parse(lines=wikitext,
+                        word=word, languages=self._languages)
+            else:
+                return None
         return self._termsets[word]
 
     def get_info(self, word):
         """Return termsets contained in the wikitext about the word.
         When the list of languages provided at initialization only covers one
-        language, the terms of the only termset are directly returned.
+        language, the terms of the only termset are directly returned. If no
+        information about the word could be retrieved, the empty list is
+        returned.
 
         Keyword arguments:
         word - The word about which you want the information.
         """
         termsets = self._load(word)
-        if isinstance(self._languages, list) and len(self._languages) == 1:
-            return termsets[0].terms
+        if not termsets:
+            return []
         else:
-            return termsets
+            if isinstance(self._languages, list) and len(self._languages) == 1:
+                return termsets[0].terms
+            else:
+                return termsets
 
     @property
     def parser_warnings(self):
