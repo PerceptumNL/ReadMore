@@ -1,0 +1,25 @@
+/* 
+Primary Color:  #22ADC2
+Highlights:     #F3F3F3
+Shadow:         #736f66
+Contrast:       #F35C9F
+*/
+
+html, body {
+    background-color: #F3F3F3
+    width: 100%;
+}
+
+h1 {
+    color: #22ADC2;
+}
+
+p {
+    color: #736f66;
+}
+
+p strong {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+

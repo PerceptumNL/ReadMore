@@ -1,0 +1,151 @@
+/* 
+Primary Color:  #22ADC2
+Highlights:     #F3F3F3
+Shadow:         #736f66
+Contrast:       #F35C9F
+*/
+
+.fullScreen{
+    height:100%;
+    width:100%;
+
+}
+
+#topbar {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:50px;
+    margin: 0px;
+    padding: 0px;
+    background-color: #51afbc;
+}
+
+#mainContent{
+    position:fixed;
+    overflow-y: auto;
+    top: 50px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 25px;
+    background-color: #e9f8f9;
+    }
+#mainContent::-webkit-scrollbar { 
+    display: none; 
+}
+
+.row{
+    margin: 0px;
+    padding: 0px;
+}
+
+.navButton {
+    height: 45px;
+    width:45px;
+    margin: 2px 0px;
+    border: 1px solid #F3F3F3;
+    border-radius: 5px;
+}
+.navButton:hover{
+    box-shadow: 2px 2px 2px #F3F3F3 inset;
+}
+.navButton:active{
+    box-shadow: 2px 2px 2px #736F66 inset;
+}
+.navButton img {
+    height:35px;
+    display:block; margin:5px 5px;"
+}
+
+.articleTile{
+	position:relative;
+	z-index:2;
+	padding: 8px 5px;
+	
+}
+
+.articleContent{
+	position: relative;
+	min-height:120px; 	
+	width:100%;
+	background-color: #51afbc;
+	box-shadow: 2px 2px 1px #531a50, 0px 90px 0px #e4e6d6 inset;
+	border-radius: 5px;
+    -webkit-transition: all 0.5s ease; /* For Safari 3.1 to 6.0 */
+    transition: all 0.5s ease;
+    overflow: hidden;
+}
+.articleContent:hover{
+    box-shadow: 2px 2px 3px #531a50;
+    background-color: #51afbc;
+    -webkit-transition: all 0.5s ease; /* For Safari 3.1 to 6.0 */
+    transition: all 0.5s ease;
+}
+
+.articleContent:hover h4{
+	color: #F3F3F3;
+}
+
+.articleInfo{
+	display:none;
+
+}
+.overlayMask {
+	position:absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin:0;
+	background-color: #F3F3F3;
+	border-radius: 5px;
+	z-index:10;
+}
+
+.articleTitle{
+	position: absolute;
+	top:0px;
+	left:0px;
+	width:60%;
+	height: 90px;
+	font-size: 16px;
+	z-index:15;
+	word-wrap:break-word;
+	overflow: hidden;
+	
+}
+.articleTitle h4{
+	color: #736f66;
+	margin:10px;
+	-webkit-transition: all 0.7s ease; /* For Safari 3.1 to 6.0 */
+    transition: all 0.7s ease;
+    
+}
+
+.articleImage{
+	position: absolute;
+	top:0px;
+	bottom: 20px;
+	right:15px;
+	max-width:30%;
+	z-index:15;
+    
+}
+.articleImage img{
+	max-height: 80%;
+	margin:5px;
+}
+
+.articleType{
+	position: absolute;
+	width:100%;
+	bottom:1px;
+	color:#F3F3F3;
+	text-align: center;
+}
+.articleType h3{
+	margin:0px 0px;
+
+}
