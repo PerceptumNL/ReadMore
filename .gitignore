@@ -57,3 +57,6 @@ readmore/settings.py
 
 # Vim swap files
 *.swp
+
+# Temporary files
+*~
