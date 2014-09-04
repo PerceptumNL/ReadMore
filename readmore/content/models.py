@@ -299,7 +299,7 @@ class Article(PolymorphicModel):
         Use this method to retrieve the categories as it can be overriden by
         subclasses to contain the right information for each type of article.
         """
-        return self.category.all()
+        return [self.category]
 
     def get_absolute_url(self):
         """Return the URL identifiying this object.
