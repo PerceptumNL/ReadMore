@@ -2,6 +2,30 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from readmore.main.models import *        
 from allauth.socialaccount.models import SocialAccount
+from readmore.content.models import *
+
+def login(request):
+    # If user already logged in, go to main site
+    if request.user.is_authenticated():
+        return navigation(request)
+        
+    # Else go to login page
+    else:
+        return render(request, 'login.html', 
+                {
+                
+                }
+            )
+
+def navigation(request):
+    
+    allArticles = Article.objects.all()
+    
+    return render(request, 'overview.html',
+        {
+            "articles": allArticles,
+        }
+    )    
 
 def profile(request, user_id):
     try:

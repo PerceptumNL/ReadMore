@@ -1,0 +1,28 @@
+/* 
+Primary Color:  #22ADC2
+Highlights:     #F3F3F3
+Shadow:         #736f66
+Contrast:       #F35C9F
+*/
+
+.loginButton {
+    background-color: #22ADC2;
+    width: 100%;
+    min-height: 120px;
+    border-radius: 10px;
+    box-shadow: 3px 3px 0px #736f66;
+}
+.loginButton:hover {
+    background-color: #22ADC2;
+    box-shadow: 3px 3px 2px #F3F3F3 inset, 3px 3px 1px #736f66;
+}
+.loginButton:active {
+    background-color: #22ADC2;
+    box-shadow: 3px 3px 2px #736f66 inset, 3px 3px 1px #F3F3F3;
+}
+
+.loginButton h1 {
+    margin:10px;
+    color: #F3F3F3;
+}
+
