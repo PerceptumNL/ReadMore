@@ -1,0 +1,84 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Lees is Meer</title>
+
+	<!-- Bootstrap -->
+
+	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+	<!-- Custom -->
+	<link href="{% static 'css/custom.css' %}" rel="stylesheet">	
+	
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/jquery-ui.js' %}"></script>
+	<script src="{% static 'js/interface.js' %}"></script>
+	<script src="{% static 'js/custom.js' %}"></script>
+	<script src="{% static 'js/carddeck.js' %}"></script>
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+</head>
+<body>
+<style>
+.item {
+	width: 500px;
+	background-color: white;
+	border: thin solid black;
+	margin: 20px;
+	padding: 5px;
+}
+
+.item .title {
+	background-color: #438eb9;
+	display: block;
+	width: 100%;
+	color: #ffffff;
+}
+
+.item dl {
+	margin-left: 10px;
+}
+
+.item dl dt{
+	float: left;
+	clear: left;
+	font-weight: normal;
+}
+
+.item dl dd{
+	float: left;
+	margin-left: 20px;
+}
+
+.item.dict_term_card .word {
+	font-weight: bold;
+}
+
+.item.dict_term_card .category {
+	text-decoration: italic;
+	margin-left: 2px;
+}
+</style>
+<div id="container">
+</div>
+<ol>
+	<li>item 1</li>
+	<li>item 2</li>
+</ol>
+<script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+<script>
+deck = new CardDeck('#container',
+		[{ 'url': '/widgets/dictionary/', 'params': {'word':'bank'}}]);
+</script>
+</body>
+</html>
