@@ -1,4 +1,9 @@
 $( function() {
+ var $cardcontainer = $('#cards').isotope({
+    itemSelector: '.element-item',
+    layoutMode: 'fitrows',
+  });
+  
   // init Isotope
   var $container = $('.isotope').isotope({
     itemSelector: '.articleItem',
