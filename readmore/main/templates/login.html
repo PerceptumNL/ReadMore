@@ -1,6 +1,7 @@
 {% extends "main.html" %}
 
 {% load staticfiles %}
+{% load socialaccount %}
 
 {% block extraCSS %}
     <link href="{% static 'css/mainStyle.css' %}" rel="stylesheet">
@@ -14,19 +15,7 @@
     <h1> Welkom op Lees Meer </h1>
     <div class="row">
         <div class="col-sm-6 col-xs-12" style="padding:15px;">
-            <a href="http://leesmeer.com:8000/accounts/windowslive/login/?process=login&next=%2F">
-                <div class="row loginButton">
-                    <div class="col-xs-3">
-                        <h1><i class="fa fa-windows fa-2x"></i></h1>
-                    </div>
-                    <div class="col-xs-9">
-                        <h1>Schrijf je in met Windows Live</h1>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-sm-6 col-xs-12" style="padding:15px;">
-            <a href="#Login">
+            <a href="{% provider_login_url 'windowslive' %}">
                 <div class="row loginButton">
                     <div class="col-xs-3">
                         <h1><i class="fa fa-windows fa-2x"></i></h1>

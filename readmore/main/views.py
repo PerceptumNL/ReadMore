@@ -26,6 +26,37 @@ def navigation(request):
             "articles": allArticles,
         }
     )    
+    
+def articleNew(request):
+
+
+    return render(request, 'articleView.html',
+        {
+        
+        }
+    )
+    
+def profileSelf(request):
+    try:
+        user = User.objects.get(username=request.user.username)
+    except User.DoesNotExist:
+        return HttpResponseRedirect("/")
+        
+    socialaccount = SocialAccount.objects.filter(user_id=request.user.id)
+    if( len(socialaccount)>0 ):
+        socialaccount = socialaccount[0].extra_data
+    else:
+        socialaccount = {}
+        
+    return render(request, 'account/profileSelf.html', 
+        { 
+            "first_name": socialaccount.get('first_name', ''),
+            "last_name": socialaccount.get('last_name', user.username),
+            "age": socialaccount.get('age', '?'),
+        }
+    )
+
+
 
 def profile(request, user_id):
     try:

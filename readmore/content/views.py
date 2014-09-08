@@ -160,7 +160,7 @@ def article(request, identifier, source='local'):
                         category=category,
                         article_id=identifier,
                         article=article)
-        return render(request, 'reader.html',
+        return render(request, 'articleView.html',
                 {"article": article, "random_articles": random_articles})
     else:
         # Return JSON with article properties
