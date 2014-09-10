@@ -1,7 +1,6 @@
 $( function() {
  var $cardcontainer = $('#cards').isotope({
     itemSelector: '.element-item',
-    layoutMode: 'fitrows',
   });
   
   // init Isotope
@@ -9,6 +8,7 @@ $( function() {
     itemSelector: '.articleItem',
     layoutMode: 'fitRows',
   });
+  
   // bind filter button click
   $('#filters').on( 'click', 'btn', function() {
     var filterValue = $( this ).attr('data-filter');
