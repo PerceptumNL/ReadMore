@@ -35,18 +35,20 @@ def process(request):
                     synonyms[index] = meaning.synonyms
                 if meaning.antonyms:
                     antonyms[index] = meaning.antonyms
-            # Create corresponding synonyms card
-            cards.append({'type': 'DictSynonymCard',
-                'data': {
-                    'word': word,
-                    'term_category': card['data']['category'],
-                    'synonyms': synonyms}})
-            # Create corresponding synonyms card
-            cards.append({'type': 'DictAntonymCard',
-                'data': {
-                    'word': word,
-                    'term_category': card['data']['category'],
-                    'antonyms': antonyms}})
+            if synonyms:
+                # Create corresponding synonyms card
+                cards.append({'type': 'DictSynonymCard',
+                    'data': {
+                        'word': word,
+                        'term_category': card['data']['category'],
+                        'synonyms': synonyms}})
+            if antonyms:
+                # Create corresponding antonyms card
+                cards.append({'type': 'DictAntonymCard',
+                    'data': {
+                        'word': word,
+                        'term_category': card['data']['category'],
+                        'antonyms': antonyms}})
         cards.append(card)
     return HttpResponse(json.dumps(cards).encode('ascii', 'xmlcharrefreplace'),
             content_type='application/json')
