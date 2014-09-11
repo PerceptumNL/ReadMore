@@ -56,7 +56,7 @@ Contrast:       #F35C9F
     height:7%;
 }
 
-#cover:target a{
+#cover.open a{
     bottom: 0px;
 }
 
