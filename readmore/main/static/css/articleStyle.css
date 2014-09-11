@@ -28,7 +28,7 @@ Contrast:       #F35C9F
     
 }
 
-#cover:target { 
+#cover.open { 
     height: 100%;
     top: 0;
     position: fixed;
@@ -72,10 +72,43 @@ Contrast:       #F35C9F
     overflow-y: auto;
 }
 
-.element-item .well {
-    margin: 5px 0px;
+.element-item {
+    min-height: 20px;
+    padding: 19px;
+    margin: 10px 5px;
     background-color: rgba(255, 255, 255, 100);
     border: 1px solid #777;
+    border-radius: 4px;
     box-shadow: 1px 1px 1px #333;
 }
 
+.element-item .title {
+	background-color: #438eb9;
+	display: block;
+	width: 100%;
+	color: #ffffff;
+}
+
+.element-item dl {
+	margin-left: 10px;
+}
+
+.element-item dl dt{
+	float: left;
+	clear: left;
+	font-weight: normal;
+}
+
+.element-item dl dd{
+	float: left;
+	margin-left: 20px;
+}
+
+.element-item.dict_term_card .word {
+	font-weight: bold;
+}
+
+.element-item.dict_term_card .category {
+	text-decoration: italic;
+	margin-left: 2px;
+}

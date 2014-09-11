@@ -2,7 +2,7 @@ function CardDeck(container, decks){
 	var _self = this;
 
 	this.create_empty_card = function(){
-		return $("<div class='item'>");
+		return $("<div class='element-item col-lg-4 col-md-6 col-xs-12'>");
 	}
 
 	this.load_deck = function(deck){
@@ -18,11 +18,6 @@ function CardDeck(container, decks){
 	for(var i = 0; i < decks.length; i++){
 		api_call(decks[i]['url'], decks[i]['params'], 'get', this.load_deck)
 	}
-
-	$(container).isotope({
-		// options
-		itemSelector: '.item',
-	});
 }
 
 function Card(container, title){
