@@ -138,6 +138,14 @@ dt + dd {
     font-weight: normal;
 }
 
+.element-item .word {
+    font-weight: bold;
+}
+
+.word ~ .category{
+    font-weight: 300;
+    font-style: italic;
+}
 
 .rating {
     unicode-bidi: bidi-override;
