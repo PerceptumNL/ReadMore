@@ -165,7 +165,7 @@ class TermForm(object):
     # The provided form type
     _form = None
     # A dictionary translating form codes to human-readable text
-    _form_rewrites = {}
+    _form_rewrites = None
 
     def __init__(self, main_term, form):
         """
@@ -175,6 +175,7 @@ class TermForm(object):
         """
         self._main_term = main_term
         self._form = form
+        self._form_rewrites = {}
 
     @property
     def main_term(self):

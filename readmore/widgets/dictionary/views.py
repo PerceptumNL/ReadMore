@@ -28,13 +28,13 @@ def process(request):
                         meaning.definition)
                 example = WiktionaryParser.clean_wikitext(
                         meaning.example)
-                card['data']['meanings'][index] = {
+                card['data']['meanings'][index+1] = {
                     'definition': definition,
                     'example': example}
                 if meaning.synonyms:
-                    synonyms[index] = meaning.synonyms
+                    synonyms[index+1] = meaning.synonyms
                 if meaning.antonyms:
-                    antonyms[index] = meaning.antonyms
+                    antonyms[index+1] = meaning.antonyms
             if synonyms:
                 # Create corresponding synonyms card
                 cards.append({'type': 'DictSynonymCard',
@@ -49,6 +49,15 @@ def process(request):
                         'word': word,
                         'term_category': card['data']['category'],
                         'antonyms': antonyms}})
+        elif isinstance(term, TermForm):
+            card['type'] = 'DictTermCard'
+            card['data'] = {
+                'category': '',
+                'word': word,
+                'meanings': dict(enumerate(
+                    [{'definition':t, 'example':''} for t in term.form2text()]
+                , start=1))
+            }
         cards.append(card)
     return HttpResponse(json.dumps(cards).encode('ascii', 'xmlcharrefreplace'),
             content_type='application/json')
