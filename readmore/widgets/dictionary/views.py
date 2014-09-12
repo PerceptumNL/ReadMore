@@ -34,24 +34,6 @@ def process(request):
                     'synonyms': meaning.synonyms,
                     'antonyms': meaning.antonyms
                     })
-                if meaning.synonyms:
-                    synonyms[index+1] = meaning.synonyms
-                if meaning.antonyms:
-                    antonyms[index+1] = meaning.antonyms
-            if synonyms:
-                # Create corresponding synonyms card
-                cards.append({'type': 'DictSynonymCard',
-                    'data': {
-                        'word': word,
-                        'term_category': card['data']['category'],
-                        'synonyms': synonyms}})
-            if antonyms:
-                # Create corresponding antonyms card
-                cards.append({'type': 'DictAntonymCard',
-                    'data': {
-                        'word': word,
-                        'term_category': card['data']['category'],
-                        'antonyms': antonyms}})
         elif isinstance(term, TermForm):
             card['type'] = 'DictTermCard'
             card['data'] = {
