@@ -19,7 +19,7 @@ def process(request):
             card['data'] = {
                 'category': term.category_description,
                 'word': word,
-                'meanings': {}
+                'meanings': []
             }
             synonyms = {}
             antonyms = {}
@@ -28,9 +28,12 @@ def process(request):
                         meaning.definition)
                 example = WiktionaryParser.clean_wikitext(
                         meaning.example)
-                card['data']['meanings'][index+1] = {
+                card['data']['meanings'].append({
                     'definition': definition,
-                    'example': example}
+                    'example': example,
+                    'synonyms': meaning.synonyms,
+                    'antonyms': meaning.antonyms
+                    })
                 if meaning.synonyms:
                     synonyms[index+1] = meaning.synonyms
                 if meaning.antonyms:
@@ -54,9 +57,8 @@ def process(request):
             card['data'] = {
                 'category': '',
                 'word': word,
-                'meanings': dict(enumerate(
+                'meanings':
                     [{'definition':t, 'example':''} for t in term.form2text()]
-                , start=1))
             }
         cards.append(card)
     return HttpResponse(json.dumps(cards).encode('ascii', 'xmlcharrefreplace'),
