@@ -1263,6 +1263,7 @@ class WiktionaryParser(object):
             text = re.sub(r'\[\[[^]]+\]\]', convert_link_fn, text)
         # Remove any whitespace or interpunction at the beginning of the text
         text = text.lstrip(whitespace+"!#$%&*+,-./:;<=>?@\\^_`|})~")
+        text = text.replace("()", "").replace("[]","").replace("{}","")
         return text
 
 
