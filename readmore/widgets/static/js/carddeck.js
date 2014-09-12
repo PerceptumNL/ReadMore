@@ -24,7 +24,7 @@ function Card(container, title){
 
 	this.create_content_container = function(){
 		content_container = $("<div class='well'></div>");
-		content_container.append($("<span class='title'>"+title+"</span>"))
+		content_container.append($("<div class='title'>"+title+"</div>"))
 		container.append(content_container);
 		return content_container;
 	}
@@ -34,10 +34,10 @@ function DictTermCard(container, data){
 	var _parent = new Card(container, "Betekenis van <b>"+data['word']+"</b>");
 	container.addClass("dict_term_card");
 	var content = _parent.create_content_container();
-	content.append($('<span class="word">'+data['word']+'</span>'));
-	content.append($('<span class="category">('+data['category']+')</span>'));
+	content.append($('<div class="word">'+data['word']+'</div>'));
+	content.append($('<div class="category">('+data['category']+')</div>'));
 	if(!$.isEmptyObject(data['meanings'])){
-		var meanings = $("<dl>");
+		var meanings = $("<ol>");
 		content.append(meanings);
 		for(index in data['meanings']){
 			var meaning = data['meanings'][index];
@@ -52,11 +52,11 @@ function DictTermCard(container, data){
 
 function DictSynonymCard(container, data){
 	var _parent = new Card(container, "Hetzelfde als <b>"+data['word']+"</b>");
-	container.addclass("dict_synonym_card");
+	container.addClass("dict_synonym_card");
 	var content = _parent.create_content_container();
-	content.append($('<span class="word">'+data['word']+'</span>'));
+	content.append($('<div class="word">'+data['word']+'</div>'));
 	content.append(
-		$('<span class="category">('+data['term_category']+')</span>'));
+		$('<div class="category">('+data['term_category']+')</div>'));
 	if(!$.isEmptyObject(data['synonyms'])){
 		var synonyms = $("<dl>");
 		content.append(synonyms);

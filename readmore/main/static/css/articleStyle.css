@@ -90,6 +90,7 @@ Contrast:       #F35C9F
 }
 
 .element-item {
+    padding: 10px;
 }
 
 .element-item .well{
@@ -98,6 +99,7 @@ Contrast:       #F35C9F
     background-color: rgba(255, 255, 255, 100);
     margin: 10px 5px;
 }
+
 
 .element-item .title {
 	background-color: #438eb9;

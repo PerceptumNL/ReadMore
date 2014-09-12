@@ -1,8 +1,9 @@
 $( function() {
- var $cardcontainer = $('#cards').isotope({
-    itemSelector: '.element-item',
-  });
-  
+
+    var $cardcontainer = $('#cards').isotope({
+        itemSelector: '.element-item',   
+    });
+
   // init Isotope
   var $container = $('.isotope').isotope({
     itemSelector: '.articleItem',

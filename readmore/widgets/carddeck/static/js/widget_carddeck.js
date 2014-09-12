@@ -30,10 +30,12 @@ $.widget( "readmore.carddeck", {
 		return decks;
 	},
     load: function(word){
-		$(this.element).html("");
+        $(this.element).isotope( 'remove');
 		if(this.options.cover){
 			$(this.options.cover).addClass('open');
 		}
-		CardDeck(this.element, this.decks(word))
+		CardDeck(this.element, this.decks(word));
+		$(this.element).isotope( 'reloadItems' )		
+
 	}
 })
