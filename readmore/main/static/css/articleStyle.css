@@ -81,7 +81,7 @@ Contrast:       #F35C9F
     background-color: #22ADC2;
 }
 .word + .prevSelected {
-    color: #14626e;
+    color: #0E7080;
 }
 .word + .lastSelected {
     color: #22ADC2;
@@ -128,6 +128,14 @@ Contrast:       #F35C9F
 .element-item.dict_term_card .category {
 	text-decoration: italic;
 	margin-left: 2px;
+}
+
+
+dt ~ dd {
+    font-weight: 300;
+}
+dt + dd {
+    font-weight: normal;
 }
 
 
