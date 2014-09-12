@@ -21,10 +21,10 @@ function CardDeck(container, decks){
 }
 
 function Card(container, title){
-	container.append($("<span class='title'>"+title+"</span>"))
 
 	this.create_content_container = function(){
 		content_container = $("<div class='well'></div>");
+		content_container.append($("<span class='title'>"+title+"</span>"))
 		container.append(content_container);
 		return content_container;
 	}

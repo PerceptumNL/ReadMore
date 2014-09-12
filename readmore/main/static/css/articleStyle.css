@@ -90,13 +90,13 @@ Contrast:       #F35C9F
 }
 
 .element-item {
-    min-height: 20px;
-    padding: 19px;
-    margin: 10px 5px;
-    background-color: rgba(255, 255, 255, 100);
+}
+
+.element-item .well{
     border: 1px solid #777;
-    border-radius: 4px;
     box-shadow: 1px 1px 1px #333;
+    background-color: rgba(255, 255, 255, 100);
+    margin: 10px 5px;
 }
 
 .element-item .title {
