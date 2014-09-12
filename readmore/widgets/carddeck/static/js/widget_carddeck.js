@@ -30,12 +30,22 @@ $.widget( "readmore.carddeck", {
 		return decks;
 	},
     load: function(word){
-        $(this.element).isotope( 'remove');
+        var _self = this;
 		if(this.options.cover){
 			$(this.options.cover).addClass('open');
 		}
-		CardDeck(this.element, this.decks(word));
-		$(this.element).isotope( 'reloadItems' )		
-
-	}
+        $(this.options.cover).find("#closeCover").click(
+                function(){ _self.close(_self.options.cover); });
+		this.carddeck = new CardDeck(this.element, this.decks(word));
+	},
+    close: function(cover){
+		if(cover){
+		    $(cover).removeClass('open');
+        }
+        $('#selected').addClass('prevSelected');
+        $('.lastSelected').removeClass('lastSelected');
+        $('#selected').addClass('lastSelected');
+        $('#selected').removeAttr('id');
+        this.carddeck.close();
+    }
 })

@@ -18,6 +18,11 @@ function CardDeck(container, decks){
 	for(var i = 0; i < decks.length; i++){
 		api_call(decks[i]['url'], decks[i]['params'], 'get', this.load_deck)
 	}
+
+	this.close = function(){
+		elems = $(container).isotope('getItemElements');
+		$(container).isotope('remove', elems);
+	}
 }
 
 function Card(container, title){
@@ -41,10 +46,11 @@ function DictTermCard(container, data){
 		content.append(meanings);
 		for(index in data['meanings']){
 			var meaning = data['meanings'][index];
-			meanings.append($('<dt>').text(index+"."));
-			meanings.append($('<dd>').text(meaning['definition']));
+			var item = $('<li>')
+			meanings.append(item);
+			item.append($('<span class="definition">').text(meaning['definition']));
 			if(meaning['example']){
-				meanings.append($('<dd>').text(meaning['example']));
+				item.append($('<span class="example">').text(meaning['example']));
 			}
 		}
 	}
