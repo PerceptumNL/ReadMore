@@ -22,7 +22,20 @@
     </div>
 </div>
 
+<!--
+Card for rating through CSS, javascript below catches rating and parses it to int
 
+<div class="element-item">
+                <div class="title">Hoe leuk was dit artikel?</div>
+                <div class="rating">
+                    <span rating="5"><i class="fa fa-star-o"></i></span>
+                    <span rating="4"><i class="fa fa-star-o"></i></span>
+                    <span rating="3"><i class="fa fa-star-o"></i></span>
+                    <span rating="2"><i class="fa fa-star-o"></i></span>
+                    <span rating="1"><i class="fa fa-star-o"></i></span>
+                </div>
+            </div>
+-->
 
 {% endblock body %}
 
@@ -40,6 +53,12 @@
  	<script src="{% static 'js/custom.js' %}"></script>
     
     <script>
+    
+    $('span').click(function(){
+        var rating = parseInt(this.getAttribute('rating'));
+        this.parentElement.innerHTML = Array(rating+1).join("<i class='fa fa-star' style='color: #22ADC2'></i>");
+    });
+    
     $(function(){
         $("#article").articleviewer(
             {'article': "{{ article.get_absolute_url }}" });

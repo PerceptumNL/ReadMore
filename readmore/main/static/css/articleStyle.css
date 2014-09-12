@@ -130,3 +130,25 @@ Contrast:       #F35C9F
 	text-decoration: italic;
 	margin-left: 2px;
 }
+
+
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    font-family: FontAwesome;
+    font-size:1.5em;
+    text-align:center;
+
+}
+.rating > span {
+  display: inline-block;
+  position: relative;
+  width: 1.1em;
+  cursor: pointer;
+  color: #22ADC2;
+}
+.rating > span:hover:before,
+.rating > span:hover ~ span:before {
+   content:  "\f005";
+   position: absolute;
+}
