@@ -52,6 +52,14 @@ function DictTermCard(container, data){
 			if(meaning['example']){
 				item.append($('<span class="example">').text(meaning['example']));
 			}
+			if(meaning['synonyms']){
+				item.append($('<span class="synonyms">')
+					.text(meaning['synonyms'].join(", ")));
+			}
+			if(meaning['antonyms']){
+				item.append($('<span class="antonyms">')
+					.text(meaning['antonyms'].join(", ")));
+			}
 		}
 	}
 }
