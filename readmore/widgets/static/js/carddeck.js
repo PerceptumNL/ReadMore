@@ -22,18 +22,25 @@ function CardDeck(container, decks){
 
 function Card(container, title){
 	container.append($("<span class='title'>"+title+"</span>"))
+
+	this.create_content_container = function(){
+		content_container = $("<div class='well'></div>");
+		container.append(content_container);
+		return content_container;
+	}
 }
 
 function DictTermCard(container, data){
-	Card(container, "Betekenis van <b>"+data['word']+"</b>")
-	container.addClass("dict_term_card")
-	container.append($('<span class="word">'+data['word']+'</span>'));
-	container.append($('<span class="category">('+data['category']+')</span>'));
+	var _parent = new Card(container, "Betekenis van <b>"+data['word']+"</b>");
+	container.addClass("dict_term_card");
+	var content = _parent.create_content_container();
+	content.append($('<span class="word">'+data['word']+'</span>'));
+	content.append($('<span class="category">('+data['category']+')</span>'));
 	if(!$.isEmptyObject(data['meanings'])){
-		meanings = $("<dl>");
-		container.append(meanings);
+		var meanings = $("<dl>");
+		content.append(meanings);
 		for(index in data['meanings']){
-			meaning = data['meanings'][index];
+			var meaning = data['meanings'][index];
 			meanings.append($('<dt>').text(index+"."));
 			meanings.append($('<dd>').text(meaning['definition']));
 			if(meaning['example']){
@@ -44,15 +51,17 @@ function DictTermCard(container, data){
 }
 
 function DictSynonymCard(container, data){
-	Card(container, "Hetzelfde als <b>"+data['word']+"</b>")
-	container.append($('<span class="word">'+data['word']+'</span>'));
-	container.append(
+	var _parent = new Card(container, "Hetzelfde als <b>"+data['word']+"</b>");
+	container.addclass("dict_synonym_card");
+	var content = _parent.create_content_container();
+	content.append($('<span class="word">'+data['word']+'</span>'));
+	content.append(
 		$('<span class="category">('+data['term_category']+')</span>'));
 	if(!$.isEmptyObject(data['synonyms'])){
-		synonyms = $("<dl>");
-		container.append(synonyms);
+		var synonyms = $("<dl>");
+		content.append(synonyms);
 		for(index in data['synonyms']){
-			synonym_list = data['synonyms'][index];
+			var synonym_list = data['synonyms'][index];
 			synonyms.append($('<dt>').text(index+"."));
 			synonyms.append($('<dd>').text(synonym_list.join(", ")));
 		}
@@ -60,15 +69,18 @@ function DictSynonymCard(container, data){
 }
 
 function DictAntonymCard(container, data){
-	Card(container, "Tegenovergestelde van <b>"+data['word']+"</b>")
-	container.append($('<span class="word">'+data['word']+'</span>'));
-	container.append(
+	var _parent = new Card(container,
+			"Tegenovergestelde van <b>"+data['word']+"</b>");
+	container.addClass("dict_antonym_card");
+	var content = _parent.create_content_container();
+	content.append($('<span class="word">'+data['word']+'</span>'));
+	content.append(
 		$('<span class="category">('+data['term_category']+')</span>'));
 	if(!$.isEmptyObject(data['antonyms'])){
-		antonyms = $("<dl>");
-		container.append(antonyms);
+		var antonyms = $("<dl>");
+		content.append(antonyms);
 		for(index in data['antonyms']){
-			antonym_list = data['antonyms'][index];
+			var antonym_list = data['antonyms'][index];
 			antonyms.append($('<dt>').text(index+"."));
 			antonyms.append($('<dd>').text(antonym_list.join(", ")));
 		}

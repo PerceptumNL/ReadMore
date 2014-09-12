@@ -19,17 +19,20 @@ $.widget( "readmore.carddeck", {
 	decks: function(word){
 		decks = []
 		for(var i = 0; i < this.options.carddecks.length ; i++){
-			deck = this.options.carddecks[i];
-			for(key in deck.params){
-				deck.params[key] = deck.params[key].replace("%%WORD%%", word);
+			var url = this.options.carddecks[i].url;
+			var params = {};
+			for(key in this.options.carddecks[i].params){
+				params[key] = this.options.carddecks[i].params[key]
+					.replace("%%WORD%%", word);
 			}
-			decks.push(deck);
+			decks.push({'url':url, 'params':params});
 		}
 		return decks;
 	},
     load: function(word){
+		$(this.element).html("");
 		if(this.options.cover){
-			$(cover).addClass('open');
+			$(this.options.cover).addClass('open');
 		}
 		CardDeck(this.element, this.decks(word))
 	}
