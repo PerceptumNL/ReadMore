@@ -71,7 +71,7 @@ Contrast:       #F35C9F
     overflow-y: auto;
 }
 
-.word {
+span + .word {
     cursor: pointer;
 }
 
@@ -109,7 +109,7 @@ Contrast:       #F35C9F
 	color: #ffffff;
 }
 
-.element-item dl {
+.li .definition {
 	margin-left: 10px;
 }
 
@@ -134,10 +134,11 @@ Contrast:       #F35C9F
 }
 
 
-dt ~ dd {
+.example {
     font-weight: 300;
+    padding: 0px 5px;
 }
-dt + dd {
+.definition {
     font-weight: normal;
 }
 
