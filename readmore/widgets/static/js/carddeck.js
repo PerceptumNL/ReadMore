@@ -50,7 +50,10 @@ function DictTermCard(container, data){
 			meanings.append(item);
 			item.append($('<span class="definition">').text(meaning['definition']));
 			if(meaning['example']){
-				item.append($('<span class="example">').text(meaning['example']));
+				item.append($('<span class="example">')
+					.html(meaning['example'].replace(
+						"'''"+data['word']+"'''",
+						"<span class='word'>"+data['word']+"</span>")));
 			}
 			if(meaning['synonyms']){
 				item.append($('<span class="synonyms">')
