@@ -18,6 +18,11 @@ function CardDeck(container, decks){
 	for(var i = 0; i < decks.length; i++){
 		api_call(decks[i]['url'], decks[i]['params'], 'get', this.load_deck)
 	}
+
+	this.close = function(){
+		elems = $(container).isotope('getItemElements');
+		$(container).isotope('remove', elems);
+	}
 }
 
 function Card(container, title){

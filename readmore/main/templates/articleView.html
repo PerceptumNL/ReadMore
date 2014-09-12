@@ -16,7 +16,7 @@
         <div class="col-md-8 col-sm-12 col-xs-12">
             <div id="article"></div>
         </div>
-        <div class="col-md-4 col-sm-12 col-xs-12" ">
+        <div class="col-md-4 col-sm-12 col-xs-12">
             <div class="well" id="imageHolder"></div>
         </div>
     </div>
@@ -48,37 +48,23 @@ Card for rating through CSS, javascript below catches rating and parses it to in
 {% block extraScripts %}
 	<script src={% static "js/isotope.pkgd.min.js"%}></script>
     <script src={% static "js/filteringIsotope.js"%}></script>	
-	
  	<script src="{% static 'js/interface.js' %}"></script>
-+	<script src="{% static 'js/carddeck.js' %}"></script>
+	<script src="{% static 'js/carddeck.js' %}"></script>
  	<script src="{% static 'js/widget_articleviewer.js' %}"></script>
  	<script src="{% static 'js/widget_dummy.js' %}"></script>
  	<script src="{% static 'js/widget_dictionary.js' %}"></script>
-+	<script src="{% static 'js/widget_carddeck.js' %}"></script>
+	<script src="{% static 'js/widget_carddeck.js' %}"></script>
  	<script src="{% static 'js/widget_seemore.js' %}"></script>
  	<script src="{% static 'js/custom.js' %}"></script>
-    
     <script>
-    
     $('span').click(function(){
         var rating = parseInt(this.getAttribute('rating'));
         this.parentElement.innerHTML = Array(rating+1).join("<i class='fa fa-star' style='color: #22ADC2'></i>");
     });
-    
     $(function(){
         $("#article").articleviewer(
             {'article': "{{ article.get_absolute_url }}" });
         $("#cards").carddeck({'cover': $("#cover")});
-        
     });
-    
-    $('#closeCover').click(function(){
-        $('#cover').removeClass('open');
-        $('#selected').addClass('prevSelected');
-        $('.lastSelected').removeClass('lastSelected');
-        $('#selected').addClass('lastSelected');
-        $('#selected').removeAttr('id');
-    });
-    
 	</script>
 {% endblock extraScripts %}
