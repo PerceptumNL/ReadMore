@@ -36,6 +36,10 @@ $.widget( "readmore.carddeck", {
 		}
         $(this.options.cover).find("#closeCover").click(
                 function(){ _self.close(_self.options.cover); });
+        $(this.options.cover).find("#closeOnBackground").click(
+                function(){ _self.close(_self.options.cover); });                
+                
+                
 		this.carddeck = new CardDeck(this.element, this.decks(word));
 	},
     close: function(cover){

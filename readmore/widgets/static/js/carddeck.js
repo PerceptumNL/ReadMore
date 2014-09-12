@@ -48,19 +48,19 @@ function DictTermCard(container, data){
 			var meaning = data['meanings'][index];
 			var item = $('<li>')
 			meanings.append(item);
-			item.append($('<span class="definition">').text(meaning['definition']));
+			item.append($('<div class="definition">').text(meaning['definition']));
 			if(meaning['example']){
-				item.append($('<span class="example">')
+				item.append($('<div class="example">')
 					.html(meaning['example'].replace(
 						"'''"+data['word']+"'''",
 						"<span class='word'>"+data['word']+"</span>")));
 			}
 			if(meaning['synonyms']){
-				item.append($('<span class="synonyms">')
+				item.append($('<div class="synonyms">')
 					.text(meaning['synonyms'].join(", ")));
 			}
 			if(meaning['antonyms']){
-				item.append($('<span class="antonyms">')
+				item.append($('<div class="antonyms">')
 					.text(meaning['antonyms'].join(", ")));
 			}
 		}

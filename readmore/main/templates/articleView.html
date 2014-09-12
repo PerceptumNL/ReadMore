@@ -22,10 +22,12 @@
     </div>
 </div>
 <div id="cover">
-    <a href="#" id="closeCover"><i class="fa fa-angle-double-down fa-3x"></i></a>
+    <div id="closeOnBackground"></div>
+    <a href="" id="closeCover"><i class="fa fa-angle-double-down fa-3x"></i></a>
     <div class="container" id="row-holder">
         <div class="row" id="cards"></div>
     </div>
+    
 </div>
 
 <!--
@@ -61,6 +63,10 @@ Card for rating through CSS, javascript below catches rating and parses it to in
         var rating = parseInt(this.getAttribute('rating'));
         this.parentElement.innerHTML = Array(rating+1).join("<i class='fa fa-star' style='color: #22ADC2'></i>");
     });
+    
+
+     
+    
     $(function(){
         $("#article").articleviewer(
             {'article': "{{ article.get_absolute_url }}" });
