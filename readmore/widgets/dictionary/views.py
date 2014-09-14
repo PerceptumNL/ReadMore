@@ -28,12 +28,13 @@ def process(request):
                         meaning.definition)
                 example = WiktionaryParser.clean_wikitext(
                         meaning.example)
-                card['data']['meanings'].append({
-                    'definition': definition,
-                    'example': example,
-                    'synonyms': meaning.synonyms,
-                    'antonyms': meaning.antonyms
-                    })
+                if definition:
+                    card['data']['meanings'].append({
+                        'definition': definition,
+                        'example': example,
+                        'synonyms': meaning.synonyms,
+                        'antonyms': meaning.antonyms
+                        })
         elif isinstance(term, TermForm):
             card['type'] = 'DictTermCard'
             card['data'] = {

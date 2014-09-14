@@ -1,3 +1,19 @@
+function annotate_special_word(phrase){
+	var phrase_parts = phrase.split("'''");
+	var special_phrase;
+	if(phrase_parts.length == 1){
+		special_phrase = phrase;
+	}else{
+		for(var i = 1; i < phrase_parts.length; i+=2){
+			phrase_parts[i] =
+				"<span class='word'>"+phrase_parts[i]+"</span>";
+		}
+		special_phrase = phrase_parts.join("");
+	}
+	return special_phrase;
+}
+
+
 function CardDeck(container, decks){
 	var _self = this;
 
@@ -48,12 +64,11 @@ function DictTermCard(container, data){
 			var meaning = data['meanings'][index];
 			var item = $('<li>')
 			meanings.append(item);
-			item.append($('<div class="definition">').text(meaning['definition']));
+			definition_phrase = annotate_special_word(meaning['definition'])
+			item.append($('<div class="definition">').html(definition_phrase));
 			if(meaning['example']){
-				item.append($('<div class="example">')
-					.html(meaning['example'].replace(
-						"'''"+data['word']+"'''",
-						"<span class='word'>"+data['word']+"</span>")));
+				example_phrase = annotate_special_word(meaning['example'])
+				item.append($('<div class="example">').html(example_phrase));
 			}
 			if(meaning['synonyms']){
 				item.append($('<div class="synonyms">')
