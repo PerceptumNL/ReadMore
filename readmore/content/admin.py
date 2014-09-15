@@ -1,5 +1,6 @@
 from django.contrib import admin
 from readmore.content.models import *
+from django_summernote.admin import SummernoteModelAdmin
 from polymorphic.admin import PolymorphicParentModelAdmin, \
         PolymorphicChildModelAdmin
 
@@ -19,7 +20,7 @@ class CategoryAdmin(PolymorphicParentModelAdmin):
 class WikiArticleAdmin(PolymorphicChildModelAdmin):
     base_model = WikiArticle
 
-class RegularArticleAdmin(PolymorphicChildModelAdmin):
+class RegularArticleAdmin(PolymorphicChildModelAdmin, SummernoteModelAdmin):
     base_model = Article
 
 class ArticleAdmin(PolymorphicParentModelAdmin):
