@@ -95,6 +95,10 @@ SOCIALACCOUNT_AUTO_SIGNUP = 'True'
 ACCOUNT_EMAIL_VERIFICATION = 'False'
 AUTH_PROFILE_MODULE = 'main.UserProfile'
 
+SOCIALACCOUNT_PROVIDERS = \
+    { 'google':
+        { 'SCOPE': ['https://www.googleapis.com/auth/userinfo.profile'],
+          'AUTH_PARAMS': { 'access_type': 'online' } }}
 
 # Template Context
 TEMPLATE_CONTEXT_PROCESSORS = (
