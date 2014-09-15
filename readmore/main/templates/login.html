@@ -12,10 +12,12 @@
 
 {% block body %}
 <div class="container">
-    <h1> Welkom op Lees Meer </h1>
+    
     <div class="row">
+        <div class="col-sm-3 hidden-xs"></div>
         <div class="col-sm-6 col-xs-12" style="padding:15px;">
-            <a href="{% provider_login_url 'windowslive' %}">
+            <h1 style="text-align: center"> Welkom op Lees Meer </h1>
+            <a href="{% provider_login_url 'windowslive' %}" >
                 <div class="row loginButton">
                     <div class="col-xs-3">
                         <h1><i class="fa fa-windows fa-2x"></i></h1>
@@ -26,12 +28,20 @@
                 </div>
             </a>
         </div>
+        <div class="col-sm-3 hidden-xs"></div>
     </div>
     <p>
-        <strong>Lorem ipsum</strong> dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.
+        <strong>Lees Meer</strong> is een programma dat speciaal gemaakt is om leerlingen te helpen met lezen. Soms staan er in teksten woorden die je toevallig niet weet of die je wel kent, maar even niet weet wat ze ook al weer betekenen. <strong>Lees Meer</strong> helpt hiermee. Door op een woord te klikken in de tekst komen er kaartjes in beeld met informatie over het woord. Hierdoor hoef je niet te lang stil te staan bij een lastige zin. Het is ook mogelijk om binnen het systeem een vraag te stellen over een woord. De docent krijgt deze vraag binnen en kan een antwoord achterlaten die dan voortaan bij de kaartjes verschijnt van dat woord.
+    </p>
+    <p>
+        Wij hopen dat met <strong>Lees Meer</strong>, lezen leuker wordt. Of in ieder geval makkelijker. Zodat jij gewoon teksten kan lezen wanneer jij wilt en over de onderwerpen die jij leuk vindt.
     </p>
     
     
+    
+    <div class="secretLogin" style="position:fixed; display: block; bottom:0; right:0">
+        <a href="{% provider_login_url 'google' %}" style="color: white">G+</a>
+    </div>
 </div>
 
 {% endblock body %}

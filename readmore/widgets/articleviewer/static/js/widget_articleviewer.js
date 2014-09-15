@@ -79,5 +79,9 @@ $.widget( "readmore.articleviewer", {
 			//Append linked image to article
 			$("<a class='linkimg' href='" + link + "''><img src='/static/img/layout/link_nobg.png'></a>").appendTo($(this).parent());
 		})
+		
+	    $('#article img').load(function(){
+           $('#imageHolder').append(this);        
+        });
 	}
 })

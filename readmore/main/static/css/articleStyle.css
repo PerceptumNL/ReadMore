@@ -7,7 +7,18 @@ Contrast:       #F35C9F
 
 #article {
     z-index:5;
+    
+}
 
+#article p {
+    font-size: 1.2em;
+}
+
+#imageHolder img {
+    display: block;
+    margin: auto !important;
+    width: 100% !important;
+    height: auto !important;
 }
 
 #cover {
