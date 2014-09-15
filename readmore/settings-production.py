@@ -69,7 +69,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 )
-)
 
 LANGUAGE_CODE = 'nl'
 LANGUAGES = (
