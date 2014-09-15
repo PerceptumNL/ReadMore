@@ -45,6 +45,8 @@ function api_call(endpoint, data, method, cb_success, cb_error, cb_cancel)
 	// Set default method
 	if( method == undefined && data == null)  method = "get"
 	else if( method == undefined) method = "post"
+	// Ensure method is lower case.
+	method = method.toLowerCase()
 	// Setup attempt to execute post call to api
 	if(method == "post"){
 		if(data == null) data = {}

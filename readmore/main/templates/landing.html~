@@ -1,0 +1,18 @@
+{% extends "mainbase.html" %}
+
+{% load staticfiles %}
+
+{% block body %}
+<div class="container background">
+	{% for cat in categories %}
+	<div class="row">
+		<div class="col-md-1"></div>
+		{% for item in cat %}
+			<a href= "{{ item.get_absolute_url }}"> <div class="col-md-3 iconBlock"> <br><img src="{{ item.image }}" class="img-icon"> <p class="landingText"> <br> {{ item }} </p></div></a>
+		{% endfor %}
+		<div class="col-md-1"></div>
+		<div class="col-md-1"></div>
+	</div>
+	{% endfor %}
+</div>
+{% endblock body %}

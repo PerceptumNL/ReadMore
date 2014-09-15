@@ -1,0 +1,60 @@
+{% extends "main.html" %}
+
+{% load staticfiles %}
+
+{% block extraCSS %}
+    <link href="{% static 'css/mainStyle.css' %}" rel="stylesheet">
+    <link href="{% static 'css/navigationStyle.css' %}" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block body %}
+<div class="fullScreen">
+    {% include "topbar.html" %}
+    
+    <div  id="mainContent">
+        <div class="container">
+            <div id="filters" class="btn-group">
+                <btn type="button" class="btn btn-default" data-filter="*">show all</btn>
+                <btn type="button" class="btn btn-default" data-filter="Muziek">Muziek</btn>
+                <btn type="button" class="btn btn-default" data-filter="Sport">Sport</btn>
+                <btn type="button" class="btn btn-default" data-filter="Vervoer">Vervoer</btn>
+            </div>
+            <div class="row isotope js-isotope" id="articles">
+                {% for article in articles %}
+                
+                    <div class="articleTile col-lg-4 col-md-6 col-xs-12">
+						<a href="{{ article.get_absolute_url }}">  <!--{% url 'article' article.pk %}">-->
+					    <div class="articleContent ">
+						    
+						    <div class="articleImage">
+						        {% if article.category.image %}
+        							<img src="{{article.category.image}}">
+							    {% endif %}
+						    </div>
+						    <div class="articleTitle">
+							    <h4>{{article.title}}</h4>
+						    </div>
+						    <div class="articleType">
+							    <h3>{{article.category.title}}</h3>				
+						    </div>
+						    <div class="articleInfo"> {{article.category.title}}
+						    </div>
+					    </div>
+					    </a>
+				    </div>
+				
+				{% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
+
+
+{% block extraScripts %}
+	<script src={% static "js/isotope.pkgd.min.js"%}></script>
+	<script src={% static "js/filteringIsotope.js"%}></script>
+{% endblock %}

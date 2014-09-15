@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+{% load i18n %}
+{% load url from future %}
+
+{% load account %}
+{% load staticfiles %}
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+  <script src="{% static 'js/animatedOpen.js' %}"></script>
+
+
+{% if request.user.is_authenticated %}
+	<div class="container">
+	    <div class="col-md-2">
+	        <a href="{% url 'profile' request.user %}">
+			<button class="newBtn">
+		    	{% user_display user %}
+			</button>
+			</a>
+		</div>
+		<div class="col-md-8">
+		</div>
+		<div class="col-md-2">
+	    	<form method="POST" action="{% url 'account_logout' %}"> 
+			{% csrf_token %}
+			<button class="newBtn" type="submit">{% trans "Log Out" %}</button>
+	    	</form>
+	    </div>			
+	</div>
+
+{% else %}
+
+
+    <div id="dialog" title="Nieuwe Gebruiker">
+
+	<form id="signup_form" method="POST" action="{% url 'account_signup' %}">
+		{% csrf_token %}
+		<div class="form-group">
+		<div class="input-group">
+			<input id="id_username"  class="signup-input" name="username" placeholder="Gebruikersnaam" type="text" />{{ form.username.errors }}<br>
+		</div>
+		<div class="input-group">
+			<input id="id_email"  class="signup-input" name="email" placeholder="E-Mail" type="email" />{{ form.email.errors }}<br>
+		</div>
+		<div class="input-group">
+			<input id="id_password1"  class="signup-input" name="password1" placeholder="Wachtwoord" type="password" />{{ form.password1.errors }}<br>
+		</div>
+		<div class="input-group">
+			<input id="id_password2"  class="signup-input" name="password2" placeholder="Wachtwoord (controle)" type="password" />{{ form.password2.errors }}<br>
+		</div>
+		</div>
+		{% if redirect_field_value %}
+			<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+		{% endif %}
+		<div class="form-actions">
+			<button class="signupBtn" type="submit">{% trans "Schrijf je in" %}</button>
+		</div>
+
+<i class="fa fa-windows"></i> 
+
+	</form>
+
+    </div>
+    	<!--<div class="col-md-3">
+			<button id="opener" class="newBtn">Nieuwe Gebruiker?</button>
+		</div>-->
+	    <!--<a href="/accounts/login/" class="pull-right">Login</a>-->
+		<form method="POST" action="{% url 'account_login' %}"> 
+			<span class="col-md-2">
+			</span>
+			<span class="col-md-7">
+				{% csrf_token %}
+				<span class="form-group">
+					<input id="id_login" class="inp" maxlength="30" name="login" placeholder="Gebruikersnaam" type="text" />
+				</span>
+				<span class="form-group">
+					<input id="id_password" class="inp" name="password" placeholder="Wachtwoord" type="password" />
+				</span>
+			
+			<!--<span>-->
+				{% if redirect_field_value %}
+					<input type="hidden" class="inp" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+				{% endif %}
+				<button type="submit" class="newBtn">{% trans "Log In" %}</button>
+			<!--</span>-->
+			</span>
+		</form>
+	
+{% endif %}
+</p>
+
+
+

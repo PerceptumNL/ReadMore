@@ -1,0 +1,42 @@
+{% extends "main.html" %}
+
+{% load staticfiles %}
+{% load socialaccount %}
+
+{% block extraCSS %}
+    <link href="{% static 'css/mainStyle.css' %}" rel="stylesheet">
+    <link href="{% static 'css/loginStyle.css' %}" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block body %}
+<div class="container">
+    <h1> Welkom op Lees Meer </h1>
+    <div class="row">
+        <div class="col-sm-6 col-xs-12" style="padding:15px;">
+            <a href="{% provider_login_url 'windowslive' %}">
+                <div class="row loginButton">
+                    <div class="col-xs-3">
+                        <h1><i class="fa fa-windows fa-2x"></i></h1>
+                    </div>
+                    <div class="col-xs-9">
+                        <h1>Log in met Windows Live</h1>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <p>
+        <strong>Lorem ipsum</strong> dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.
+    </p>
+    
+    
+</div>
+
+{% endblock body %}
+
+
+{% block extraScripts %}
+
+{% endblock %}

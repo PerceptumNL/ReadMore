@@ -1,0 +1,527 @@
+/* File for custom CSS */
+
+/* Body background landing page */
+
+.body-background{
+	background-color: #438EB9;
+}
+
+/* Menu background landing page */
+
+.background{
+	background-color: #f0f0f0;
+	border-radius:4px;
+	padding:1%;
+	height:80%;
+	overflow:scroll;
+}
+
+/* 
+	Landing page 
+*/
+
+/* Blocks for landing page */
+
+.iconBlock{
+	background-color: #cecece;
+	text-align: center;
+	padding: 1%;
+	margin:1%;
+	border-radius: 4px;
+}
+
+.iconBlock:hover{
+	background-color: #438EB9;
+}
+
+
+/*
+	Navigation page
+*/
+
+/* Category blocks */
+.cats {
+	background-color: #cecece;
+	padding: 1%;
+	color: #414141;
+}
+
+/* Content blocks */
+.content{
+	background-color: #ffffff;
+	color: #414141;
+	padding:10px;
+	border-radius:4px;
+	margin-bottom: 5%;
+}
+
+/* Title for Categories with articles*/
+.title{
+	color: #ffffff;
+	background-color: #438eb9;
+	padding: 1%;
+	margin:0;
+	text-align: center;
+	border-radius: 4px;
+}
+
+/* Title for Categories without articles */
+.titleEmpty{
+	color: #438eb9;
+	background-color: #ffffff;
+	padding: 1%;
+	margin-bottom:5%;
+	text-align: center;
+	border-radius: 4px;
+}
+
+.titleEmpty:hover{
+	text-decoration: underline;
+}
+
+html,body{
+	height:100%;
+	font-family: sans-serif;
+}
+
+.wrapper{
+	height:80%;
+}
+
+.inside{
+	background-color:#ffffff;
+	height:80%;
+}
+
+#reader{
+	border-top:5px solid #cecece;
+	border-bottom: 5px solid #cecece;
+	padding:5px;
+}
+
+.landingText{
+	color:#ffffff;
+	font-family:sans-serif;
+}
+
+.whiteLink{
+	color:#ffffff;
+}
+.whiteLink:hover{
+	color:#ffffff;
+	text-decoration: underline;
+}
+
+.blueLink{
+	color:#438eb9;
+	font-family: sans-serif
+}
+
+.blueLink:hover{
+	color:#438eb9;
+	font-family: sans-serif;
+	text-decoration: underline
+}
+
+.titleBig{
+	color:#438eb9;
+	background-color: #ffffff;
+	text-align: center;
+	border-radius:4px;
+	padding:5%;
+}
+
+
+.crumbs{
+	color: #438eb9;
+	font-family: sans-serif;
+}
+.crumbs:hover{
+	color:#cecece;;
+}
+
+.arrows{color:#cecece;}
+
+.footer{
+	height:10%;
+}
+
+#account{
+	height:10%;
+}
+
+.wikiBlueLink{
+	color:#438eb9;
+}
+.wikiBlueLink:hover{
+	color:#438EB9;
+	text-decoration: underline;
+}
+
+
+/* User/login/newuser buttons */
+.newBtn{
+	background-color:#ffffff;
+	border:none;
+	border-radius:4px;
+	margin:10px;
+	padding:10px;
+	font-family: sans-serif;
+	color:#438eb9;
+}
+
+.newBtn:hover{
+	background-color: #438eb9;
+	color:#ffffff;
+	border: 1px solid white;
+	margin:9px;
+}
+
+/* Signup button */
+.signupBtn{
+	background-color:#438eb9;
+	border:none;
+	border-radius: 4px;
+	margin:10px;
+	padding:10px;
+	font-family: sans-serif;
+	color:#ffffff;
+}
+
+.signupBtn:hover{
+	background-color: #ffffff;
+	color: #438eb9;
+	border: 1px solid #438eb9;
+	margin:9px;
+}
+
+.navbar-form{
+	margin:0;
+}
+
+/* User/pw input styling */
+form { 
+	display:inline;
+	margin:0;
+	padding:0;
+}
+
+.inp {
+	font-family: sans-serif;
+	color: #ffffff;
+	padding:10px;
+	margin:5px;
+	background-color:#438eb9;
+	border: none;
+	border-bottom-style:solid;
+	border-bottom-width:1px;
+	border-bottom-color:#ffffff;
+	border-radius: 5px;
+}
+.inp:hover{
+	padding: 9px;
+	border: 1px solid #ffffff;
+}
+
+/*
+Change placeholder color (http://stackoverflow.com/questions/2610497/change-an-inputs-html5-placeholder-color-with-css)
+*/
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #f0f0f0;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #f0f0f0;
+    opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #f0f0f0;
+    opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #f0f0f0;
+}
+
+/* Style signup dialog */
+.ui-dialog-title {
+	color:#ffffff;
+}
+.ui-widget-header {
+	background:none !important;
+	background-color:#438eb9 !important;
+	border:none !important;
+}
+
+.ui-dialog {
+	border-radius: 4px !important;
+	border:none !important;
+	text-align: center !important;
+}
+
+.input-group {
+	width:100% !important;
+}
+.signup-input {
+	border:none !important;
+	border-bottom-color: #438eb9 !important;
+	border-bottom-width: 1px !important;
+	border-bottom-style:solid !important;
+	border-radius: 5px !important; 
+	padding: 5px !important;
+	width:90% !important;
+}
+
+.signup-input:hover{
+	border: 1px solid #438eb9 !important;
+	padding: 4px !important;
+}
+
+.ui-button {
+	background:none !important;
+	background-color:#ffffff !important;
+	color:#438eb9 !important;
+	border:none !important;
+}
+
+/* Style login pages */
+.signup{
+	padding:10%;
+	height:80%;
+}
+
+.login{
+	text-align: center;
+}
+
+.errorlist{
+	list-style-type: none;
+}
+
+.logo{
+	text-align: center;
+	margin:5px;
+	z-index:-10;
+	width:100px;
+	padding:5px;
+}
+
+.logo:hover{
+	border: 1px solid #ffffff;
+	border-radius: 3px;
+	padding:4px;
+	
+}
+
+.header{
+	text-align: center;
+	height:10%;
+	color:white;
+}
+
+.header:hover{
+	color:white;
+	text-decoration: underline;
+}
+
+.titleSmall{
+	color: #438eb9;
+	background-color: #ffffff;
+	padding: 1%;
+	margin-bottom:5%;
+	text-align: center;
+	border-radius: 4px;
+}
+
+.img-circle{
+	height:200px;
+	border-radius: 50%;
+}
+
+.person{
+	text-align: center;
+}
+
+.right{
+	overflow:scroll;
+	height:100%;
+	border-left: 2px solid #cecece;
+	border-top: 5px solid #cecece;
+	border-bottom: 5px solid #cecece;
+	background-color: #ffffff;
+}
+
+.text{
+	overflow: scroll;
+	height:100%;
+}
+
+/* Widget styling */
+.widget{
+	background-color: #ffffff;
+	height: 30%;
+	margin: 2%;
+	padding: 1%;
+	border: 2px solid #cecece;
+	border-radius: 4px;
+	overflow: scroll;
+}
+
+.barrier{
+	margin-top: 15%;
+	margin-bottom: 15%;
+	margin-left: 25%;
+	margin-right: 25%;
+	text-align: center;
+}
+
+/* Form Styling */
+label, input {
+    /* in order to define widths */
+    display: inline-block;
+}
+label {
+    width: 30%;
+    /* positions the label text beside the input */
+    text-align: right;
+}
+label + input {
+    width: 30%;
+    /* large margin-right to force the next element to the new-line
+       and margin-left to create a gutter between the label and input */
+    margin: 0 30% 0 4%;
+}
+input + input {
+    float: left;
+}
+
+/* Margin of 1px, to change to 0px and 1px border upon hover, 
+to prevent shifting of words */
+.word {
+	margin:1px;
+}
+
+/* Visual emphasis on the word that was not found */
+.notfound {
+	font-weight: bold;
+}
+
+#selected {
+	margin: 0px;
+	border-radius: 3px;
+	border: 1px dashed #438eb9;
+}
+
+.neutral * #selected {
+	border: none;
+}
+
+.neutral {
+	border: 1px dashed #438eb9;
+	position:relative;
+}
+
+.openlink {
+	color: #438eb9;
+	font-size: 80%;
+	margin: 0;
+	padding: 0;
+	position:relative;
+}
+.linkimg {
+	background-color: #438eb9;
+	border-radius: 5px;
+	padding:1px;
+	margin:1px;
+}
+
+
+/* Profile page styling */
+
+/* Resize profile picture to fit box */
+.profilepic {
+	max-width: 100%;
+	max-height: 100%
+}
+
+/* Styling for badges */
+.badges {
+	width: 100px;
+	height: 100px;
+	margin: 5px;
+}
+
+/* Styling for id-card style profile container */
+.profilepage {
+	color: #333333;
+	background-color: #333333;
+	height:80%;
+	border-radius: 50px;
+	overflow: auto;
+
+}
+
+/* Make top grey */
+.toprow {
+	height: 75px;
+	color: #ffffff;
+	background-color: #333333;
+	text-align: center;
+	border-top-left-radius: 50px;
+	border-top-right-radius: 50px;
+}
+
+/* Style info part */
+.pr {
+	height: 470px;
+	background-color: #ffffff;
+	overflow: auto;
+	border: 3px solid #333333;
+}
+
+/* Extra row for positioning */
+.bufferrow {
+	height: 30px;
+	background-color: #ffffff;
+}
+
+/* Capitalize first letter of word in case of name */
+.name:first-letter {
+	text-transform: uppercase;
+}
+
+/* Styling for labels */
+.defheader {
+	font-size: 100%;
+	text-align: right;
+}
+
+/* Styling for link container in profile */
+.linkrow {
+	background-color: #ffffff;
+}
+
+/* Styling for links in profiles */
+.pa {
+	color: #438EB9;
+}
+
+.pa:hover {
+	color: #333333;
+	text-decoration: none;
+}
+
+.barcode {
+	text-align: center;
+	font-size: 40px;
+	color: #ffffff;
+	letter-spacing: 15px;
+	margin:10px;
+}
+
+.edit {
+	height:25px;
+	position:absolute;
+	right:30px;
+}
+
+

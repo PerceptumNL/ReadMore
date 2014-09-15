@@ -1,0 +1,32 @@
+{% extends "main_base.html" %}
+
+{% block body %}
+
+<div class="container background inside">
+	<div class="col-md-8 text" id="reader">	
+		<script>
+			$(
+				$("#reader").articleviewer({'article': "{{ article.get_absolute_url }}" })				);
+			</script>
+	</div>
+	<div class="col-md-4 right">
+		<div id="dictionary" class="row widget">
+			<h3 class="title">Woordenboek</h3>
+			Klik op een woord om de betekenis op te vragen.
+		</div>
+		<script>$( $("#dictionary").dictionary() )</script>
+		<div id="seemore" class="row widget">
+			<h3 class="title">Ook interessant:</h3>
+			<p>
+				<ul>
+				{% for art in random_articles %}
+				<li><a href="{{ art.get_absolute_url }}" class="blueLink">{{ art }}</a></li>
+				{% endfor %}
+				</ul>
+			</p>
+		</div>
+		<script>$( $("#seemore").seemore() )</script>
+	</div>
+</div>
+
+{% endblock body %}

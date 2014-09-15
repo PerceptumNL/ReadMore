@@ -11,8 +11,12 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.6/howto/static-files/
 STATIC_ROOT = '/app/staticfiles'
 STATIC_URL = '/static/'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -30,20 +34,30 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
 # Application definition
 
 INSTALLED_APPS = (
     'django.contrib.admin',
+    'polymorphic',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django_summernote',
     'readmore.main',
     'readmore.widgets',
-    'readmore.widgets.categorylist',
-    'readmore.sources',
+    'readmore.widgets.articleviewer',
+    'readmore.widgets.dummy',
+    'readmore.widgets.dictionary',
+    'readmore.widgets.carddeck',
+    'readmore.content',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.windowslive',
+    'allauth.socialaccount.providers.google',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -53,6 +67,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+)
+)
+
+LANGUAGE_CODE = 'nl'
+LANGUAGES = (
+  ('nl', ('Dutch')),
 )
 
 ROOT_URLCONF = 'readmore.urls'
@@ -62,6 +83,43 @@ WSGI_APPLICATION = 'readmore.wsgi.application'
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 DATABASES = {'default': dj_database_url.config()}
+
+# Django sites
+SITE_ID = 1
+
+# Authentication back-end
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend"
+)
+
+# auth and allauth settings
+# Settings for social providers
+# Note: Windows Live requires no settings
+#LOGIN_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_REQUIRED = 'True'
+SOCIALACCOUNT_EMAIL_REQUIRED = 'True'
+SOCIALACCOUNT_AUTO_SIGNUP = 'True'
+ACCOUNT_EMAIL_VERIFICATION = 'False'
+AUTH_PROFILE_MODULE = 'main.UserProfile'
+
+SOCIALACCOUNT_PROVIDERS = \
+    { 'google':
+        { 'SCOPE': ['https://www.googleapis.com/auth/userinfo.profile'],
+          'AUTH_PARAMS': { 'access_type': 'online' } }}
+
+# Template Context
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.request",
+    "django.contrib.auth.context_processors.auth",
+    "allauth.account.context_processors.account",
+    "allauth.socialaccount.context_processors.socialaccount",
+)
+
+# Database
+# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -77,4 +135,18 @@ USE_L10N = True
 USE_TZ = True
 
 # Wikipedia source
-SOURCE_WIKIPEDIA_LANG = "nl"
+
+SUMMERNOTE_CONFIG = {
+    # Using SummernoteWidget - iframe mode
+    'iframe': True,  # or set False to use SummernoteInplaceWidget - no iframe mode
+
+    # Change editor size
+    'width': '100%',
+    'height': '450',
+
+    # Set editor language/locale
+    'lang': 'en-US',
+}
+
+# Mediawiki content settings
+CONTENT_MEDIAWIKI_LANG = "nl"

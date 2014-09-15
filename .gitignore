@@ -55,3 +55,8 @@ docs/_build/
 # Settings file
 readmore/settings.py
 
+# Vim swap files
+*.swp
+
+# Temporary files
+*~
