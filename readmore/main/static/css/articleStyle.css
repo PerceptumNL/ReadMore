@@ -49,6 +49,7 @@ Contrast:       #F35C9F
 #cover a{
     position:fixed;
     text-align:center;
+    cursor:pointer;
     background-color: #111;
     bottom: -100px;
     color: #FFF;
