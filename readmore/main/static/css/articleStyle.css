@@ -71,6 +71,11 @@ Contrast:       #F35C9F
 #cover.open a{
     bottom: 0px;
 }
+@media all and (max-width: 959px){
+    #cover a{
+        font-size: 0.5em;
+    }
+}
 
 #row-holder {
     width:100%;
