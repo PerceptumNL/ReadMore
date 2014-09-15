@@ -10,7 +10,9 @@ $.widget( "readmore.articleviewer", {
 			{'format':'json'},
 			'GET',
 			function(data, xhr){
+				title = $("<header>").html(data['title']);
 				_self.element.html(data['body']);
+				_self.element.prepend(title);
 				_self.postprocess()
 			}
 		);
