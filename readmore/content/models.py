@@ -26,7 +26,7 @@ class Category(PolymorphicModel):
     title = models.CharField(max_length=255)
 
     # Link to a remotely hosted image.
-    image = models.URLField(max_length=255, null=True, blank=True)
+    image = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Categories"
