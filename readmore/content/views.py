@@ -13,6 +13,11 @@ article_read = django.dispatch.Signal(providing_args=["user", "category", "artic
 def barrier(request):
     return render(request, 'barrier.html')
 
+def update_feeds(request):
+    for category in RSSCategory.objects.all():
+        category.update_feed()
+    return HttpResponse()
+
 @login_required
 def index(request):
     """Return response containing index of categories."""

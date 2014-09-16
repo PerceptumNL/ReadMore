@@ -4,6 +4,9 @@ from django_summernote.admin import SummernoteModelAdmin
 from polymorphic.admin import PolymorphicParentModelAdmin, \
         PolymorphicChildModelAdmin
 
+class RSSCategoryAdmin(PolymorphicChildModelAdmin):
+    base_model = RSSCategory
+
 class WikiCategoryAdmin(PolymorphicChildModelAdmin):
     base_model = WikiCategory
 
@@ -13,9 +16,13 @@ class RegularCategoryAdmin(PolymorphicChildModelAdmin):
 class CategoryAdmin(PolymorphicParentModelAdmin):
     base_model = Category
     child_models = (
+        (RSSCategory, RSSCategoryAdmin),
         (WikiCategory, WikiCategoryAdmin),
         (Category, RegularCategoryAdmin)
     )
+
+class RSSArticleAdmin(PolymorphicChildModelAdmin):
+    base_model = RSSArticle
 
 class WikiArticleAdmin(PolymorphicChildModelAdmin):
     base_model = WikiArticle
@@ -26,6 +33,7 @@ class RegularArticleAdmin(PolymorphicChildModelAdmin, SummernoteModelAdmin):
 class ArticleAdmin(PolymorphicParentModelAdmin):
     base_model = Article
     child_models = (
+        (RSSArticle, RSSArticleAdmin),
         (WikiArticle, WikiArticleAdmin),
         (Article, RegularArticleAdmin)
     )
