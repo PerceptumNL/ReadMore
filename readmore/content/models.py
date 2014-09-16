@@ -267,7 +267,7 @@ class Article(PolymorphicModel):
     An article has a title and optionally a body. Each Article object
     belongs to a category.
     """
-    category = models.ForeignKey('Category', related_name='articles')
+    categories = models.ManyToManyField('Category', related_name='articles')
     title = models.CharField(max_length=255)
     body = models.TextField(null=True, blank=True)
 
@@ -299,7 +299,7 @@ class Article(PolymorphicModel):
         Use this method to retrieve the categories as it can be overriden by
         subclasses to contain the right information for each type of article.
         """
-        return [self.category]
+        return self.categories.all()
 
     def get_absolute_url(self):
         """Return the URL identifiying this object.
