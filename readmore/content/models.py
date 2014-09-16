@@ -271,6 +271,8 @@ class Article(PolymorphicModel):
     title = models.CharField(max_length=255)
     body = models.TextField(null=True, blank=True)
 
+
+
     def __repr__(self):
         return 'Article(%s)' % (self.title,)
 
