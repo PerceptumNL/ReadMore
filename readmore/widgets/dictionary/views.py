@@ -38,7 +38,7 @@ def process(request):
         elif isinstance(term, TermForm):
             card['type'] = 'DictTermCard'
             card['data'] = {
-                'category': '',
+                'category': "form of %s" % (term.main_term,),
                 'word': word,
                 'meanings':
                     [{'definition':t, 'example':''} for t in term.form2text()]
