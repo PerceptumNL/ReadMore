@@ -76,7 +76,10 @@ class Category(PolymorphicModel):
             for category in categories:
                 if len(articles) < max_num:
                     articles += category.get_articles(True, max_num)
-        return articles[:max_num]
+        if max_num == 'Inf':
+            return articles
+        else:
+            return articles[:max_num]
 
     def get_random_articles(self, num=5):
         """Return a number of random articles.
