@@ -1,6 +1,8 @@
 from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
+    url(r'categories/update/?$',
+        'readmore.content.views.update_feeds', name='update_feeds'),
     url(r'articles/(?P<identifier>\d+)$',
         'readmore.content.views.article', {'source':'local'},
         name='article'),
