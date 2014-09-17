@@ -7,6 +7,9 @@ from readmore.content.helpers import *
 import lxml
 import random
 import urllib
+from datetime import datetime
+from time import mktime
+import feedparser
 from bs4 import BeautifulSoup
 
 MWAPI = MediaWikiAPI()
@@ -54,7 +57,7 @@ class Category(PolymorphicModel):
                 children += child.subcategories(recursive)
         return children
 
-    def get_articles(self, recursive=False):
+    def get_articles(self, recursive=False, max_num='Inf'):
         """Return the list of articles in this catergory.
         Use this method to retrieve articles as it can be overriden by
         subclasses to give the expected result for each type of category.
@@ -65,21 +68,29 @@ class Category(PolymorphicModel):
 
         Keyword arguments:
         recursive -- Search for articles recursively (default False)
+        max_num -- Maximum number of articles (default 'Inf')
         """
         articles = list(self.articles.all())
-        #print "sub: " + str(self)
-        #print "articles: " + str(articles)
-        if recursive:
+        if recursive and len(articles) < max_num:
             categories = self.get_subcategories(False)
             for category in categories:
-                articles += category.get_articles(True)
-        return articles
+                if len(articles) < max_num:
+                    articles += category.get_articles(True, max_num)
+        if max_num == 'Inf':
+            return articles
+        else:
+            return articles[:max_num]
 
-    def get_random_articles(self, amt=5):
+    def get_random_articles(self, num=5):
+        """Return a number of random articles.
+
+        Keyword arguments:
+        num -- The number of random articles to return (default 5)
+        """
         article_list = self.get_articles()
         random_list = []
-        if(len(article_list) >  amt):
-            for i in range(0, amt):
+        if(len(article_list) >  num):
+            for i in range(0, num):
                 random_list.append(random.choice(article_list))
             return random_list
         else:
@@ -94,6 +105,58 @@ class Category(PolymorphicModel):
         https://docs.djangoproject.com/en/1.6/ref/models/instances/#django.db.models.Model.get_absolute_url
         """
         return reverse('category', args=(self.pk,))
+
+
+class RSSCategory(Category):
+    """Model for RSS-based categories."""
+    feed = models.URLField()
+    last_update = models.DateTimeField(null=True, blank=True)
+
+    def get_articles(self, recursive=False, max_num=100):
+        """Return the list of articles in this catergory.
+        Use this method to retrieve articles as it can be overriden by
+        subclasses to give the expected result for each type of category.
+
+        This function can search for all articles in all subcategories
+        recursively, in a breadth-first search. This operation can however be
+        rather costly.
+
+        Keyword arguments:
+        recursive -- Search for articles recursively (default False)
+        max_num -- Maximum number of articles (default 100)
+        """
+        return super(RSSCategory, self).get_articles(recursive, max_num)
+
+    def update_feed(self):
+        """Retrieve new articles from the RSS feed in this category."""
+        data = feedparser.parse(self.feed)
+        updated = datetime.fromtimestamp(mktime(data['updated_parsed']))
+        updated = updated.replace(tzinfo=None)
+        last_updated = self.last_update if self.last_update else \
+                datetime.fromtimestamp(0)
+        last_updated = last_updated.replace(tzinfo=None)
+        if updated > last_updated:
+            for entry in data['entries']:
+                published = datetime.fromtimestamp(
+                        mktime(entry['published_parsed']))
+                published = published.replace(tzinfo=None)
+                if published > last_updated:
+                    article, created = RSSArticle.objects.get_or_create(
+                            identifier=entry['id'],
+                            defaults={
+                                'title': entry['title'],
+                                'body': entry['description'],
+                                'publication_date': published
+                            })
+                    article.categories.add(self)
+                    article.save()
+            self.last_update = updated
+            self.save()
+
+    def save(self, *args, **kwargs):
+        super(RSSCategory, self).save(*args, **kwargs)
+        self.update_feed()
+
 
 class WikiCategory(Category):
     """Model for wikipedia-based categories.
@@ -267,7 +330,7 @@ class Article(PolymorphicModel):
     An article has a title and optionally a body. Each Article object
     belongs to a category.
     """
-    category = models.ForeignKey('Category', related_name='articles')
+    categories = models.ManyToManyField('Category', related_name='articles')
     title = models.CharField(max_length=255)
     body = models.TextField(null=True, blank=True)
 
@@ -301,7 +364,7 @@ class Article(PolymorphicModel):
         Use this method to retrieve the categories as it can be overriden by
         subclasses to contain the right information for each type of article.
         """
-        return [self.category]
+        return self.categories.all()
 
     def get_absolute_url(self):
         """Return the URL identifiying this object.
@@ -311,6 +374,13 @@ class Article(PolymorphicModel):
         https://docs.djangoproject.com/en/1.6/ref/models/instances/#django.db.models.Model.get_absolute_url
         """
         return reverse('article', args=(self.pk,))
+
+
+class RSSArticle(Article):
+    """Model for RSS-based articles."""
+    publication_date = models.DateTimeField()
+    identifier = models.URLField(max_length=255)
+
 
 class WikiArticle(Article):
     """Model for wikipedia-based articles.
