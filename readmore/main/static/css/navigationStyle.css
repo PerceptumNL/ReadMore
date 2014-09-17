@@ -61,7 +61,7 @@ Contrast:       #F35C9F
 	min-height:120px; 	
 	width:100%;
 	background-color: #51afbc;
-	box-shadow: 2px 2px 1px #531a50, 0px 90px 0px #e4e6d6 inset;
+	box-shadow: 2px 2px 1px #531a50, 0px 90px 0px #EDEDED inset;
 	border-radius: 5px;
     -webkit-transition: all 0.5s ease; /* For Safari 3.1 to 6.0 */
     transition: all 0.5s ease;
