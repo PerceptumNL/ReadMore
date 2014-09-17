@@ -909,7 +909,7 @@ class WiktionaryParser(object):
         self.re_pron_ipa = re.compile(r"^\*{{WikiW\|IPA}}: {{IPA\|/(.+)/.*$")
         self.re_syll = re.compile(r"^\*(.+)$")
         self.re_nlnoun = re.compile(r"^([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)$")
-        self.re_pipelist = re.compile(r"([^|]+)")
+        self.re_pipelist = re.compile(r"((?:{{[^}]+\|[^}]+}})|[^|]+)")
         self.re_form = re.compile(r"^{{([^|]+)\|([^|]+).*}}$")
         self.re_meaning_entry = re.compile(
                 r"^(?:\[[A-Z]\] )?'''(.+)''' ?(.+)?$")
