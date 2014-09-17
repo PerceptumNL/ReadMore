@@ -7,6 +7,7 @@ from readmore.content.helpers import *
 import lxml
 import random
 import urllib
+import re
 from datetime import datetime
 from time import mktime
 import feedparser
@@ -129,6 +130,7 @@ class RSSCategory(Category):
 
     def update_feed(self):
         """Retrieve new articles from the RSS feed in this category."""
+        re_image = re.compile("^image/")
         data = feedparser.parse(self.feed)
         updated = datetime.fromtimestamp(mktime(data['updated_parsed']))
         updated = updated.replace(tzinfo=None)
@@ -145,6 +147,11 @@ class RSSCategory(Category):
                         body = entry['content'][0]['value']
                     else:
                         body = entry['description']
+                    if 'links' in entry:
+                        images = filter(lambda x: re_image.match(x['type']),
+                                entry['links'])
+                        for image in images:
+                            body += '<img src="%s" />' % (image['href'],)
                     article, created = RSSArticle.objects.get_or_create(
                             identifier=entry['id'],
                             defaults={
