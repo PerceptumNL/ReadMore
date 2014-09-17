@@ -132,7 +132,12 @@ class RSSCategory(Category):
         """Retrieve new articles from the RSS feed in this category."""
         re_image = re.compile("^image/")
         data = feedparser.parse(self.feed)
-        updated = datetime.fromtimestamp(mktime(data['updated_parsed']))
+        if 'updated_parsed' in data:
+            updated = datetime.fromtimestamp(mktime(data['updated_parsed']))
+        elif 'published_parsed' in data:
+            updated = datetime.fromtimestamp(mktime(data['published_parsed']))
+        else:
+            updated = datetime.now()
         updated = updated.replace(tzinfo=None)
         last_updated = self.last_update if self.last_update else \
                 datetime.fromtimestamp(0)
@@ -145,8 +150,12 @@ class RSSCategory(Category):
                 if published > last_updated:
                     if 'content' in entry:
                         body = entry['content'][0]['value']
-                    else:
+                    elif 'description' in entry:
                         body = entry['description']
+                    elif 'summary' in entry:
+                        body = entry['description']
+                    else:
+                        continue
                     if 'links' in entry:
                         images = filter(lambda x: re_image.match(x['type']),
                                 entry['links'])
