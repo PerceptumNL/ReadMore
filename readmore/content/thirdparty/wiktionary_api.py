@@ -36,7 +36,6 @@ method will return all wiktionary information about a given word.
 
 Known issues:
     * Does not support any other wiktionary formats than the Dutch one.
-    * Does not support other lexical categories than nouns and verbs
     * Does not support different conjugations per meaning of a term
     * Does not support different antonyms per meaning
     * Does not support stress homographs
@@ -706,33 +705,88 @@ class NounTerm(Term):
 
 class VerbTerm(Term):
     """The term class for verbs."""
-    _past_tense = u''
-    _past_participle_tense = u''
+    _1ps = u''
+    _2ps = u''
+    _plural = u''
+    _past_single = u''
+    _past_plural = u''
+    _auxiliary = u''
+    _past_participle = u''
 
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "noun"
+        return "verb"
 
     @property
-    def past_tense(self):
-        """Return the past tense form of the noun."""
-        return self._past_tense
+    def first_person_single(self):
+        """Return the 1st person single form of the verb."""
+        return self._1ps
 
-    @past_tense.setter
-    def past_tense(self, value):
-        """Set the past tense form of the noun."""
-        self._past_tense = value
+    @first_person_single.setter
+    def first_person_single(self, value):
+        """Set the 1st person single form of the verb."""
+        self._1ps = value
 
     @property
-    def past_participle_tense(self):
-        """Return the past participle tense form of the noun."""
-        return self._past_participle_tense
+    def second_person_single(self):
+        """Return the 2st person single form of the verb."""
+        return self._2ps
 
-    @past_participle_tense.setter
-    def past_participle_tense(self, value):
-        """Set the past participle tense form of the noun."""
-        self._past_participle_tense = value
+    @second_person_single.setter
+    def second_person_single(self, value):
+        """Set the 2st person single form of the verb."""
+        self._2ps = value
+
+    @property
+    def plural(self):
+        """Return the plural form of the verb."""
+        return self._plural
+
+    @plural.setter
+    def plural(self, value):
+        """Set the plural form of the verb."""
+        self._plural = value
+
+    @property
+    def past_single(self):
+        """Return the past single form of the verb."""
+        return self._past_single
+
+    @past_single.setter
+    def past_single(self, value):
+        """Set the past single form of the verb."""
+        self._past_single = value
+
+    @property
+    def past_plural(self):
+        """Return the past plural form of the verb."""
+        return self._past_plural
+
+    @past_plural.setter
+    def past_plural(self, value):
+        """Set the past plural form of the verb."""
+        self._past_plural = value
+
+    @property
+    def auxiliary(self):
+        """Return the auxiliary form of the verb."""
+        return self._auxiliary
+
+    @auxiliary.setter
+    def auxiliary(self, value):
+        """Set the auxiliary form of the verb."""
+        self._auxiliary = value
+
+    @property
+    def past_participle(self):
+        """Return the past participle form of the verb."""
+        return self._past_participle
+
+    @past_participle.setter
+    def past_participle(self, value):
+        """Set the past participle form of the verb."""
+        self._past_participle = value
 
 
 class TermSet(object):
@@ -807,6 +861,8 @@ class WiktionaryParser(object):
     """Parser class that parses raw wikitext"""
     # The word the parsed document is about
     word = None
+    # Reference to the WiktionaryAPI instance
+    api = None
     # Temporary buffer of lines
     _buff = None
     # List of termsets
@@ -824,11 +880,13 @@ class WiktionaryParser(object):
     # List of parser warnings
     _warnings = None
 
-    def __init__(self):
+    def __init__(self, api):
+        self.api = api
         self._buff = []
         self._termsets = []
         self._warnings = []
         self._universal_langs = ['universeel', 'translingual']
+        self._conjugations_identifier = lambda x: '%s/vervoeging' % (x,)
         self.re_ignore = re.compile(
             (r"^"
                 r"(?:<!--.+-->)|"
@@ -851,7 +909,7 @@ class WiktionaryParser(object):
         self.re_pron_ipa = re.compile(r"^\*{{WikiW\|IPA}}: {{IPA\|/(.+)/.*$")
         self.re_syll = re.compile(r"^\*(.+)$")
         self.re_nlnoun = re.compile(r"^([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)$")
-        self.re_nlstam = re.compile(r"([^|]+)")
+        self.re_pipelist = re.compile(r"((?:{{[^}]+\|[^}]+}})|[^|]+)")
         self.re_form = re.compile(r"^{{([^|]+)\|([^|]+).*}}$")
         self.re_meaning_entry = re.compile(
                 r"^(?:\[[A-Z]\] )?'''(.+)''' ?(.+)?$")
@@ -883,6 +941,7 @@ class WiktionaryParser(object):
         word - The word this wikitext is about. (Default None)
         languages - A list of languages it should return or '*'. (Default '*')
         """
+        self.word = word
         self._termsets = []
         if isinstance(lines, str) or isinstance(lines, unicode):
             lines = lines.split("\n")
@@ -929,11 +988,13 @@ class WiktionaryParser(object):
             # If there is no current term either, skip line
             if self._termset is None:
                 self._warn("Expecting language line", line)
-                continue
 
             # Test for new header template
             header_match = re.search(self.re_header, line)
             if header_match:
+                # If there is no current termset, assume universal language
+                if self._termset is None:
+                    self._termset = TermSet(self._universal_langs[0])
                 # If there was a current header
                 if self._header is not None:
                     # Finish parsing current header
@@ -944,8 +1005,9 @@ class WiktionaryParser(object):
                 self._header, self._header_params = header_match.groups()
                 continue
 
-            # If not language or header line, save to buffer.
-            self._buff.append(line)
+            # If not language or header line, but header exists: save to buffer
+            if self._header:
+                self._buff.append(line)
 
         # Finish pending termset
         if self._termset is not None:
@@ -1001,6 +1063,8 @@ class WiktionaryParser(object):
                 self._parse_form(NounTermForm)
             else:
                 self._parse_meaning(NounTerm)
+        elif self._header == 'nlverb':
+            self._parse_nlverb()
         elif self._header == 'nlstam':
             self._parse_nlstam()
         elif self._header == 'prcp':
@@ -1125,17 +1189,54 @@ class WiktionaryParser(object):
         if self._buff:
             self._warn("Unexpected buffer content for nlnoun")
 
+    def _parse_nlverb(self):
+        """Parse info under the nlverb header."""
+        # Create new current term
+        term = self._ensure_term(VerbTerm)
+        # Match different forms of the verb
+        conj_list = re.findall(self.re_pipelist, self._header_params)
+        if len(conj_list) > 7:
+            term.first_person_single = conj_list[1]
+            term.second_person_single = conj_list[2]
+            term.plural = conj_list[3]
+            term.past_single = conj_list[4]
+            term.past_plural = conj_list[5]
+            term.auxiliary = conj_list[6]
+            term.past_participle = conj_list[7]
+        else:
+            self._warn("Unexpected nlverb line", self.header_params)
+
+        if self._buff:
+            self._warn("Unexpected buffer content for nlverb")
+
     def _parse_nlstam(self):
         """Parse info under the nlstam header."""
         # Create new current term
         term = self._ensure_term(VerbTerm)
-        # Match different forms of the verb
-        nlstam_list = re.findall(self.re_nlstam, self._header_params)
-        if len(nlstam_list) > 2:
-            term.past_tense = nlstam_list[1]
-            term.past_participle_tense = nlstam_list[2]
+        # Create separate parser
+        inner_parser = self.api.create_parser()
+        # Attempt to fetch extended conjugations list
+        wiki_conjugations = self.api.get_info(
+                self._conjugations_identifier(self.word), inner_parser)
+        conj_terms = filter(lambda x: isinstance(x, VerbTerm), wiki_conjugations)
+        if len(conj_terms) > 0:
+            term.first_person_single = conj_terms[0].first_person_single
+            term.second_person_single = conj_terms[0].second_person_single
+            term.plural = conj_terms[0].plural
+            term.past_single = conj_terms[0].past_single
+            term.past_plural = conj_terms[0].past_plural
+            term.auxiliary = conj_terms[0].auxiliary
+            term.past_participle = conj_terms[0].past_participle
         else:
-            self._warn("Unexpected nlstam line", self._header_params)
+            self._warn("No extended conjugations available for %s" %
+                    (self.word,))
+            # Match different forms of the verb
+            nlstam_list = re.findall(self.re_pipelist, self._header_params)
+            if len(nlstam_list) > 2:
+                term.past_single = nlstam_list[1]
+                term.past_participle = nlstam_list[2]
+            else:
+                self._warn("Unexpected nlstam line", self._header_params)
 
         if self._buff:
             self._warn("Unexpected buffer content for nlstam")
@@ -1303,23 +1404,25 @@ class WiktionaryAPI(MediaWikiAPI):
                 base_url = 'http://%s' % (base_url,)
 
         super(WiktionaryAPI, self).__init__(lang, base_url, **kwargs)
-
-        self._parser = WiktionaryParser() if parser is None else parser
+        self._parser = self.create_parser() if parser is None else parser
         self._languages = languages
         self._termsets = {}
 
-    def _load(self, word):
+    def create_parser(self):
+        return WiktionaryParser(api=self)
+
+    def _load(self, word, parser):
         """Retrieve wikitext about the word or load from cache."""
         if word not in self._termsets:
             wikitext = self.get_page_wikitext(word)
             if wikitext is not None:
-                self._termsets[word] = self._parser.parse(lines=wikitext,
+                self._termsets[word] = parser.parse(lines=wikitext,
                         word=word, languages=self._languages)
             else:
                 return None
         return self._termsets[word]
 
-    def get_info(self, word):
+    def get_info(self, word, parser=None):
         """Return termsets contained in the wikitext about the word.
         When the list of languages provided at initialization only covers one
         language, the terms of the only termset are directly returned. If no
@@ -1329,7 +1432,8 @@ class WiktionaryAPI(MediaWikiAPI):
         Keyword arguments:
         word - The word about which you want the information.
         """
-        termsets = self._load(word)
+        parser = parser if parser is not None else self._parser
+        termsets = self._load(word, parser)
         if not termsets:
             return []
         else:

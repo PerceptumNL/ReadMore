@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from readmore.content.thirdparty.wiktionary_api import *
+from cards import *
 import json
 
 # Create your views here.
@@ -15,34 +16,23 @@ def process(request):
     for term in info:
         card = {}
         if isinstance(term, Term):
-            card['type'] = 'DictTermCard'
-            card['data'] = {
-                'category': term.category_description,
-                'word': word,
-                'meanings': []
-            }
-            synonyms = {}
-            antonyms = {}
-            for index, meaning in enumerate(term.meanings):
-                definition = WiktionaryParser.clean_wikitext(
-                        meaning.definition)
-                example = WiktionaryParser.clean_wikitext(
-                        meaning.example)
-                if definition:
-                    card['data']['meanings'].append({
-                        'definition': definition,
-                        'example': example,
-                        'synonyms': meaning.synonyms,
-                        'antonyms': meaning.antonyms
-                        })
+            cards.append(create_term_card(term))
+            if isinstance(term, VerbTerm):
+                cards.append(create_verb_conj_card(term))
         elif isinstance(term, TermForm):
-            card['type'] = 'DictTermCard'
-            card['data'] = {
-                'category': "form of %s" % (term.main_term,),
-                'word': word,
-                'meanings':
-                    [{'definition':t, 'example':''} for t in term.form2text()]
-            }
-        cards.append(card)
+            # Get main term
+            main_term_info = api.get_info(term.main_term)
+            if isinstance(term, VerbTermForm):
+                main_terms = filter(
+                    lambda x: isinstance(x, VerbTerm), main_term_info)
+            elif isinstance(term, NounTermForm):
+                main_terms = filter(
+                    lambda x: isinstance(x, NounTerm), main_term_info)
+            else:
+                main_terms = []
+            if len(main_terms) == 1:
+                cards.append(create_term_card(main_terms[0]))
+                if isinstance(main_terms[0], VerbTerm):
+                    cards.append(create_verb_conj_card(main_terms[0]))
     return HttpResponse(json.dumps(cards).encode('ascii', 'xmlcharrefreplace'),
             content_type='application/json')
