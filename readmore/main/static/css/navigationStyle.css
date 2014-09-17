@@ -32,10 +32,20 @@ Contrast:       #F35C9F
     left:0;
     top:60px;
     bottom:0;
-    padding: 15px 5px;
+    padding: 0px 5px;
     width:20%;
     overflow-y:auto;
+    
     background-color: #22ADC2;
+}
+.buttonHolder::-webkit-scrollbar { 
+    display: none; 
+}
+.buttonHolder btn{
+    margin: 0px 5px;
+    border-radius: 0px;
+    box-shadow: 1px 1px 1px #777;
+
 }
 @media screen and (max-width: 800px) {
   .buttonHolder {
@@ -43,8 +53,14 @@ Contrast:       #F35C9F
     display: none;
   }
   .articleHolder {
+    position: fixed;
+    overflow-y: auto;
     left: 0;
     top: 60px;
+  }
+  
+  #topbar #toggleCategories {
+    display: block;
   }
 }
 

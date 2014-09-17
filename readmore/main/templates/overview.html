@@ -32,7 +32,7 @@
                             <div class="articleContent ">
 	                            
 	                            <div class="articleImage">
-	                                {% if article.category.image %}
+	                                {% if article.categories.first.image %}
 						                <img src="{{article.categories.first.image}}">
 		                            {% endif %}
 	                            </div>

@@ -31,17 +31,35 @@ p strong {
 
 
 #topbar {
-    position:absolute;
+    position:fixed;
     top:0;
     left:0;
     width: 20%;
     height:60px;
+    margin:0px;
+    padding:0;
     background-color: #22ADC2;
+}
+#topbar a{
+    color: #F3F3F3;
+}
+#topbar a:hover{
+    color: #DDD;
+}
+
+#topbar i{
+    display:block;
+    padding: 5px 0px;
+    text-align: center;
+}
+
+#topbar #toggleCategories {
+    display: none;
 }
 
 #topbar img{
     display:block;
-    height:50%;
+    height:40px;
     width:auto;
     margin:10px auto;
 }
