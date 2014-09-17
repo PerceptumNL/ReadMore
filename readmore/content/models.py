@@ -141,11 +141,15 @@ class RSSCategory(Category):
                         mktime(entry['published_parsed']))
                 published = published.replace(tzinfo=None)
                 if published > last_updated:
+                    if 'content' in entry:
+                        body = entry['content'][0]['value']
+                    else:
+                        body = entry['description']
                     article, created = RSSArticle.objects.get_or_create(
                             identifier=entry['id'],
                             defaults={
                                 'title': entry['title'],
-                                'body': entry['description'],
+                                'body': body,
                                 'publication_date': published
                             })
                     article.categories.add(self)
