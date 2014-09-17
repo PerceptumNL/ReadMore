@@ -18,7 +18,6 @@ Contrast:       #F35C9F
     bottom:0;
     right:0;
     padding:10px 25px;
-    
 }
 
 .row.isotope {
@@ -35,16 +34,14 @@ Contrast:       #F35C9F
     padding: 0px 25px;
     width:20%;
     overflow-y:auto;
-    
     background-color: #51afbc;
 }
-.buttonHolder::-webkit-scrollbar { 
-    display: none; 
+
+.buttonHolder::-webkit-scrollbar {
+    display: none;
 }
-.buttonHolder btn{
+.buttonHolder .btn{
     margin: 0px 25px;
-    border-radius: 0px;
-    box-shadow: 1px 1px 1px #777;
 }
 
 @media screen and (max-width: 800px) {
@@ -58,23 +55,19 @@ Contrast:       #F35C9F
     left: 0;
     top: 60px;
   }
-  
   #topbar #toggleCategories {
     display: block;
   }
 }
-
-
 .articleTile{
 	position:relative;
 	z-index:2;
 	padding: 18px 18px;
-	
 }
 
 .articleContent{
 	position: relative;
-	min-height:120px; 	
+	min-height:120px;
 	width:100%;
 	background-color: #51afbc;
 	box-shadow: 1px 1px 3px #531a50, 0px 90px 0px #F3F3F3 inset;
@@ -120,14 +113,13 @@ Contrast:       #F35C9F
 	z-index:15;
 	word-wrap:break-word;
 	overflow: hidden;
-	
 }
+
 .articleTitle h4{
 	color: #736f66;
 	margin:10px;
 	-webkit-transition: all 0.7s ease; /* For Safari 3.1 to 6.0 */
     transition: all 0.7s ease;
-    
 }
 
 .articleImage{
@@ -137,8 +129,8 @@ Contrast:       #F35C9F
 	right:15px;
 	max-width:30%;
 	z-index:15;
-    
 }
+
 .articleImage img{
 	max-height: 80%;
 	margin:5px;
@@ -151,6 +143,7 @@ Contrast:       #F35C9F
 	color:#F3F3F3;
 	text-align: center;
 }
+
 .articleType h3{
 	margin:0px 0px;
 
