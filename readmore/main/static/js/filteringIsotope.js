@@ -12,6 +12,7 @@ $( function() {
         itemSelector: '.articleTile',
         layoutMode: 'fitRows',
         sortBy: 'random',
+        transitionDuration: 0,
         filter: function() {
             var variable = qsRegex ? $(this).text().match( qsRegex ) : true;
             return variable ;
