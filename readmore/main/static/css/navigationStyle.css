@@ -40,8 +40,8 @@ Contrast:       #F35C9F
 .buttonHolder::-webkit-scrollbar {
     display: none;
 }
-.buttonHolder .btn{
-    margin: 0px 25px;
+#filters{
+    width:100%;
 }
 
 @media screen and (max-width: 800px) {
