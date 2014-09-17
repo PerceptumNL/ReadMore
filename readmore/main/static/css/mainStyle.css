@@ -36,8 +36,9 @@ p strong {
     left:0;
     width: 20%;
     height:60px;
-    margin:0px;
-    padding:0;
+    margin:0 0;
+    padding:0 0;
+    z-index:5000;
     background-color: #22ADC2;
 }
 #topbar a{
@@ -68,6 +69,7 @@ p strong {
 @media screen and (max-width: 800px) {
   #topbar {
     width:100%;
+    margin:0 0;
   }
 }
 
