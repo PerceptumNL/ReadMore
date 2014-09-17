@@ -19,7 +19,7 @@ $( function() {
     });
   
     // bind filter button click
-    $('#filters').on( 'click', 'btn', function() {
+    $('#filters').on( 'click', 'button', function() {
         var filterValue = $( this ).attr('data-filter');
         if(filterValue=='*'){ 
             qsRegex=null;
