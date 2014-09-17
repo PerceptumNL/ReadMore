@@ -32,6 +32,19 @@ class RegularArticleAdmin(PolymorphicChildModelAdmin, SummernoteModelAdmin):
 
 class ArticleAdmin(PolymorphicParentModelAdmin):
     base_model = Article
+    polymorphic_list = True
+    search_fields = ['title',]
+    list_display = ('title', 'main_category', 'publication_date',)
+    def main_category(self, obj):
+        return obj.categories.first()
+    def publication_date(self, obj):
+        if(isinstance(obj, RSSArticle)):
+            return obj.publication_date
+        else:
+            return " "
+    
+    
+    
     child_models = (
         (RSSArticle, RSSArticleAdmin),
         (WikiArticle, WikiArticleAdmin),
