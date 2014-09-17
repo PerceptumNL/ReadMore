@@ -11,9 +11,8 @@
 
 {% block body %}
 <div class="fullScreen">
-    {% include "topbar.html" %}
-    
     <div  id="mainContent">
+         {% include "topbar.html" %}
         <div class="container-full">
             <div class="buttonHolder">
                 <input type="text" id="quicksearch" onblur="this.value=''" placeholder="Zoek artikel" style="width:100%; padding: 10px 0px; margin:15px auto;"/>
@@ -34,16 +33,16 @@
 	                            
 	                            <div class="articleImage">
 	                                {% if article.category.image %}
-						                <img src="{{article.category.image}}">
+						                <img src="{{article.categories.first.image}}">
 		                            {% endif %}
 	                            </div>
 	                            <div class="articleTitle">
 		                            <h4>{{article.title}}</h4>
 	                            </div>
 	                            <div class="articleType">
-		                            <h3>{{article.category.title}}</h3>				
+		                            <h3>{{article.categories.first.title}}</h3>				
 	                            </div>
-	                            <div class="articleInfo"> {{article.category.title}}
+	                            <div class="articleInfo"> {% for category in article.categories.all %} {{category}} }} {% endfor %}
 	                            </div>
                             </div>
                             </a>

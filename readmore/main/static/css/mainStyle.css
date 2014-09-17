@@ -34,25 +34,31 @@ p strong {
     position:absolute;
     top:0;
     left:0;
-    right:0;
-    height:50px;
-    margin: 0px;
-    padding: 0px;
+    width: 20%;
+    height:60px;
     background-color: #22ADC2;
 }
-#topbar .row{
-    margin: 0px;
-    padding: 0px;
+
+#topbar img{
+    display:block;
+    height:50%;
+    width:auto;
+    margin:10px auto;
+}
+
+
+@media screen and (max-width: 800px) {
+  #topbar {
+    width:100%;
+  }
 }
 
 #mainContent{
-    position:fixed;
-    overflow-y: auto;
-    top: 50px;
+    position:absolute;
+    top: 0;
     bottom: 0px;
-    left: 0px;
-    right: 0px;
-    padding: 25px;
+    left: 0;
+    right: 0;
     background-color: #fff;
     background: -webkit-linear-gradient(left, #FFF, #e9f8f9, #FFF); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(left, #FFF, #e9f8f9, #FFF); /* For Opera 11.1 to 12.0 */

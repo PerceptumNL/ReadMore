@@ -10,6 +10,20 @@ Contrast:       #F35C9F
     
 }
 
+#topbar{
+    width:100%;
+}
+#mainContent {
+    top: 60px;
+    padding: 20px 0px;
+}
+#article header {
+    color: #22ADC2;
+    font-size: 2em;
+    font-weight: bold;
+    box-shadow: 0px 2px 2px -2px; #22ADC2 inset;
+}
+
 #article p {
     font-size: 1.2em;
 }

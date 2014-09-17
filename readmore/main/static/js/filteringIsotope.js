@@ -11,6 +11,7 @@ $( function() {
     $container.isotope({
         itemSelector: '.articleTile',
         layoutMode: 'fitRows',
+        sortBy: 'random',
         filter: function() {
             var variable = qsRegex ? $(this).text().match( qsRegex ) : true;
             return variable ;
