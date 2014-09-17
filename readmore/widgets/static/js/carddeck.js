@@ -82,39 +82,31 @@ function DictTermCard(container, data){
 	}
 }
 
-function DictSynonymCard(container, data){
-	var _parent = new Card(container, "Hetzelfde als <b>"+data['word']+"</b>");
-	container.addClass("dict_synonym_card");
+function DictVerbConjCard(container, data){
+	var _parent = new Card(container, "Vervoegingen van <b>"+data['word']+"</b>");
+	container.addClass("dict_verb_conj_card");
 	var content = _parent.create_content_container();
-	content.append($('<div class="word">'+data['word']+'</div>'));
-	content.append(
-		$('<div class="category">('+data['term_category']+')</div>'));
-	if(!$.isEmptyObject(data['synonyms'])){
-		var synonyms = $("<dl>");
-		content.append(synonyms);
-		for(index in data['synonyms']){
-			var synonym_list = data['synonyms'][index];
-			synonyms.append($('<dt>').text(index+"."));
-			synonyms.append($('<dd>').text(synonym_list.join(", ")));
-		}
-	}
-}
-
-function DictAntonymCard(container, data){
-	var _parent = new Card(container,
-			"Tegenovergestelde van <b>"+data['word']+"</b>");
-	container.addClass("dict_antonym_card");
-	var content = _parent.create_content_container();
-	content.append($('<span class="word">'+data['word']+'</span>'));
-	content.append(
-		$('<span class="category">('+data['term_category']+')</span>'));
-	if(!$.isEmptyObject(data['antonyms'])){
-		var antonyms = $("<dl>");
-		content.append(antonyms);
-		for(index in data['antonyms']){
-			var antonym_list = data['antonyms'][index];
-			antonyms.append($('<dt>').text(index+"."));
-			antonyms.append($('<dd>').text(antonym_list.join(", ")));
-		}
-	}
+	table_part1 = $("<table class='table verb_conj_table'>");
+	table_part1.append($("<tr>").html(
+			"<th></th><th>tegenwoordige tijd</th>"+
+			"<th>verleden tijd</th>"));
+	table_part1.append($("<tr>").html(
+			"<td>ik</td><td>"+data['1ps']+"</td>"+
+			"<td>"+data['past_single']+"</td></tr>"));
+	table_part1.append($("<tr>").html(
+			"<td>jij</td><td>"+data['2ps']+"</td>"+
+			"<td>"+data['past_single']+"</td></tr>"));
+	table_part1.append($("<tr>").html(
+			"<td>hij/zij</td><td>"+data['2ps']+"</td>"+
+			"<td>"+data['past_single']+"</td></tr>"));
+	table_part1.append($("<tr>").html(
+			"<td>wij</td><td>"+data['plural']+"</td>"+
+			"<td>"+data['past_plural']+"</td>"));
+	content.append(table_part1);
+	table_part2 = $("<table class='table verb_conj_table'>");
+	table_part2.append($("<tr>").html(
+			"<th>voltooid deelwoord</th>"+
+				"<td>"+data['auxiliary']+" "+data['past_participle']+
+			"</td>"));
+	content.append(table_part2);
 }
