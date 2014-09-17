@@ -38,7 +38,7 @@ p strong {
     height:60px;
     margin:0 0;
     padding:0 0;
-    z-index:5000;
+    z-index:4;
     background-color: #22ADC2;
 }
 #topbar a{
