@@ -10,8 +10,33 @@ Contrast:       #F35C9F
     
 }
 
+#topbar{
+    width:100%;
+}
+#mainContent {
+    top: 60px;
+    padding: 20px 0px;
+}
+#article header {
+    color: #22ADC2;
+    font-size: 2.25em;
+    font-weight: bold;
+    box-shadow: 0px 2px 2px -2px; #22ADC2 inset;
+    padding: 5px 10px;
+}
+
+#article h1,h2,h3,h4{
+    color: #22ADC2;
+    padding: 0px 15px;  
+}
+
 #article p {
     font-size: 1.2em;
+        padding: 5px 25px;
+}
+#imageHolder {
+    margin: 5px 25px;
+    padding: 5px 5px;
 }
 
 #imageHolder img {
@@ -19,6 +44,8 @@ Contrast:       #F35C9F
     margin: auto !important;
     width: 100% !important;
     height: auto !important;
+    max-width: 100% !important;
+
 }
 
 #cover {
@@ -82,10 +109,13 @@ Contrast:       #F35C9F
 #cover.open a{
     bottom: 0px;
 }
-@media all and (max-width: 959px){
+@media all and (max-width: 800px){
     #cover a{
         font-size: 0.5em;
         height:10%;
+    }
+    #mainContent .row{
+        margin: 0 0;
     }
 }
 

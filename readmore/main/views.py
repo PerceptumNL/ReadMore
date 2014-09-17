@@ -20,10 +20,13 @@ def login(request):
 def navigation(request):
     
     allArticles = Article.objects.all()
+    allCategories = Category.objects.all()
+    
     
     return render(request, 'overview.html',
         {
             "articles": allArticles,
+            "categories": allCategories,
         }
     )    
     

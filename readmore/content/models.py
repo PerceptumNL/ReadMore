@@ -141,11 +141,15 @@ class RSSCategory(Category):
                         mktime(entry['published_parsed']))
                 published = published.replace(tzinfo=None)
                 if published > last_updated:
+                    if 'content' in entry:
+                        body = entry['content'][0]['value']
+                    else:
+                        body = entry['description']
                     article, created = RSSArticle.objects.get_or_create(
                             identifier=entry['id'],
                             defaults={
                                 'title': entry['title'],
-                                'body': entry['description'],
+                                'body': body,
                                 'publication_date': published
                             })
                     article.categories.add(self)
@@ -333,6 +337,8 @@ class Article(PolymorphicModel):
     categories = models.ManyToManyField('Category', related_name='articles')
     title = models.CharField(max_length=255)
     body = models.TextField(null=True, blank=True)
+
+
 
     def __repr__(self):
         return 'Article(%s)' % (self.title,)

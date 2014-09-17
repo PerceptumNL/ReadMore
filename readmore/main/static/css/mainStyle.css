@@ -31,28 +31,54 @@ p strong {
 
 
 #topbar {
-    position:absolute;
+    position:fixed;
     top:0;
     left:0;
-    right:0;
-    height:50px;
-    margin: 0px;
-    padding: 0px;
+    width: 20%;
+    height:60px;
+    margin:0 0;
+    padding:0 0;
+    z-index:4;
     background-color: #51afbc;
 }
-#topbar .row{
-    margin: 0px;
-    padding: 0px;
+#topbar a{
+    color: #F3F3F3;
+}
+#topbar a:hover{
+    color: #DDD;
+}
+
+#topbar i{
+    display:block;
+    padding: 5px 0px;
+    text-align: center;
+}
+
+#topbar #toggleCategories {
+    display: none;
+}
+
+#topbar img{
+    display:block;
+    height:40px;
+    width:auto;
+    margin:10px auto;
+}
+
+
+@media screen and (max-width: 800px) {
+  #topbar {
+    width:100%;
+    margin:0 0;
+  }
 }
 
 #mainContent{
-    position:fixed;
-    overflow-y: auto;
-    top: 50px;
+    position:absolute;
+    top: 0;
     bottom: 0px;
-    left: 0px;
-    right: 0px;
-    padding: 25px;
+    left: 0;
+    right: 0;
     background-color: #fff;
     background: -webkit-linear-gradient(left, #FFF, #e9f8f9, #FFF); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(left, #FFF, #e9f8f9, #FFF); /* For Opera 11.1 to 12.0 */
