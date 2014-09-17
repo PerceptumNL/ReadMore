@@ -32,7 +32,7 @@ Contrast:       #F35C9F
     left:0;
     top:60px;
     bottom:0;
-    padding: 0px 5px;
+    padding: 0px 25px;
     width:20%;
     overflow-y:auto;
     
@@ -42,11 +42,11 @@ Contrast:       #F35C9F
     display: none; 
 }
 .buttonHolder btn{
-    margin: 0px 5px;
+    margin: 0px 25px;
     border-radius: 0px;
     box-shadow: 1px 1px 1px #777;
-
 }
+
 @media screen and (max-width: 800px) {
   .buttonHolder {
   visibility: hidden;

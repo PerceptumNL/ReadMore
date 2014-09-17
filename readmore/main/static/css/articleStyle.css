@@ -25,6 +25,11 @@ Contrast:       #F35C9F
     padding: 5px 10px;
 }
 
+#article h1,h2,h3,h4{
+    color: #22ADC2;
+    padding: 0px 25px;  
+}
+
 #article p {
     font-size: 1.2em;
         padding: 5px 15px;
