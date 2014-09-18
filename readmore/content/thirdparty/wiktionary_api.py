@@ -1243,6 +1243,9 @@ class WiktionaryParser(object):
 
     def _parse_meaning(self, termcls):
         """Parse info under the meaning header."""
+        if isinstance(self._term, TermForm):
+            self._warn("Meaning found for term form, which is not supported.")
+            return
         meaning = None
         # Create new current term
         term = self._ensure_term(termcls)
@@ -1278,6 +1281,9 @@ class WiktionaryParser(object):
         if self._term is None:
             self._warn("Synonyms found without current term")
             return
+        elif isinstance(self._term, TermForm):
+            self._warn("Synonyms found for term form, which is not supported.")
+            return
 
         for line in self._buff:
             ref_match = re.search(self.re_syn_ref, line)
@@ -1302,6 +1308,9 @@ class WiktionaryParser(object):
         if self._term is None:
             self._warn("Antonyms found without current term")
             return
+        elif isinstance(self._term, TermForm):
+            self._warn("Antonyms found for term form, which is not supported.")
+            return
 
         for line in self._buff:
             ref_match = re.search(self.re_ant_ref, line)
@@ -1325,6 +1334,9 @@ class WiktionaryParser(object):
         """Parse info under the hyponyms header."""
         if self._term is None:
             self._warn("Hyponyms found without current term")
+            return
+        elif isinstance(self._term, TermForm):
+            self._warn("Hyponyms found for term form, which is not supported.")
             return
 
         for line in self._buff:
