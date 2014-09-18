@@ -64,9 +64,6 @@ Card for rating through CSS, javascript below catches rating and parses it to in
         this.parentElement.innerHTML = Array(rating+1).join("<i class='fa fa-star' style='color: #22ADC2'></i>");
     });
 
-    
-
-    
     $(function(){
         $("#article").articleviewer(
             {'article': "{{ article.get_absolute_url }}" });

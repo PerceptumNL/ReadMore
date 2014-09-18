@@ -10,13 +10,15 @@ $( function() {
     var qsRegex;
     $container.isotope({
         itemSelector: '.articleTile',
-        layoutMode: 'fitRows',
-        sortBy: 'random',
+        layoutMode: 'masonry',
         transitionDuration: 0,
         filter: function() {
             var variable = qsRegex ? $(this).text().match( qsRegex ) : true;
             return variable ;
         }
+    });
+    $(window).load(function(){
+        $container.isotope();
     });
   
     // bind filter button click

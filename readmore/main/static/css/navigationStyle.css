@@ -13,37 +13,75 @@ Contrast:       #F35C9F
 
 .articleHolder {
     position:absolute;
-    left:20%;
+    left:350px;
     top: 0;
     bottom:0;
     right:0;
-    padding:10px 25px;
+    padding: 0 0;
+    margin: 0 0;
 }
 
-.row.isotope {
+.isotope {
     height:100%;
     overflow-y: auto;
     overflow: hidden;
 }
+
 
 .buttonHolder{
     position: fixed;
     left:0;
     top:60px;
     bottom:0;
-    padding: 0px 25px;
-    width:20%;
+    padding: 0px 5px;
+    width:350px;
     overflow-y:auto;
-    background-color: #51afbc;
+    background-color: #333;
 }
 
 .buttonHolder::-webkit-scrollbar {
     display: none;
 }
+
+.buttonHolder .btn{
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+.buttonHolder input{
+    border-radius: 4px !important;
+}
+
 #filters{
     width:100%;
 }
 
+
+.articleTile{
+	position:relative;
+	z-index:2;
+	padding: 0;
+	margin 0;
+	width:25%;
+	height:350px;
+      
+}
+@media screen and (max-width: 1200px) {
+  .articleTile{
+    width: 50%;
+  }
+}
+@media screen and (max-width: 800px) {
+  .articleTile{
+    width: 100%;
+  }
+}
+@media screen and (max-width: 640px) {
+  .articleTile{
+    width: 100%;
+  }
+}
 @media screen and (max-width: 800px) {
   .buttonHolder {
   visibility: hidden;
@@ -55,96 +93,51 @@ Contrast:       #F35C9F
     left: 0;
     top: 60px;
   }
+  
   #topbar #toggleCategories {
     display: block;
   }
 }
-.articleTile{
-	position:relative;
-	z-index:2;
-	padding: 18px 18px;
-}
-
 .articleContent{
-	position: relative;
-	min-height:120px;
+	position: absolute;
+	height: 100%;
 	width:100%;
-	background-color: #51afbc;
-	box-shadow: 1px 1px 3px #531a50, 0px 90px 0px #F3F3F3 inset;
-	border-radius: 5px;
-    -webkit-transition: all 0.5s ease; /* For Safari 3.1 to 6.0 */
-    transition: all 0.5s ease;
     overflow: hidden;
+
+    
 }
 .articleContent:hover{
-    box-shadow: 2px 2px 3px #531a50;
-    background-color: #51afbc;
-    -webkit-transition: all 0.5s ease; /* For Safari 3.1 to 6.0 */
-    transition: all 0.5s ease;
+    box-shadow: 0px -145px 5px rgba(81,175,188,75) inset, 0px -145px 0px rgba(33,33,33,75) inset;
+
 }
 
 .articleContent:hover h4{
-	color: #F3F3F3;
+	color: #FFF;
+	font-size: 28px;
 }
 
 .articleInfo{
 	display:none;
 
 }
-.overlayMask {
-	position:absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	margin:0;
-	background-color: #F3F3F3;
-	border-radius: 5px;
-	z-index:10;
-}
+
 
 .articleTitle{
 	position: absolute;
-	top:0px;
-	left:0px;
-	width:60%;
-	height: 90px;
-	font-size: 16px;
+	bottom:5px;
+	left:5px;
+	width:100%;
+	height: auto;
+	
 	z-index:15;
 	word-wrap:break-word;
 	overflow: hidden;
 }
 
 .articleTitle h4{
-	color: #736f66;
+	color: #f3f3f3;
 	margin:10px;
-	-webkit-transition: all 0.7s ease; /* For Safari 3.1 to 6.0 */
-    transition: all 0.7s ease;
-}
-
-.articleImage{
-	position: absolute;
-	top:0px;
-	bottom: 20px;
-	right:15px;
-	max-width:30%;
-	z-index:15;
-}
-
-.articleImage img{
-	max-height: 80%;
-	margin:5px;
-}
-
-.articleType{
-	position: absolute;
-	width:100%;
-	bottom:1px;
-	color:#F3F3F3;
-	text-align: center;
-}
-
-.articleType h3{
-	margin:0px 0px;
+	font-size: 22px;
 
 }
+

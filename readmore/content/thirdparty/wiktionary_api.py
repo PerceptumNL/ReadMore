@@ -427,6 +427,104 @@ class VerbTermForm(TermForm):
             "onpersoonlijke verleden tijd van %s"))
 
 
+class AdjectiveTermForm(TermForm):
+    """Class for forms of an adjective."""
+
+    def __init__(self, main_term, form):
+        """
+        Supported adjective forms are:
+          * decl-pos (declined positive)
+          * decl-com (declined comparitive)
+          * decl-sup (declined superlative)
+          * indecl-pos (indeclined positive)
+          * indecl-com (indeclined comparitive)
+          * indecl-sup (indeclined superlative)
+          * part-pos (partitive positive)
+          * part-com (partitive comparitive)
+          * part-sup (partitive superlative)
+
+        Keyword arguments:
+        main_term - The word of which this is a form.
+        form - The name of which form this is.
+        """
+        if form not in [
+            'decl-pos', 'decl-com', 'decl-sup',
+            'indecl-pos', 'indecl-com', 'indecl-sup',
+            'part-pos', 'part-com', 'part-sup',
+            ]:
+            raise ValueError("Unsupported form type")
+        super(AdjectiveTermForm, self).__init__(main_term, form)
+        self._init_rewrite_rules()
+
+    @property
+    def is_declined(self):
+        """Return if the adjective form is declined.
+        In Dutch, 'beter' would be indeclined and 'betere' declined.
+        """
+        return bool(re.match('decl', self.form))
+
+    @property
+    def is_indeclined(self):
+        """Return if the adjective form is indeclined.
+        In Dutch, 'beter' would be indeclined and 'betere' declined.
+        """
+        return bool(re.match('indecl', self.form))
+
+    @property
+    def is_partitive(self):
+        """Return if the adjective form is partitive.
+        Indicating partialness or indeterminateness, such as "some water" or
+        "something nice". In Dutch, it is a word form that is used when referring to
+        undetermined things or amounts.
+        """
+        return bool(re.match('part', self.form))
+
+    @property
+    def is_positive(self):
+        """ Return if the adjective form is positive.
+        Positive is the 'normal' form of the degrees of comparison of an
+        adjective or adverb. Thus big is the positive form of the trio big,
+        bigger, biggest.
+        """
+        return bool(re.match('pos', self.form))
+
+    @property
+    def is_comparitive(self):
+        """Return if the adjective form is comparitive.
+        An inflection, or different form, of a comparable adjective showing a
+        relative quality, usually denoting 'to a greater extent' but not 'to
+        the ultimate extent' (see also superlative and degrees of comparison).
+        In English, the comparative form is usually formed by appending -er, or
+        using the word more. For example, the comparative of hard is 'harder';
+        of difficult, 'more difficult'.
+        """
+        return bool(re.match('com', self.form))
+
+    @property
+    def is_superlative(self):
+        """Return if the adjective form is superlative.
+        An inflection, or different form, of a comparable adjective showing a
+        relative quality, denoting 'to the ultimate extent' (see also
+        comparative and degrees of comparison). In English, the superlative
+        form is often formed by appending -est, or using the word most. For
+        example, the superlative of big is 'biggest'; of confident, 'most
+        confident'
+        """
+        return bool(re.match('sup', self.form))
+
+    def _init_rewrite_rules(self):
+        """Initialize rewrite rules for each form."""
+        # Define template rule
+        rule_template = lambda s: (lambda x: s % (x.main_term, ))
+        #Add Dutch rewrite rules
+        self.add_form_rewrite_rule('nl', 'noun-pl', rule_template(
+            "meervoud van het zelfstandig naamwoord %s"))
+        self.add_form_rewrite_rule('nl', 'noun-dim', rule_template(
+            "verkleinwoord enkelvoud van het zelfstandig naamwoord %s"))
+        self.add_form_rewrite_rule('nl', 'noun-dim-pl', rule_template(
+            "verkleinwoord meervoud van het zelfstandig naamwoord %s"))
+
+
 class ConjunctiveTerm(Term):
     """The term class for conjunctives."""
 
@@ -1074,6 +1172,8 @@ class WiktionaryParser(object):
                 self._parse_form(VerbTermForm)
             else:
                 self._parse_meaning(VerbTerm)
+#        elif self._header == 'nl-adjc-form':
+#            self._parse_form(VerbTermForm)
         elif self._header == 'abbr':
             self._parse_meaning(AbbreviationTerm)
         elif self._header == 'adverb':
@@ -1243,6 +1343,9 @@ class WiktionaryParser(object):
 
     def _parse_meaning(self, termcls):
         """Parse info under the meaning header."""
+        if isinstance(self._term, TermForm):
+            self._warn("Meaning found for term form, which is not supported.")
+            return
         meaning = None
         # Create new current term
         term = self._ensure_term(termcls)
@@ -1278,6 +1381,9 @@ class WiktionaryParser(object):
         if self._term is None:
             self._warn("Synonyms found without current term")
             return
+        elif isinstance(self._term, TermForm):
+            self._warn("Synonyms found for term form, which is not supported.")
+            return
 
         for line in self._buff:
             ref_match = re.search(self.re_syn_ref, line)
@@ -1302,6 +1408,9 @@ class WiktionaryParser(object):
         if self._term is None:
             self._warn("Antonyms found without current term")
             return
+        elif isinstance(self._term, TermForm):
+            self._warn("Antonyms found for term form, which is not supported.")
+            return
 
         for line in self._buff:
             ref_match = re.search(self.re_ant_ref, line)
@@ -1325,6 +1434,9 @@ class WiktionaryParser(object):
         """Parse info under the hyponyms header."""
         if self._term is None:
             self._warn("Hyponyms found without current term")
+            return
+        elif isinstance(self._term, TermForm):
+            self._warn("Hyponyms found for term form, which is not supported.")
             return
 
         for line in self._buff:

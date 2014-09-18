@@ -46,9 +46,10 @@ $.widget( "readmore.carddeck", {
 		if(cover){
 		    $(cover).removeClass('open');
         }
-        $('#selected').addClass('prevSelected');
-        $('.lastSelected').removeClass('lastSelected');
+        
+        $('.lastSelected.prevSelected').removeClass('lastSelected');
         $('#selected').addClass('lastSelected');
+        $('#selected').addClass('prevSelected');
         $('#selected').removeAttr('id');
         this.carddeck.close();
     }
