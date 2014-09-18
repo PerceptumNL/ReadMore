@@ -24,9 +24,9 @@
                 </div>
             </div>
             <div class="articleHolder">
-                <div class="row isotope" id="articles">
+                <div class="isotope" id="articles">
                     {% for article in articles %}
-                        <div class="articleTile col-lg-4 col-md-6 col-xs-12">
+                        <div class="articleTile">
 	                        <a href="{{ article.get_absolute_url }}">
                             <div class="articleContent ">
 	                            <div class="articleImage">
@@ -38,7 +38,7 @@
 		                            <h4>{{article.title}}</h4>
 	                            </div>
 	                            <div class="articleType">
-		                            <h3>{{article.categories.first.title}}</h3>				
+		                            <!-- <h3>{{article.categories.first.title}}</h3> -->
 	                            </div>
 	                            <div class="articleInfo"> {% for category in article.categories.all %} {{category}} }} {% endfor %}
 	                            </div>

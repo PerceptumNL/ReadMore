@@ -13,18 +13,20 @@ Contrast:       #F35C9F
 
 .articleHolder {
     position:absolute;
-    left:20%;
+    left:350px;
     top: 0;
     bottom:0;
     right:0;
-    padding:10px 25px;
+    padding: 0 0;
+    margin: 0 0;
 }
 
-.row.isotope {
+.isotope {
     height:100%;
     overflow-y: auto;
     overflow: hidden;
 }
+
 
 .buttonHolder{
     position: fixed;
@@ -32,7 +34,7 @@ Contrast:       #F35C9F
     top:60px;
     bottom:0;
     padding: 0px 25px;
-    width:20%;
+    width:350px;
     overflow-y:auto;
     background-color: #51afbc;
 }
@@ -44,6 +46,30 @@ Contrast:       #F35C9F
     width:100%;
 }
 
+
+.articleTile{
+	position:relative;
+	z-index:2;
+	padding: 0;
+	margin 0;
+	width:25%;
+	height:350px
+}
+@media screen and (max-width: 1200px) {
+  .articleTile{
+    width: 33%;
+  }
+}
+@media screen and (max-width: 800px) {
+  .articleTile{
+    width: 50%;
+  }
+}
+@media screen and (max-width: 640px) {
+  .articleTile{
+    width: 100%;
+  }
+}
 @media screen and (max-width: 800px) {
   .buttonHolder {
   visibility: hidden;
@@ -55,26 +81,26 @@ Contrast:       #F35C9F
     left: 0;
     top: 60px;
   }
+  
   #topbar #toggleCategories {
     display: block;
   }
 }
-.articleTile{
-	position:relative;
-	z-index:2;
-	padding: 18px 18px;
-}
-
 .articleContent{
 	position: relative;
-	min-height:120px;
+	height: 100%;
 	width:100%;
-	background-color: #51afbc;
-	box-shadow: 1px 1px 3px #531a50, 0px 90px 0px #F3F3F3 inset;
-	border-radius: 5px;
+	background-color: #f3f3f3;
     -webkit-transition: all 0.5s ease; /* For Safari 3.1 to 6.0 */
     transition: all 0.5s ease;
     overflow: hidden;
+    background: -moz-linear-gradient(top, rgba(110,119,116,0) 40%, rgba(110,119,116,0.22) 58%, rgba(10,14,10,0.42) 74%, rgba(10,8,9,0.74) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(40%,rgba(110,119,116,0)), color-stop(58%,rgba(110,119,116,0.22)), color-stop(74%,rgba(10,14,10,0.42)), color-stop(100%,rgba(10,8,9,0.74))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(110,119,116,0) 40%,rgba(110,119,116,0.22) 58%,rgba(10,14,10,0.42) 74%,rgba(10,8,9,0.74) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(110,119,116,0) 40%,rgba(110,119,116,0.22) 58%,rgba(10,14,10,0.42) 74%,rgba(10,8,9,0.74) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(110,119,116,0) 40%,rgba(110,119,116,0.22) 58%,rgba(10,14,10,0.42) 74%,rgba(10,8,9,0.74) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(110,119,116,0) 40%,rgba(110,119,116,0.22) 58%,rgba(10,14,10,0.42) 74%,rgba(10,8,9,0.74) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#006e7774', endColorstr='#bd0a0809',GradientType=0 ); /* IE6-9 */    
 }
 .articleContent:hover{
     box-shadow: 2px 2px 3px #531a50;
@@ -105,9 +131,9 @@ Contrast:       #F35C9F
 
 .articleTitle{
 	position: absolute;
-	top:0px;
-	left:0px;
-	width:60%;
+	bottom:5px;
+	left:5px;
+	width:100%;
 	height: 90px;
 	font-size: 16px;
 	z-index:15;
@@ -116,7 +142,7 @@ Contrast:       #F35C9F
 }
 
 .articleTitle h4{
-	color: #736f66;
+	color: #f3f3f3;
 	margin:10px;
 	-webkit-transition: all 0.7s ease; /* For Safari 3.1 to 6.0 */
     transition: all 0.7s ease;
