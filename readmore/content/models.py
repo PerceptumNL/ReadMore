@@ -28,6 +28,7 @@ class Category(PolymorphicModel):
     parent = models.ForeignKey('self', null=True, blank=True,
         related_name='children')
     title = models.CharField(max_length=255)
+    color = models.CharField(max_length=50, default='#f3f3f3', blank=True)
 
     # Link to a remotely hosted image.
     image = models.CharField(max_length=255, null=True, blank=True)
@@ -161,11 +162,14 @@ class RSSCategory(Category):
                                 entry['links'])
                         for image in images:
                             body += '<img src="%s" />' % (image['href'],)
+                    else:
+                        images = []
                     article, created = RSSArticle.objects.get_or_create(
                             identifier=entry['id'],
                             defaults={
                                 'title': entry['title'],
                                 'body': body,
+                                'image': images[0]['href'] if images else None,
                                 'publication_date': published
                             })
                     article.categories.add(self)
@@ -353,8 +357,7 @@ class Article(PolymorphicModel):
     categories = models.ManyToManyField('Category', related_name='articles')
     title = models.CharField(max_length=255)
     body = models.TextField(null=True, blank=True)
-
-
+    image = models.URLField(null=True, blank=True)
 
     def __repr__(self):
         return 'Article(%s)' % (self.title,)
