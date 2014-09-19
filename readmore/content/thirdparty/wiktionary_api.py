@@ -1013,7 +1013,7 @@ class WiktionaryParser(object):
                 r"(?:{{\)\)}})|"
                 r"(?:{{=}})"
             r"$"))
-        self.re_lang = re.compile(r"^{{=(\w+)=i}}$")
+        self.re_lang = re.compile(r"^{{=(\w+)=}}$")
         self.re_template = re.compile(r"^{{([^|]+)(?:\|(.+))?}}$")
         self.re_pipelist = re.compile(r"((?:{{[^}]+\|[^}]+}})|[^|]+)")
         self.re_header = re.compile(r"^{{-([\w-]+)-(?:\|(.+))?}}$")
