@@ -486,7 +486,7 @@ class AdjectiveTermForm(TermForm):
         adjective or adverb. Thus big is the positive form of the trio big,
         bigger, biggest.
         """
-        return bool(re.match('pos', self.form))
+        return bool(re.match('.*-pos', self.form))
 
     @property
     def is_comparitive(self):
@@ -498,7 +498,7 @@ class AdjectiveTermForm(TermForm):
         using the word more. For example, the comparative of hard is 'harder';
         of difficult, 'more difficult'.
         """
-        return bool(re.match('com', self.form))
+        return bool(re.match('.*-com', self.form))
 
     @property
     def is_superlative(self):
@@ -510,19 +510,31 @@ class AdjectiveTermForm(TermForm):
         example, the superlative of big is 'biggest'; of confident, 'most
         confident'
         """
-        return bool(re.match('sup', self.form))
+        return bool(re.match('.*-sup', self.form))
 
     def _init_rewrite_rules(self):
         """Initialize rewrite rules for each form."""
         # Define template rule
         rule_template = lambda s: (lambda x: s % (x.main_term, ))
         #Add Dutch rewrite rules
-        self.add_form_rewrite_rule('nl', 'noun-pl', rule_template(
-            "meervoud van het zelfstandig naamwoord %s"))
-        self.add_form_rewrite_rule('nl', 'noun-dim', rule_template(
-            "verkleinwoord enkelvoud van het zelfstandig naamwoord %s"))
-        self.add_form_rewrite_rule('nl', 'noun-dim-pl', rule_template(
-            "verkleinwoord meervoud van het zelfstandig naamwoord %s"))
+        self.add_form_rewrite_rule('nl', 'decl-pos', rule_template(
+            "verbogen vorm van de stellende trap van %s"))
+        self.add_form_rewrite_rule('nl', 'decl-com', rule_template(
+            "verbogen vorm van de vergrotende trap van %s"))
+        self.add_form_rewrite_rule('nl', 'decl-sup', rule_template(
+            "verbogen vorm van de overtreffende trap van %s"))
+        self.add_form_rewrite_rule('nl', 'indecl-pos', rule_template(
+            "onverbogen vorm van de stellende trap van %s"))
+        self.add_form_rewrite_rule('nl', 'indecl-com', rule_template(
+            "onverbogen vorm van de vergrotende trap van %s"))
+        self.add_form_rewrite_rule('nl', 'indecl-sup', rule_template(
+            "onverbogen vorm van de overtreffende trap van %s"))
+        self.add_form_rewrite_rule('nl', 'part-pos', rule_template(
+            "partitief vorm van de stellende trap van %s"))
+        self.add_form_rewrite_rule('nl', 'part-com', rule_template(
+            "partitief vorm van de vergrotende trap van %s"))
+        self.add_form_rewrite_rule('nl', 'part-sup', rule_template(
+            "partitief vorm van de overtreffende trap van %s"))
 
 
 class ConjunctiveTerm(Term):
@@ -1001,13 +1013,14 @@ class WiktionaryParser(object):
                 r"(?:{{\)\)}})|"
                 r"(?:{{=}})"
             r"$"))
-        self.re_lang = re.compile(r"^{{=(\w+)=}}$")
+        self.re_lang = re.compile(r"^{{=(\w+)=i}}$")
+        self.re_template = re.compile(r"^{{([^|]+)(?:\|(.+))?}}$")
+        self.re_pipelist = re.compile(r"((?:{{[^}]+\|[^}]+}})|[^|]+)")
         self.re_header = re.compile(r"^{{-([\w-]+)-(?:\|(.+))?}}$")
         self.re_pron_sound = re.compile(r"^\*{{sound}}: {{audio\|(.+)\|.+}}$")
         self.re_pron_ipa = re.compile(r"^\*{{WikiW\|IPA}}: {{IPA\|/(.+)/.*$")
         self.re_syll = re.compile(r"^\*(.+)$")
         self.re_nlnoun = re.compile(r"^([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)$")
-        self.re_pipelist = re.compile(r"((?:{{[^}]+\|[^}]+}})|[^|]+)")
         self.re_form = re.compile(r"^{{([^|]+)\|([^|]+).*}}$")
         self.re_meaning_entry = re.compile(
                 r"^(?:\[[A-Z]\] )?'''(.+)''' ?(.+)?$")
@@ -1018,6 +1031,10 @@ class WiktionaryParser(object):
         self.re_ant_ref = re.compile(r"^\*\[([0-9]+)\]:? (.+)$")
         self.re_ant_list = re.compile(r"\[\[([^]]+)\]\]")
         self.re_hypo = re.compile(r"^\*\[\[(.+)\]\]$")
+#        self.header_classes = {
+#            'art': ArticleTerm,
+#            'conj': ConjunctiveTerm,
+#        }
 
     def _warn(self, warning, line=None):
         """Add a warning string to the list of warnings."""
@@ -1172,14 +1189,15 @@ class WiktionaryParser(object):
                 self._parse_form(VerbTermForm)
             else:
                 self._parse_meaning(VerbTerm)
-#        elif self._header == 'nl-adjc-form':
-#            self._parse_form(VerbTermForm)
         elif self._header == 'abbr':
             self._parse_meaning(AbbreviationTerm)
         elif self._header == 'adverb':
             self._parse_meaning(AdverbTerm)
         elif self._header == 'adjc':
-            self._parse_meaning(AdjectiveTerm)
+            if self._header_params == "0":
+                self._parse_adjective_form()
+            else:
+                self._parse_meaning(AdjectiveTerm)
         elif self._header == 'art':
             self._parse_meaning(ArticleTerm)
         elif self._header == 'conj':
@@ -1271,6 +1289,32 @@ class WiktionaryParser(object):
             return
         else:
             self._add_term(term)
+
+    def _parse_adjective_form(self):
+        """Parse info under the adjective form header."""
+        # Check the size of the buffer
+        if not self._buff:
+            self._warn("No buffer found to parse adjective form from",
+                    self._header)
+            return
+        elif len(self._buff) > 1:
+            self._warn("Unexpected extra buffer content", self._buff[1])
+            return
+        # Match the form line
+        template_match = re.search(self.re_template, self._buff[0])
+        if template_match:
+            template, params = template_match.groups()
+            if template == "nl-adjc-form":
+                adjc_forms = re.findall(self.re_pipelist, params)
+                if adjc_forms:
+                    self._add_term(AdjectiveTermForm(adjc_forms[0],
+                        "%s-%s" % (adjc_forms[1], adjc_forms[2])))
+                else:
+                    self._warn("Unexpected adjective form line", self._buff[0])
+            else:
+                self._warn("Unexpected adjective form line", self._buff[0])
+        else:
+            self._warn("Unexpected adjective form line", self._buff[0])
 
     def _parse_nlnoun(self):
         """Parse info under the nlnoun header."""
