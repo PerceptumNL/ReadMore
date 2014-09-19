@@ -172,6 +172,7 @@ def article(request, identifier, source='local'):
         return HttpResponse(
             json.dumps({
                 'title': article.title,
+                'image': article.image,
                 'body': article.get_body()
             }),
             content_type='application/json')
