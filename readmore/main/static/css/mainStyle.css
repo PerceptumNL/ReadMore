@@ -9,14 +9,14 @@ html, body {
     background-color: #F3F3F3
     width: 100%;
     font-family: 'Roboto', sans-serif;
-}
+ }   
 
 h1 {
     color: #22ADC2;
-    font-family: 'Lobster', cursive;
+    font-family: 'Asap', italic;
 }
 h2, h3, h4 {
-    font-family: 'Share', cursive;
+    font-family: 'Asap', italic;
 }
 
 p {
