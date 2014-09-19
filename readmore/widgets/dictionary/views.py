@@ -28,6 +28,9 @@ def process(request):
             elif isinstance(term, NounTermForm):
                 main_terms = filter(
                     lambda x: isinstance(x, NounTerm), main_term_info)
+            elif isinstance(term, AdjectiveTermForm):
+                main_terms = filter(
+                    lambda x: isinstance(x, AdjectiveTerm), main_term_info)
             else:
                 main_terms = []
             if len(main_terms) == 1:
