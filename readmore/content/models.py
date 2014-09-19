@@ -154,22 +154,35 @@ class RSSCategory(Category):
                     elif 'description' in entry:
                         body = entry['description']
                     elif 'summary' in entry:
-                        body = entry['description']
+                        body = entry['summary']
                     else:
                         continue
+                    parse_body = BeautifulSoup(body)
+                    # Remove existing images in the body
+                    for image in parse_body.find_all('img'):
+                        image.decompose()
+                    # Remove existing links in the body
+                    for link in parse_body.find_all('a'):
+                        if link.string:
+                            link.replace_with(link.string)
+                        else:
+                            link.decompose()
+                    body = str(parse_body)
                     if 'links' in entry:
                         images = filter(lambda x: re_image.match(x['type']),
                                 entry['links'])
+                        main_image = images.pop(0)['href'] if images else None
                         for image in images:
                             body += '<img src="%s" />' % (image['href'],)
                     else:
+                        main_images = None
                         images = []
                     article, created = RSSArticle.objects.get_or_create(
                             identifier=entry['id'],
                             defaults={
                                 'title': entry['title'],
                                 'body': body,
-                                'image': images[0]['href'] if images else None,
+                                'image': main_image,
                                 'publication_date': published
                             })
                     article.categories.add(self)
