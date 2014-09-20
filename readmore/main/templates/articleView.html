@@ -27,7 +27,6 @@
     <div class="container" id="row-holder">
         <div class="row" id="cards"></div>
     </div>
-    
 </div>
 
 <!--
@@ -48,8 +47,10 @@ Card for rating through CSS, javascript below catches rating and parses it to in
 {% endblock body %}
 
 {% block extraScripts %}
-	<script src={% static "js/isotope.pkgd.min.js"%}></script>
-    <script src={% static "js/filteringIsotope.js"%}></script>	
+	<script src={% static 'js/isotope.pkgd.min.js' %}></script>
+    <script src={% static 'js/filteringIsotope.js' %}></script>
+	<!-- jquery mobile for hashchange event -->
+    <script src={% static 'js/jquery.mobile.custom.min.js' %}></script>
  	<script src="{% static 'js/interface.js' %}"></script>
 	<script src="{% static 'js/carddeck.js' %}"></script>
  	<script src="{% static 'js/widget_articleviewer.js' %}"></script>
@@ -67,14 +68,7 @@ Card for rating through CSS, javascript below catches rating and parses it to in
     $(function(){
         $("#article").articleviewer(
             {'article': "{{ article.get_absolute_url }}" });
-        
-        
         $("#cards").carddeck({'cover': $("#cover")});
     });
-
-
-
-
-        
 	</script>
 {% endblock extraScripts %}

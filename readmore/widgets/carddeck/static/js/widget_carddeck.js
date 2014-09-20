@@ -12,9 +12,19 @@ $.widget( "readmore.carddeck", {
 		$(":readmore-"+this.options.controlwidget).bind(
 			this.options.controlwidget+"wordclick",
 			function(event, data){
-				_self.load(data['word']);
+				location.hash = "#cover-"+data['word'];
 			}
 		)
+		$(window).hashchange(function(){
+			if(location.hash == ''){
+				_self.close(_self.options.cover);
+			}else{
+				hash_parts = location.hash.split("-");
+				if(hash_parts[0] == '#cover'){
+					_self.load(hash_parts[1])
+				}
+			}
+		});
 	},
 	decks: function(word){
 		decks = []
@@ -32,21 +42,22 @@ $.widget( "readmore.carddeck", {
     load: function(word){
         var _self = this;
 		if(this.options.cover){
-			$(this.options.cover).addClass('open');
+			if($(this.options.cover).hasClass('open')){
+				this.carddeck.close();
+			}else{
+				$(this.options.cover).addClass('open');
+				$(this.options.cover).find("#closeCover").click(
+						function(){ window.history.back(); });
+				$(this.options.cover).find("#closeOnBackground").click(
+						function(){ window.history.back(); });
+			}
 		}
-        $(this.options.cover).find("#closeCover").click(
-                function(){ _self.close(_self.options.cover); });
-        $(this.options.cover).find("#closeOnBackground").click(
-                function(){ _self.close(_self.options.cover); });                
-                
-                
 		this.carddeck = new CardDeck(this.element, this.decks(word));
 	},
     close: function(cover){
 		if(cover){
 		    $(cover).removeClass('open');
         }
-        
         $('.lastSelected.prevSelected').removeClass('lastSelected');
         $('#selected').addClass('lastSelected');
         $('#selected').addClass('prevSelected');
