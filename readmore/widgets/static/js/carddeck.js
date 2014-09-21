@@ -24,9 +24,10 @@ function CardDeck(container, decks){
 	this.load_deck = function(deck){
 		for(var i = 0; i < deck.length; i++){
 			if(deck[i]['type'] in window){
-				card = _self.create_empty_card();
+				var card = _self.create_empty_card();
 				window[deck[i]['type']](card, deck[i]['data']);
 				$(container).isotope('insert', card);
+				$(container).isotope('updateSortData', card);
 			}
 		}
 	}
@@ -41,7 +42,7 @@ function CardDeck(container, decks){
 	}
 }
 
-function Card(container, title){
+function Card(container, order, title){
 
 	this.create_content_container = function(){
 		content_container = $("<div class='well'></div>");
@@ -49,10 +50,12 @@ function Card(container, title){
 		container.append(content_container);
 		return content_container;
 	}
+	container.attr("data-order", order);
 }
 
 function DictTermCard(container, data){
-	var _parent = new Card(container, "Betekenis van <b>"+data['word']+"</b>");
+	var _parent = new Card(container, 0,
+			"Betekenis van <b>"+data['word']+"</b>");
 	container.addClass("dict_term_card");
 	var content = _parent.create_content_container();
 	content.append($('<div class="word">'+data['word']+'</div>'));
@@ -83,7 +86,7 @@ function DictTermCard(container, data){
 }
 
 function DictVerbConjCard(container, data){
-	var _parent = new Card(container, "Vervoegingen van <b>"+data['word']+"</b>");
+	var _parent = new Card(container, 50, "Vervoegingen van <b>"+data['word']+"</b>");
 	container.addClass("dict_verb_conj_card");
 	var content = _parent.create_content_container();
 	table_part1 = $("<table class='table verb_conj_table'>");
@@ -109,4 +112,15 @@ function DictVerbConjCard(container, data){
 				"<td>"+data['auxiliary']+" "+data['past_participle']+
 			"</td>"));
 	content.append(table_part2);
+}
+
+function FormCard(container, data){
+	var _parent = new Card(container, 100, data['title']);
+	container.addClass("form_card");
+	var content = _parent.create_content_container();
+	content.append($("<textarea>").attr("placeholder",
+				"Typ hier je bericht..."));
+	submit_btn = $("<button>").addClass("btn btn-md btn-block");
+	submit_btn.text("Verstuur je bericht");
+	content.append(submit_btn);
 }
