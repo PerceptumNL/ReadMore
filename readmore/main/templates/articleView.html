@@ -12,15 +12,23 @@
 
 {% include "topbar.html" %}
 <div class="container" id="mainContent">
-    <div class="row">
-        <div class="col-md-8 col-sm-12 col-xs-12">
-            <div id="article"></div>
-        </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <div class="well" id="imageHolder"></div>
-        </div>
-    </div>
+
+    <section id="mainImage">
+        <img src="{{article.image}}">
+        <div class="parallax" data-velocity="0.6"></div>
+    </section>
+
+    <section id="mainArticle">
+        <div id="article"></div>
+        <div class="parallax" data-velocity="1"></div>
+    </section>
+
+    <section id="imageHolder">
+
+    </section>
+
 </div>
+
 <div id="cover">
     <div id="closeOnBackground"></div>
     <a id="closeCover"><i class="fa fa-angle-double-down fa-3x"></i></a>
@@ -49,8 +57,17 @@ Card for rating through CSS, javascript below catches rating and parses it to in
 {% block extraScripts %}
 	<script src={% static 'js/isotope.pkgd.min.js' %}></script>
     <script src={% static 'js/filteringIsotope.js' %}></script>
+    
+    <!-- Parallax -->
+    <script src={% static 'js/jquery.scrolly.js' %}></script>
+    <script>
+        $(document).ready(function(){
+           $('.parallax').scrolly({bgParallax: true});
+        });
+    </script>
+    
 	<!-- jquery mobile for hashchange event -->
-    <script src={% static 'js/jquery.mobile.custom.min.js' %}></script>
+    <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
  	<script src="{% static 'js/interface.js' %}"></script>
 	<script src="{% static 'js/carddeck.js' %}"></script>
  	<script src="{% static 'js/widget_articleviewer.js' %}"></script>

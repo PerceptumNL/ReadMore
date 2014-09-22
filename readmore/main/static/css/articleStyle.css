@@ -7,16 +7,33 @@ Contrast:       #F35C9F
 
 #article {
     z-index:5;
-    
 }
 
-#topbar{
-    width:100%;
+#mainImage{
+
 }
+#mainArticle{
+
+}
+
+
+
+
 #mainContent {
-    top: 60px;
+    top: 0px;
+    left:350px;
+    right:0px;
     padding: 20px 0px;
 }
+
+#mainContent #mainImage{
+    position: relative;
+    height: 350px;
+    width: 100%;
+    overflow: hidden;
+
+}
+
 #article header {
     color: #22ADC2;
     font-size: 2.25em;
@@ -24,6 +41,15 @@ Contrast:       #F35C9F
     box-shadow: 0px 2px 2px -2px; #22ADC2 inset;
     padding: 5px 10px;
 }
+
+ img:first_of_type{
+    position:fixed;
+    left: 350px
+    right:0;
+    top:0;
+    z-index:0;
+}
+
 
 #article h1,h2,h3,h4{
     color: #22ADC2;
