@@ -43,8 +43,10 @@ function Loader(container){
 	}
 
 	_self.clear = function(){
-		var elems = $(container).isotope('getItemElements');
-		$(container).isotope('remove', elems);
+		if(_self.cache != {}){
+			var elems = $(container).isotope('getItemElements');
+			$(container).isotope('remove', elems);
+		}
 	}
 
 	_self.load = function(data, next){
@@ -67,7 +69,7 @@ function Loader(container){
 		if( location.hash in _self.cache ){
 			_self.load(_self.cache[location.hash]);
 		} else {
-			var category = $(location.hash);
+			var category = $(location.hash.replace("category/","category-"));
 			if( category && category.attr('data-url') ){
 				$.get(category.attr('data-url'), function(data){
 					_self.cache[location.hash] = data;
