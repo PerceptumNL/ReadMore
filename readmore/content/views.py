@@ -45,7 +45,7 @@ def query(request):
     """Return response containing articles matching the query."""
     # Fetch any subcategories and articles contained in the category.
     articles = []
-    for article in Article.objects.all():
+    for article in RSSArticle.objects.order_by('-publication_date').all()[:50]:
         category = article.get_categories()[0]
         articles.append({
             'url': article.get_absolute_url(),
