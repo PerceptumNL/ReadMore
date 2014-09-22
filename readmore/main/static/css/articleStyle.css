@@ -157,6 +157,16 @@ Contrast:       #F35C9F
     overflow-y: auto;
 }
 
+.form_card textarea {
+    margin-top: 5px;
+    width: 100%;
+    height: 100px;
+}
+
+.form_card button {
+    margin-top: 5px;
+}
+
 span + .word {
     cursor: pointer;
 }

@@ -1,6 +1,10 @@
 $( function(){
     var $cardcontainer = $('#cards').isotope({
-        itemSelector: '.element-item',   
+        itemSelector: '.element-item',
+        getSortData: {
+            order: '[data-order] parseInt'
+        },
+        sortBy: 'order'
     });
 });
 
@@ -20,11 +24,10 @@ $( function() {
     $(window).load(function(){
         $container.isotope();
     });
-  
     // bind filter button click
     $('#filters').on( 'click', 'button', function() {
         var filterValue = $( this ).attr('data-filter');
-        if(filterValue=='*'){ 
+        if(filterValue=='*'){
             qsRegex=null;
         } else {
             qsRegex = new RegExp( filterValue, 'gi' );
@@ -52,7 +55,7 @@ function debounce( fn, threshold ) {
     }
 }
 /*
-$container.isotope({ 
+$container.isotope({
 		filter: function () {
 		  if(filterValue=='*'){
 			return true
