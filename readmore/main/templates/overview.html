@@ -54,7 +54,9 @@
 	<script>
 		loader = new Loader("#articles");
 		if(location.hash == ""){
-			location.hash = 'category20';
-		}
+			location.hash = 'all';
+        } else {
+            loader.update();
+        }
 	</script>
 {% endblock %}

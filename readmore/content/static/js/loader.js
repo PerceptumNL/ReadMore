@@ -47,14 +47,19 @@ function Loader(container){
 		$(container).isotope('remove', elems);
 	}
 
-	_self.load = function(data){
+	_self.load = function(data, next){
+		if(next == undefined) next = 0;
 		var articles = []
-		for(var i=0; i < data['articles'].length; i++){
-			var article = _self.create_article(data['articles'][i]);
-			articles.push(article.get(0));
+		for(var i = next; i < data['articles'].length; i++){
+			if(i > next && i % 10 == 0){
+				setTimeout(function(){ _self.load(data, i); }, 1);
+				break;
+			}else{
+				var article = _self.create_article(data['articles'][i]);
+				articles.push(article.get(0));
+			}
 		}
 		$(container).isotope('insert', articles);
-		_self.cache[location.hash] = data;
 	}
 
 	_self.update = function(){
@@ -64,7 +69,10 @@ function Loader(container){
 		} else {
 			var category = $(location.hash);
 			if( category && category.attr('data-url') ){
-				$.get(category.attr('data-url'),_self.load)
+				$.get(category.attr('data-url'), function(data){
+					_self.cache[location.hash] = data;
+					_self.load(data);
+				})
 			}
 		}
 	}
