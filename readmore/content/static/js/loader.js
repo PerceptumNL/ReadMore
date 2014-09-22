@@ -24,13 +24,16 @@ function Loader(container){
 		var article = $("<div class='articleTile'>");
 		var inner = $("<a>").attr("href", data['url']);
 		var content = $("<div class='articleContent'>");
-		var css = "background: "+data['category-color']+";";
-		css += "background-size: cover;";
-		for(var i = 0; i < css_background_image.length; i++){
-			css += "background-image: "+css_background_image[i]+
-				"url('"+data['image']+"');"
-		}
-		content.attr('style', css);
+		content.attr('style', 'background-color: #333; border: 2px solid white;')
+		setTimeout(function(){
+			var css = "background: "+data['category-color']+";";
+			css += "background-size: cover;";
+			for(var i = 0; i < css_background_image.length; i++){
+				css += "background-image: "+css_background_image[i]+
+					"url('"+data['image']+"');"
+			}
+			content.attr('style', css);
+		}, 1);
 		var title = $("<div class='articleTitle'>")
 		title.append($("<h4>").text(data['title']))
 		content.append(title);
