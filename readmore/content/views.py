@@ -41,6 +41,20 @@ def index(request):
                 "categories": categories})
 
 @login_required
+def query(request):
+    """Return response containing articles matching the query."""
+    # Fetch any subcategories and articles contained in the category.
+    articles = []
+    for article in Article.objects.all():
+        category = article.get_categories()[0]
+        articles.append({
+            'url': article.get_absolute_url(),
+            'title': article.title,
+            'category-color': category.color,
+            'image': article.image if article.image else category.image})
+    return HttpResponse(json.dumps({'articles': articles}), content_type='application/json')
+
+@login_required
 def category(request, identifier, source='local'):
     """Return response containing contents of identified category.
 

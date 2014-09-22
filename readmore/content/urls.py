@@ -15,5 +15,6 @@ urlpatterns = patterns('',
     url(r'categories/wikipedia/(?P<identifier>.+)$',
         'readmore.content.views.category', {'source':'wikipedia'},
         name='wikipedia_category'),
+    url(r'query/?$', 'readmore.content.views.query', name='content_query'),
     url(r'$', 'readmore.content.views.index', name='content_index'))
 
