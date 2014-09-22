@@ -1,5 +1,4 @@
 {% load staticfiles %}
-{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +6,6 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Lees Meer</title>
-	{% compress css %}
 	<!-- Bootstrap -->
 	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <!-- Fonts -->
@@ -16,11 +14,9 @@
     <link href='http://fonts.googleapis.com/css?family=Share' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     {% block extraCSS %}{% endblock extraCSS %}
-	{% endcompress %}
 </head>
 <body>
 	{% block body %}{% endblock body %}
-	{% compress js %}
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script src="{% static 'js/jquery-ui.js' %}"></script>
@@ -32,6 +28,5 @@
 	<![endif]-->
     {% block extraScripts %}
     {% endblock extraScripts %}
-	{% endcompress %}
 </body>
 </html>

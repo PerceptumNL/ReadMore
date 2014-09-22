@@ -7,8 +7,6 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-from django.conf import global_settings
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -60,7 +58,6 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.windowslive',
     'allauth.socialaccount.providers.google',
     'south',
-    'compressor'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -72,9 +69,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 )
-
-STATICFILES_FINDERS = global_settings.STATICFILES_FINDERS + (
-    'compressor.finders.CompressorFinder',)
 
 LANGUAGE_CODE = 'nl'
 LANGUAGES = (
