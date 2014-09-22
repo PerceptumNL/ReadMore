@@ -16,29 +16,19 @@ $( function() {
         itemSelector: '.articleTile',
         layoutMode: 'masonry',
         transitionDuration: 0,
-        filter: function() {
-            var variable = qsRegex ? $(this).text().match( qsRegex ) : true;
-            return variable ;
-        }
+        //filter: function() {
+        //   var variable = qsRegex ? $(this).text().match( qsRegex ) : true;
+        //    return variable ;
+        //}
     });
     $(window).load(function(){
         $container.isotope();
     });
-    // bind filter button click
-    $('#filters').on( 'click', 'button', function() {
-        var filterValue = $( this ).attr('data-filter');
-        if(filterValue=='*'){
-            qsRegex=null;
-        } else {
-            qsRegex = new RegExp( filterValue, 'gi' );
-        }
-        $container.isotope();
-    });
     // use value of search field to filter
-    var $quicksearch = $('#quicksearch').keyup( debounce( function() {
-        qsRegex = new RegExp( $quicksearch.val(), 'gi' );
-        $container.isotope();
-    }, 200 ) );
+//    var $quicksearch = $('#quicksearch').keyup( debounce( function() {
+//        qsRegex = new RegExp( $quicksearch.val(), 'gi' );
+//        $container.isotope();
+//    }, 200 ) );
 });
 // debounce so filtering doesn't happen every millisecond
 function debounce( fn, threshold ) {
