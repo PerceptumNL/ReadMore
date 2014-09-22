@@ -48,10 +48,12 @@ function Loader(container){
 	}
 
 	_self.load = function(data){
+		var articles = []
 		for(var i=0; i < data['articles'].length; i++){
 			var article = _self.create_article(data['articles'][i]);
-			$(container).isotope('insert', article);
+			articles.push(article.get(0));
 		}
+		$(container).isotope('insert', articles);
 		_self.cache[location.hash] = data;
 	}
 
