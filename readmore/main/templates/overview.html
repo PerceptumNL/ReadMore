@@ -20,9 +20,9 @@
 					0px; margin:15px auto;"/>-->
                 <div id="filters" class="btn-group-vertical">
                     <a type="button" class="btn btn-default btn-lg btn-block"
-						href="#all" id="all"
+						href="#recent" id="recent"
                         data-url="{% url 'content_query' %}"
-                        data-filter="*">Alles</a>
+                        data-filter="*">Recent</a>
                     {% for category in categories %}
                         <a type="button" class="btn btn-default btn-lg btn-block"
 							href='#category{{category.id}}'
