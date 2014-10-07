@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, \
-        HttpResponseServerError
+        HttpResponseServerError, HttpResponseRedirect
 from django.conf import settings
 import json
 import requests
@@ -8,10 +8,8 @@ from readmore.content.models import *
 import django.dispatch
 from django.contrib.auth.decorators import login_required
 
-article_read = django.dispatch.Signal(providing_args=["user", "category", "article_id", "article"])
-
-def barrier(request):
-    return render(request, 'barrier.html')
+article_read = django.dispatch.Signal(
+        providing_args=["user", "category", "article_id", "article"])
 
 def update_feeds(request):
     for category in RSSCategory.objects.all():
@@ -20,35 +18,27 @@ def update_feeds(request):
 
 @login_required
 def index(request):
-    """Return response containing index of categories."""
+    """Return response containing overview of categories and articles."""
     # Only show top categories on the index page
     categories = Category.objects.filter(parent=None)
-    request.session['previous'] = ("", "")
-    request.session['urls'] = [ ("Index","/") ]
+    articles = []
+    for category in categories:
+        articles += category.get_articles()
     # Render response
     if request.is_ajax():
         # Return JSON list of categories with their properties
         categories = [{'url': c.get_absolute_url(), 'title': c.title,
             'image': c.image} for c in categories]
-        return HttpResponse(json.dumps(categories),
+        articles = [{'url': a.get_absolute_url(), 'title': a.title,
+            'image': a.image} for a in articles]
+        return HttpResponse(
+                json.dumps({'categories': categories, 'articles': articles}),
                 content_type='application/json')
     else:
         # Render HTML of the landing page containing top categories
-        counter = 0
-        catList = []
-        miniList = []
-        for i in categories:
-            counter +=1
-            if counter < 3:
-                miniList.append(i)
-            else:
-                miniList.append(i)
-                counter = 0
-                catList.append(miniList)
-                miniList = []
-        if(miniList != []):
-            catList.append(miniList)
-        return render(request, 'landing.html', { "categories": catList })
+        return render(request, 'overview.html',{
+                "articles": articles,
+                "categories": categories})
 
 @login_required
 def category(request, identifier, source='local'):
@@ -63,56 +53,30 @@ def category(request, identifier, source='local'):
     identifier -- Number or string identifying the category
     source -- The source the identifier belongs to ( default 'local' )
     """
+    if not request.is_ajax():
+        return HttpResponseRedirect('/')
     # Resolve identified category
     if source == "wikipedia":
         # Get/set identifier type
         identifier_type = request.GET.get('type','auto')
         category = WikiCategory.factory(identifier, identifier_type)
         if category is None:
-            return render(request, 'unknowncategory.html')
+            return HttpResponseRedirect('/')
     else:
         try:
             category = Category.objects.get(pk=int(identifier))
         except Category.DoesNotExist:
-            return render(request, 'unknowncategory.html')
+            return HttpResponseRedirect('/')
     # Fetch any subcategories and articles contained in the category.
     articles = category.get_articles()
     subcategories = category.get_subcategories()
-
-    # Render response
-    if request.is_ajax():
-        # Return JSON list of topics with their properties
-        articles = [{'url': a.get_absolute_url(), 'title': a.title}
-            for a in articles]
-        subcategories = [{'url': c.get_absolute_url(), 'title': c.title,
-            'image': c.image} for c in subcategories]
-        return HttpResponse(
-            json.dumps({
-                'articles': articles,
-                'subcategories': subcategories
-            }),
-            content_type='application/json')
-    else:
-        # Update breadcrums
-        urls = request.session.get('urls',[])
-        if urls:
-            request.session['previous'] = previous = urls[-1]
-            current = [stripped(category.title), category.get_absolute_url()]
-            if not current == previous:
-                urls.append((stripped(category.title), category.get_absolute_url()))
-                request.session['urls'] = urls
-        else:
-            urls.append(("Index","/"))
-            urls.append((stripped(category.title), category.get_absolute_url()))
-            request.session['previous'] = ("", "")
-            request.session['urls'] = urls
-
-        return render(request, 'navigation.html', {
-            "crtCategory": category,
-            "articles": articles,
-            "subcategories": subcategories,
-            "crumbs": request.session['urls']
-    })
+    # Return JSON list of topics with their properties
+    articles = [{'url': a.get_absolute_url(), 'title': a.title, 
+        'image': a.image} for a in articles]
+    subcategories = [{'url': c.get_absolute_url(), 'title': c.title,
+        'image': c.image} for c in subcategories]
+    return HttpResponse(json.dumps({'articles': articles,
+            'subcategories': subcategories}), content_type='application/json')
 
 @login_required
 def article(request, identifier, source='local'):
@@ -134,13 +98,13 @@ def article(request, identifier, source='local'):
         # Attempt to retrieve the article
         article = WikiArticle.factory(identifier, identifier_type)
         if article is None:
-            return render(request, 'unknownarticle.html')
+            return HttpResponseRedirect('/')
     else:
         try:
             # Attempt to retrieve the article
             article = Article.objects.get(pk=int(identifier))
         except Article.DoesNotExist:
-            return render(request, 'unknownarticle.html')
+            return HttpResponseRedirect('/')
 
     # Retrieve the categories that this article belongs to.
     categories = article.get_categories()
@@ -176,7 +140,3 @@ def article(request, identifier, source='local'):
                 'body': article.get_body()
             }),
             content_type='application/json')
-
-def about(request):
-    return render(request, 'about.html')
-
