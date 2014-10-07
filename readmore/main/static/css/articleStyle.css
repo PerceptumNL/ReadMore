@@ -5,18 +5,79 @@ Shadow:         #736f66
 Contrast:       #F35C9F
 */
 
-#article {
-    z-index:5;
-    
+#mainContent{
+    position:fixed;
+    top:0,left:0,right:0;bottom:0;
+
 }
 
-#topbar{
+#sidebar{
+    position:fixed;
+    background: #333;
+    left:0;
+    top:60px;
+    width:350px;
+    height:100%;
+}
+#mainImage{
+    height:350px;
     width:100%;
 }
-#mainContent {
-    top: 60px;
-    padding: 20px 0px;
+
+
+#imageHolder{
+    background: #333;
+    width:100%;
 }
+
+
+
+#mainArticle{
+    position:fixed;
+    overflow-y:auto;
+    top:0;
+    left:350px;
+    right:0;
+    height:100%;
+    overflow-y:auto;
+    z-index:5;
+    background: #FFF;
+}
+#article {
+    padding: 15px 350px 5px 25px;
+    z-index:5;
+}
+
+@media screen and (max-width: 1500px) {
+   #article{
+    padding:15px;
+   }
+}
+@media screen and (max-width: 800px) {
+    #sidebar{
+        width:100%;
+    }
+    #sidebar #mainImage{
+        position:relative;
+        height:350px;  
+        z-index:3;      
+    }
+
+    
+    #mainArticle{
+        position:absolute;
+        overflow-y:auto;
+        top:350px;
+        left:0;right:0;
+        width:100%;
+        z-index:5;
+    }
+    
+}
+@media screen and (max-width: 480px) {
+
+}
+
 #article header {
     color: #22ADC2;
     font-size: 2.25em;
@@ -24,6 +85,7 @@ Contrast:       #F35C9F
     box-shadow: 0px 2px 2px -2px; #22ADC2 inset;
     padding: 5px 10px;
 }
+
 
 #article h1,h2,h3,h4{
     color: #22ADC2;
@@ -34,19 +96,7 @@ Contrast:       #F35C9F
     font-size: 1.2em;
         padding: 5px 25px;
 }
-#imageHolder {
-    margin: 5px 25px;
-    padding: 5px 5px;
-}
 
-#imageHolder img {
-    display: block;
-    margin: auto !important;
-    width: 100% !important;
-    height: auto !important;
-    max-width: 100% !important;
-
-}
 
 #cover {
     display:block;
