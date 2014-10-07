@@ -11,21 +11,26 @@
 
 
 {% include "topbar.html" %}
-<div class="container" id="mainContent">
 
-    <section id="mainImage">
-        <img src="{{article.image}}">
-        <div class="parallax" data-velocity="0.6"></div>
-    </section>
 
-    <section id="mainArticle">
-        <div id="article"></div>
-        <div class="parallax" data-velocity="1"></div>
-    </section>
+<div id="mainContent">
+    <div id="sidebar">
+        <div id="mainImage" style="background-size: cover; background-position:fixed; background-image: url('{{article.image}}') ">
+        
+        </div>
+        <section id="mainArticle">
+            <div id="article"></div>
+            <div id="imageHolder"></div>
+        </section>
+        <section id="articleFeedback">
+        
+        </section>    
+    </div>
+    
+    
+    
 
-    <section id="imageHolder">
-
-    </section>
+    
 
 </div>
 
@@ -55,17 +60,6 @@ Card for rating through CSS, javascript below catches rating and parses it to in
 {% endblock body %}
 
 {% block extraScripts %}
-	<script src={% static 'js/isotope.pkgd.min.js' %}></script>
-    <script src={% static 'js/filteringIsotope.js' %}></script>
-    
-    <!-- Parallax -->
-    <script src={% static 'js/jquery.scrolly.js' %}></script>
-    <script>
-        $(document).ready(function(){
-           $('.parallax').scrolly({bgParallax: true});
-        });
-    </script>
-    
 	<!-- jquery mobile for hashchange event -->
     <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
  	<script src="{% static 'js/interface.js' %}"></script>
@@ -76,6 +70,18 @@ Card for rating through CSS, javascript below catches rating and parses it to in
 	<script src="{% static 'js/widget_carddeck.js' %}"></script>
  	<script src="{% static 'js/widget_seemore.js' %}"></script>
  	<script src="{% static 'js/custom.js' %}"></script>
+ 	
+	<script src={% static 'js/isotope.pkgd.min.js' %}></script>
+    <script src={% static 'js/filteringIsotope.js' %}></script>
+    
+    <!-- Parallax -->
+    <script src={% static 'js/jquery.scrolly.js' %}></script>
+    <script>
+        $(document).ready(function(){
+           $('.parallax').scrolly({bgParallax: true});
+        });
+    </script>
+ 	
     <script>
     $('span').click(function(){
         var rating = parseInt(this.getAttribute('rating'));
