@@ -5,6 +5,10 @@ from readmore.content.views import index
 from allauth.socialaccount.models import SocialAccount
 from readmore.content.models import *
 
+def error(request):
+    """Raise an exception."""
+    raise Exception('Some error occured.')
+
 def login(request):
     # If user already logged in, go to main site
     if request.user.is_authenticated():
