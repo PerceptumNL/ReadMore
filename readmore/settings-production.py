@@ -158,3 +158,4 @@ EMAIL_HOST= 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+SERVER_EMAIL = 'readmore-platform@perceptum.nl'
