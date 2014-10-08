@@ -7,6 +7,10 @@ from readmore.content.models import *
 
 def error(request):
     """Raise an exception."""
+    from django.core.mail import send_mail
+    send_mail('Test subject', 'An error is on its way.',
+            'readmore-platform-manual@perceptum.nl',
+            ['sanderlatour@gmail.com'], fail_silently=False)
     raise Exception('Some error occured.')
 
 def login(request):
