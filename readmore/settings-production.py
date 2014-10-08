@@ -17,7 +17,7 @@ STATIC_ROOT = '/app/staticfiles'
 STATIC_URL = '/static/'
 
 
-ADMINS = (('Sander', 'sander@perceptum.nl'))
+ADMINS = (('Sander', 'sander@perceptum.nl'),)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
