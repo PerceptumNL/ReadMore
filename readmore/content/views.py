@@ -41,6 +41,20 @@ def index(request):
                 "categories": categories})
 
 @login_required
+def query(request):
+    """Return response containing articles matching the query."""
+    # Fetch any subcategories and articles contained in the category.
+    articles = []
+    for article in RSSArticle.objects.order_by('-publication_date').all()[:50]:
+        category = article.get_categories()[0]
+        articles.append({
+            'url': article.get_absolute_url(),
+            'title': article.title,
+            'category-color': category.color,
+            'image': article.image if article.image else category.image})
+    return HttpResponse(json.dumps({'articles': articles}), content_type='application/json')
+
+@login_required
 def category(request, identifier, source='local'):
     """Return response containing contents of identified category.
 
@@ -68,13 +82,16 @@ def category(request, identifier, source='local'):
         except Category.DoesNotExist:
             return HttpResponseRedirect('/')
     # Fetch any subcategories and articles contained in the category.
-    articles = category.get_articles()
-    subcategories = category.get_subcategories()
-    # Return JSON list of topics with their properties
-    articles = [{'url': a.get_absolute_url(), 'title': a.title, 
-        'image': a.image} for a in articles]
+    articles = []
+    for article in category.get_articles():
+        articles.append({
+            'url': article.get_absolute_url(),
+            'title': article.title,
+            'category-color': category.color,
+            'image': article.image if article.image else category.image})
     subcategories = [{'url': c.get_absolute_url(), 'title': c.title,
-        'image': c.image} for c in subcategories]
+        'image': c.image} for c in category.get_subcategories()]
+    # Return JSON list of topics with their properties
     return HttpResponse(json.dumps({'articles': articles,
             'subcategories': subcategories}), content_type='application/json')
 
