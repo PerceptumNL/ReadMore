@@ -4,7 +4,6 @@ Highlights:     #F3F3F3
 Shadow:         #736f66
 Contrast:       #F35C9F
 */
-
 .fullScreen{
     height:100%;
     width:100%;
@@ -27,7 +26,6 @@ Contrast:       #F35C9F
     overflow: hidden;
 }
 
-
 .buttonHolder{
     position: fixed;
     left:0;
@@ -49,6 +47,7 @@ Contrast:       #F35C9F
     border-bottom-right-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
 }
+
 .buttonHolder input{
     border-radius: 4px !important;
 }
@@ -57,7 +56,6 @@ Contrast:       #F35C9F
     width:100%;
 }
 
-
 .articleTile{
 	position:relative;
 	z-index:2;
@@ -65,25 +63,26 @@ Contrast:       #F35C9F
 	margin 0;
 	width:25%;
 	height:350px;
-      
 }
-
 
 @media screen and (max-width: 1200px) {
   .articleTile{
     width: 50%;
   }
 }
+
 @media screen and (max-width: 800px) {
   .articleTile{
     width: 100%;
   }
 }
+
 @media screen and (max-width: 640px) {
   .articleTile{
     width: 100%;
   }
 }
+
 @media screen and (max-width: 800px) {
   .buttonHolder {
   visibility: hidden;
@@ -95,20 +94,19 @@ Contrast:       #F35C9F
     left: 0;
     top: 60px;
   }
-  
   #topbar #toggleCategories {
     display: block;
   }
 }
+
 .articleContent{
 	position: absolute;
 	height: 100%;
 	width:100%;
     overflow: hidden;
-
-
-    
+	background-size: cover;
 }
+
 .articleContent:hover{
     box-shadow: 0px -145px 5px rgba(81,175,188,75) inset, 0px -145px 0px rgba(33,33,33,75) inset;
 }
@@ -123,14 +121,12 @@ Contrast:       #F35C9F
 
 }
 
-
 .articleTitle{
 	position: absolute;
 	bottom:5px;
 	left:5px;
 	width:100%;
 	height: auto;
-	
 	z-index:15;
 	word-wrap:break-word;
 	overflow: hidden;
@@ -142,4 +138,3 @@ Contrast:       #F35C9F
 	font-size: 22px;
 
 }
-

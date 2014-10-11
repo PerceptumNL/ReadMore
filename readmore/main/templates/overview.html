@@ -15,40 +15,28 @@
          {% include "topbar.html" %}
         <div class="container-full">
             <div class="buttonHolder">
-                <input type="text" id="quicksearch" onblur="this.value=''" placeholder="Zoek artikel" style="width:100%; padding: 10px 0px; margin:15px auto;"/>
+                <!--<input type="text" id="quicksearch" onblur="this.value=''"
+					placeholder="Zoek artikel" style="width:100%; padding: 10px
+					0px; margin:15px auto;"/>-->
                 <div id="filters" class="btn-group-vertical">
-                    <button type="button" class="btn btn-default btn-lg btn-block" data-filter="*">Alles</button>
+                    <a type="button" class="btn btn-default btn-lg btn-block"
+						href="#category/recent" id="category-recent"
+                        data-url="{% url 'content_query' %}"
+                        data-filter="*">Recent</a>
                     {% for category in categories %}
-                        <button type="button" class="btn btn-default btn-lg btn-block" data-filter="{{category.title}}">{{category.title}}</button>
+                        <a type="button" class="btn btn-default btn-lg btn-block"
+							href='#category/{{category.id}}'
+							id="category-{{category.id}}"
+							data-filter="{{category.title}}"
+							data-url="{{category.get_absolute_url}}"
+						>
+							{{category.title}}
+						</a>
                     {% endfor %}
                 </div>
             </div>
             <div class="articleHolder">
-                <div class="isotope" id="articles">
-                    {% for article in articles %}
-                        <div class="articleTile">
-	                        <a href="{{ article.get_absolute_url }}">
-                            <div class="articleContent " style="background: {{article.categories.first.color}};
-                                background-size: cover;
-                                background-image: url('{% if article.image%}{{article.image}}{%else%}{{article.categories.first.image}}{%endif%}'); /* fallback */
-                                background-image:  -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,255))), url('{% if article.image%}{{article.image}}{%else%}{{article.categories.first.image}}{%endif%}'); /* Saf4+, Chrome */
-                                background-image: -webkit-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,255)), url('{% if article.image%}{{article.image}}{%else%}{{article.categories.first.image}}{%endif%}'); /* Chrome 10+, Saf5.1+ */
-                                background-image: -moz-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,255)), url('{% if article.image%}{{article.image}}{%else%}{{article.categories.first.image}}{%endif%}'); /* FF3.6+ */
-                                background-image: -ms-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,255)), url('{% if article.image%}{{article.image}}{%else%}{{article.categories.first.image}}{%endif%}'); /* IE10 */
-                                background-image: -o-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,255)),url('{% if article.image%}{{article.image}}{%else%}{{article.categories.first.image}}{%endif%}'); /* Opera 11.10+ */
-                                background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,255)), url('{% if article.image%}{{article.image}}{%else%}{{article.categories.first.image}}{%endif%}')         ; /* W3C */">
-	                            
-	                            <div class="articleTitle">
-		                            <h4>{{article.title}}</h4>
-	                            </div>
-	                            
-	                            <div class="articleInfo"> {% for category in article.categories.all %} {{category}} }} {% endfor %}
-	                            </div>
-                            </div>
-                            </a>
-                        </div>
-                    {% endfor %}
-                </div>
+				<div class="isotope" id="articles"></div>
             </div>
         </div>
     </div>
@@ -60,4 +48,15 @@
 {% block extraScripts %}
 	<script src={% static "js/isotope.pkgd.min.js"%}></script>
 	<script src={% static "js/filteringIsotope.js"%}></script>
+	<!-- jquery mobile for hashchange event -->
+    <script src={% static 'js/jquery.mobile.custom.min.js' %}></script>
+	<script src={% static "js/loader.js"%}></script>
+	<script>
+		loader = new Loader("#articles");
+		if(location.hash == ""){
+			location.hash = 'category/recent';
+        } else {
+            loader.update();
+        }
+	</script>
 {% endblock %}
