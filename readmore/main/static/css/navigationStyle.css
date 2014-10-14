@@ -4,7 +4,6 @@ Highlights:     #F3F3F3
 Shadow:         #736f66
 Contrast:       #F35C9F
 */
-
 .fullScreen{
     height:100%;
     width:100%;
@@ -27,7 +26,6 @@ Contrast:       #F35C9F
     overflow: hidden;
 }
 
-
 .buttonHolder{
     position: fixed;
     left:0;
@@ -49,6 +47,7 @@ Contrast:       #F35C9F
     border-bottom-right-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
 }
+
 .buttonHolder input{
     border-radius: 4px !important;
 }
@@ -56,7 +55,6 @@ Contrast:       #F35C9F
 #filters{
     width:100%;
 }
-
 
 .articleTile{
 	position:relative;
@@ -72,16 +70,19 @@ Contrast:       #F35C9F
     width: 50%;
   }
 }
+
 @media screen and (max-width: 800px) {
   .articleTile{
     width: 100%;
   }
 }
+
 @media screen and (max-width: 640px) {
   .articleTile{
     width: 100%;
   }
 }
+
 @media screen and (max-width: 800px) {
   .buttonHolder {
   visibility: hidden;
@@ -93,11 +94,11 @@ Contrast:       #F35C9F
     left: 0;
     top: 60px;
   }
-  
   #topbar #toggleCategories {
     display: block;
   }
 }
+
 .articleContent{
 	position: absolute;
 	height: 100%;
@@ -120,14 +121,12 @@ Contrast:       #F35C9F
 
 }
 
-
 .articleTitle{
 	position: absolute;
 	bottom:5px;
 	left:5px;
 	width:100%;
 	height: auto;
-	
 	z-index:15;
 	word-wrap:break-word;
 	overflow: hidden;
@@ -139,4 +138,3 @@ Contrast:       #F35C9F
 	font-size: 22px;
 
 }
-
