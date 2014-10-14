@@ -28,6 +28,7 @@ function Loader(container){
 		setTimeout(function(){
 			var css = "background: "+data['category-color']+";";
 			css += "background-size: cover;";
+			css += "background-position: center;";
 			for(var i = 0; i < css_background_image.length; i++){
 				css += "background-image: "+css_background_image[i]+
 					"url('"+data['image']+"');"
