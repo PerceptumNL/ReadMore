@@ -1,0 +1,354 @@
+*::-webkit-scrollbar {
+    width: 16px;
+}
+ 
+*::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0.25);
+    border-radius: 0px;
+}
+ 
+*::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    background-color: rgba(0,0,0,0.75);
+}
+
+.main{
+    background-color: #eee;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+
+.background{
+
+}
+.topbar{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height: 64px;
+    box-shadow: 0px 5px 5px;
+    background-color: #FFF;
+    z-index:10;
+}
+.topbar .content{
+    position:relative;
+    width:800px;
+    margin: 0 auto;
+    height:64px;
+}
+.topbar .content img{
+    height:100%;
+}
+.content button{
+    position:absolute;
+    top:0;
+    right:0;
+    height: 64px;
+    padding:  0;
+    width:128px;
+    background-color: #f3f3f3;
+    color: #fff;
+    cursor: pointer;
+    text-align:center;
+    font-family: 'Roboto', serif;
+    color: #777;
+    border: none;
+    box-shadow: none;
+} 
+.content button:hover {
+    background-color:#eee;
+}
+
+.random_images{
+    position:absolute;
+    top:64px;
+    left:0;
+    right:0;
+    height: 160px;
+    background-color: #556270;
+}
+
+.articleFrame{
+    position:fixed;
+    top:64px;
+    left:0;
+    right:0;
+    bottom:0;
+    overflow-y:auto;
+}
+.articleHolder{
+    width: 832px;
+    height: 100%;
+    padding-top: 80px;
+    margin: 0 auto;
+    
+}
+.articletiles{
+    position:relative;
+    height:auto;
+    min-height:100%;
+    padding: 32px 32px 128px;
+    background-color: #FFF;  
+
+}
+.articletiles .currentcategory{
+    position:relative;
+    display:block;
+    margin:0 0 16px;
+    height:32px;
+}
+.articletiles .currentcategory h1{
+    position:absolute;
+    bottom:0;
+    margin:0;
+    line-height: initial;
+}
+
+.articleTile{
+    width:256px;
+    height:256px;
+    margin-bottom:32px;
+    float: left;
+    position:relative;
+    z-index:4;
+    cursor: pointer;
+    -webkit-transition: all 0.15s ;
+    -moz-transition: all 0.15s ;
+    -o-transition: all 0.15s ;
+    transition: all 0.15s ;  
+}
+.articleContent{
+	position: absolute;
+	height: 100%;
+	width:100%;
+    overflow: hidden;
+	background-size: cover;
+}
+#articles{
+    background-color:#e5e5e5;
+}
+
+.articleTile.popular{
+    height: 544px;
+    width: 256px;
+}
+.articleTile:hover{
+    z-index:5;
+}
+
+.articleTile:hover{
+    margin-top: -5px;
+    margin-left: -2px;
+    width:260px;
+    height:260px;
+    box-shadow: 0px 8px 16px;
+}
+.articleTile.popular:hover{
+    margin-top: -5px;
+    margin-left: -2px;
+    width:260px;
+    height:548px;
+}
+
+.articleInfo{
+	display:none;
+
+}
+
+.articleTile:hover .articleTitle{
+    color: #fff;
+}
+.articleTitle{
+	position: absolute;
+	bottom:4px;
+	left:8px;
+	right:8px;
+	height: auto;
+	word-wrap:break-word;
+	overflow: hidden;
+    color: #e5e5e5;
+}
+
+.articleTitle h4{
+	color: inherit;
+	margin:10px;
+	font-size: 22px;
+
+}
+
+.articleTile h2{
+    position:absolute;
+    bottom:8px;
+    left:8px;
+    right:8px;
+    height:auto;
+    color: #FFF;
+}
+
+#search_articles {
+    position:absolute;
+    top: 32px;
+    right: 32px;
+}
+#searchForm input{
+    display: inline-block;
+    height: 32px;
+    width: auto;
+    margin:0;
+    padding:0 8px;
+    border: none;
+    background-color:#eee;
+}
+#searchForm button{
+    display: inline-block;
+    height: 32px;
+    min-width: 32px;
+    border: none;
+    margin:0;
+    cursor: pointer;
+    background-color: #438EB9;
+    color: #FFF;
+}
+#searchForm button:hover{
+    background-color: #556270;
+}
+
+.categories{
+    position: fixed;
+    top: 100%;
+    left:0;
+    right:0;
+    margin-top:-60px;
+    background-color: #222;
+}
+.categories.open{
+    top: initial;
+    bottom:0;
+    margin-top:0px;
+}
+.buttonHolder{
+    position:relative;
+    display:block;
+    width: 1024px;
+    margin: 0 auto;
+    top: inherit;
+    bottom:inherit;
+}
+
+div.btn{
+    background-color: #333;
+    position:relative;
+    float:left;
+    display: inline-block;
+    cursor: pointer;
+    text-align:center;
+    height:20px;
+    width:128px;
+    padding: 20px 0;
+    margin: 0;
+
+}
+div.btn:hover {
+    background-color:#444;
+}
+div.btn span{
+    font-family: 'Roboto', serif;
+    color: #FFF;
+    text-decoration: none;
+    line-height: none;
+}
+div.btn a{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    text-decoration: none; /* No underlines on the link */
+    background-color: #FFF; /* Fix to make div clickable in IE */
+    opacity: 0; /* Fix to make div clickable in IE */
+    filter: alpha(opacity=1); /* Fix to make div clickable in IE */
+}
+#morecategories{
+    background-color: #555;
+}
+
+@media screen and (max-width: 1024px) {
+    .buttonHolder{
+        width:800px;
+        
+    }
+
+
+}
+@media screen and (max-width: 872px) {
+    .buttonHolder{
+        width: 512px;
+    }
+    .articleHolder{
+        width: 576px
+    }
+    .topbar .content{
+        width: 576px
+    }
+
+}
+@media screen and (max-width: 616px) {
+    .currentcategory{
+        display:block;
+        position:relative;
+        width:100%;
+    }
+    #search_articles {
+        position:absolute;
+        top: -32px;
+        right: 0;
+        width:100%;
+        border-top: 32px solid white;
+    }
+    #searchForm input{
+        width:75%;
+        padding:0;
+        text-indent:8px;
+    }
+    #searchForm button{
+        width:25%;
+    }    
+    .buttonHolder{
+        width:384px;
+        overflow-y: auto;
+    }
+    .articleHolder{
+        width: 320px;
+    }
+    .topbar .content{
+        width: 320px;
+    }
+
+}
+@media screen and (max-width: 384px) {
+    .categories{
+        display:none;
+    }
+    div.btn{
+        width:80%;
+        margin:0 auto;
+    }
+    .articleHolder{
+        width: 100%;
+    }
+    .articleTile{
+        width: 100%;
+    }
+    .topbar .content{
+        width: 90%;
+    }
+    *::-webkit-scrollbar {
+        width: 4px;
+    }
+
+}
+
