@@ -1,25 +1,35 @@
-{% extends "account/base.html" %}
+{% extends "base_page.html" %}
+{% load staticfiles %}
 
-{% load url from future %}
 {% load i18n %}
+{% load account %}
+{% load url from future %}
 
-{% block head_title %}{% trans "Signup" %}{% endblock %}
-
-{% block body %}
-<div class="container background login">
-	<h1 class="title">{% trans "Schrijf je in voor Lees Meer" %}</h1>
-	<div class="content">
-		<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-		  {% csrf_token %}
-		  {{ form.as_p }}
-		  {% if redirect_field_value %}
-		  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-		  {% endif %}
-		  <button type="submit" class="signupBtn">{% trans "Schrijf je in" %} &raquo;</button>
-		</form>
-	</div>
-</div>
+{% block extraCSS %}
+    <link href="{% static 'css/form_style.css' %}" rel="stylesheet">
 
 {% endblock %}
+
+{% block menu %}
+    <a href="/accounts/login/"><button type="submit"><t4>Inloggen</t4></button></a>
+{% endblock %}
+
+{% block body %}
+	<h1 class="leading">{% trans "Schrijf je in voor Lees Meer" %}</h1>
+    <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+        <button type="submit" class="signupBtn">{% trans "Schrijf je in" %} &raquo;</button>
+    </form>
+    <a class="nav" href="/accounts/login/"><p>Heb jij al een account?<button class="nav" type="submit"><t4>Log in</t4></button></p></a>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
 
 
