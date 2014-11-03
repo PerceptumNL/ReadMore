@@ -4,7 +4,15 @@
 {% block extraCSS %}
     <link href="{% static 'css/mainStyle.css' %}" rel="stylesheet">
     <link href="{% static 'css/articleStyle.css' %}" rel="stylesheet">
+    <link href="{% static 'css/typography.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base_page.css' %}" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">-->
+    <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'> 
+    <link href='http://fonts.googleapis.com/css?family=Roboto:700,300,300italic,400italic,400,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Share' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>  
 {% endblock %}
 
 {% block body %}
@@ -40,8 +48,9 @@
         <div id="recommendations" style="border-bottom:1px solid #666; padding: 0 0 12px;">
         <h4 style="color:white; text-align:center">Vergelijkbare artikelen</h4>
             <ul>
-                <li> <p style="color:#22ADC2;">Pirlo keert terug bij Italiaans elftal</p>
-                <li> <p style="color:#22ADC2;">'Vloekende' Robben terug bij Oranje</p>
+                {% for randomarticle in random_articles %}
+                    <li> <a href="{% url 'article' randomarticle.pk %}"><p style="color:#22ADC2;">{{ randomarticle }}</p></a>
+                {% endfor %}
             </ul>
         </div>
 	</aside>
