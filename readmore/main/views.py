@@ -4,6 +4,22 @@ from readmore.main.models import *
 from readmore.content.views import index
 from allauth.socialaccount.models import SocialAccount
 from readmore.content.models import *
+from django.contrib.auth.decorators import login_required
+
+# New pages
+@login_required
+def article_overview(request):
+    """Return response containing overview of categories and articles."""
+    # Only show top categories on the index page
+    categories = Category.objects.filter(parent=None)
+    articles = []
+    for category in categories:
+        articles += category.get_articles()
+    return render(request, 'articleOverview.html', {
+        "articles": articles,
+        "categories": categories
+    })
+
 
 def login(request):
     # If user already logged in, go to main site
@@ -24,7 +40,7 @@ def profile_self(request):
         socialaccount = socialaccount[0].extra_data
     else:
         socialaccount = {}
-    return render(request, 'account/profileSelf.html', {
+    return render(request, 'account/profile.html', {
             "first_name": socialaccount.get('first_name', ''),
             "last_name": socialaccount.get('last_name', user.username),
             "age": socialaccount.get('age', '?')})

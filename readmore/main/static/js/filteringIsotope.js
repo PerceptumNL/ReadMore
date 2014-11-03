@@ -13,8 +13,11 @@ $( function() {
     // init Isotope
     var qsRegex;
     $container.isotope({
-        itemSelector: '.articleTile',
         layoutMode: 'masonry',
+        masonryHorizontal: {
+            columnWidth: 256
+        },
+        itemSelector: '.articleTile',
         transitionDuration: 0,
         //filter: function() {
         //   var variable = qsRegex ? $(this).text().match( qsRegex ) : true;
