@@ -1,15 +1,11 @@
 a.nav{
-    display: block;
-    height:32px;
-    margin: 64px 0 0 ;
     text-decoration: none;
 }
 button.nav{
     display: inline-block;
     border: none;
     background: #eee;
-    width:128px;
-    height:32px;
+    height:1.5em;
     margin:0 16px;
     cursor: pointer;
 }
