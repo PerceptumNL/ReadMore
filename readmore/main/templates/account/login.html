@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block menu %}
-    <a href="/accounts/signup/"><button type="submit"><t4>Inschrijven</t4></button></a>
+   <a href="/accounts/signup/"><button type="submit"><t4>Inschrijven</t4></button></a>
 {% endblock %}
 
 {% block body %}
@@ -25,6 +25,7 @@
       <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
       <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
     </form>
+    <a class="nav" href="/accounts/signup/"><p>Heb jij nog geen account?<button class="nav" type="submit"><t4>Inschrijven</t4></button></p></a>
 {% endblock %}
 
 {% block footer %}
