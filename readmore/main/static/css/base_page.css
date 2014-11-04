@@ -109,6 +109,7 @@
     left:0;
     right:0;
     height: auto;
+    max-height:100%;
     margin-top:-60px;
     background-color: #222;
     z-index:2000;
@@ -117,6 +118,7 @@
     top: initial;
     bottom:0;
     margin-top:0px;
+    overflow-y:auto;
 }
 
 @media screen and (max-width: 1024px) {
@@ -138,11 +140,17 @@
     .topbar .content{
         width: 320px;
         margin: auto;
+        background-image: url('/static/img/layout/logo_test_small.png');
+        background-position: right;
+        background-size: contain;
+        background-repeat: no-repeat;
     }
     .topbar .content img{
-        width:128px;
-        height:auto;
- 
+        display: none;
+    }
+    #buttons button{
+        width:64px;
+        font-size: 12px;
     }
 
 }

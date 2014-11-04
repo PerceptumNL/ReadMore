@@ -4,6 +4,7 @@
 
 {% block extraCSS %}
     <link href="{% static 'css/articleOverview.css' %}" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block menu %}
@@ -20,7 +21,7 @@
 {% endblock %}
 {% block body %}
     <div class="currentcategory">
-        <h1 class="leading"> <span id="categorytitle">Recente</span> artikelen </h1>
+        <h1 class="leading"> <span id="categorytitle">Recent</span></h1>
     </div>
     <div id="search_articles">
         <form id="searchForm">
@@ -36,22 +37,18 @@
     
 {% block footer %}       
     <div id="filters"class="buttonHolder">
-        <div class="btn" id="morecategories">
-        <h4>Meer</h4> <a type="button"></a></div>
-        <div class="btn"><h4>Recent</h4>
+        <a type="button" id="morecategories"><button>Meer  <i class='fa fa-fw fa-lg fa-arrow-up'></i></button></a>
         <a type="button"
 		    href="#category/recent" id="category-recent"
             data-url="{% url 'content_query' %}"
-            data-filter="*"></a>
-        </div>
+            data-filter="*"><button>Recent</button></a>
         {% for category in categories %}
-           <div class="btn"><h4>{{category.title}}</h4>
             <a type="button"
 			    href='#category/{{category.id}}'
 			    id="category-{{category.id}}"
 			    data-filter="{{category.title}}"
 			    data-url="{{category.get_absolute_url}}"
-		    ></a></div>
+		    ><button>{{category.title}}</button></a>
         {% endfor %}
     </div>
 {% endblock %}
@@ -77,11 +74,11 @@
         $('#morecategories').click(function(){
             if($('.footer').hasClass('open')){
                 $('.footer').removeClass('open');
-                this.firstElementChild.innerHTML = "Meer"
+                this.firstElementChild.innerHTML = "Meer  <i class='fa fa-fw fa-lg fa-arrow-up'></i> "
             } else{
                 $('.footer').addClass('open');
-                this.firstElementChild.innerHTML = "Minder"
+                this.firstElementChild.innerHTML = "Minder  <i class='fa fa-fw fa-lg fa-arrow-down'></i>"
             }
         });
-	</script>
+    </script>
 {% endblock %}
