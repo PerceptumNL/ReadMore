@@ -1,0 +1,141 @@
+{% extends "base_page.html" %}
+{% load staticfiles %}
+
+{% block extraCSS %}
+    <!--<link href="{% static 'css/mainStyle.css' %}" rel="stylesheet">-->
+    <link href="{% static 'css/article_style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/typography.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base_page.css' %}" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">-->
+    <link href='http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>  
+{% endblock %}
+
+{% block backdrop %}
+
+{% endblock %}
+
+{% block menu %}
+    <a href="/"><button type="submit">Terug</button></a>
+    <a href="/accounts/profile/"><button type="submit">Profiel</button></a>
+    <form method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        {% if redirect_field_value %}
+            <input type="hidden" name="{{redirect_field_name}}" value="{{redirect_field_value}}"/>
+        {% endif %}
+        <button type="submit">Log out</button>
+    </form>
+{% endblock %}
+
+{% block body %}
+
+<div id="mainContent">
+    {% if article.image %}
+	    <div id="mainImage" style="background-color: #151515;
+	                                background-repeat: no-repeat; 
+                                    background-size: contain; 
+                                    background-position:center; 
+                                    background-image: url('{{article.image}}')">
+	    </div>
+    {% endif %}
+	<section id="mainArticle">
+		<article id="article"></article>
+		<div id="imageHolder"></div>
+	</section>
+    <div id="recommendations">
+        <h4 style="text-align: center">Vergelijkbare artikelen</h4>
+
+        <div id="randomarticles">
+            {% for randomarticle in random_articles %}{% if randomarticle.image %}
+                <div class="articleTile" style="background-image: url('{{randomarticle.image}}');">
+                    <a href="{% url 'article' randomarticle.pk %}"></a>
+                    <div class="articleTitle"><p>{{ randomarticle }}</p></div>
+                </div>
+            {% endif %}{% endfor %}
+        </div>
+    </div>
+	
+</div>
+
+
+{% endblock body %}
+
+{% block overlay %}
+<div id="cover">
+    <div id="closeOnBackground"></div>
+    <a id="closeCover"><i class="fa fa-angle-double-down fa-3x"></i></a>
+    <div class="container" id="row-holder">
+        <div class="row" id="cards"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <h4 style="color: white !important; text-align:center">Vind je dit een leuk artikel?
+        <div class="rating" id="articlerating">
+                <span rating="5"><i class="fa fa-star-o"></i></span>
+                <span rating="4"><i class="fa fa-star-o"></i></span>
+                <span rating="3"><i class="fa fa-star-o"></i></span>
+                <span rating="2"><i class="fa fa-star-o"></i></span>
+                <span rating="1"><i class="fa fa-star-o"></i></span>
+        </div></h4>
+    <h4 style="color: white !important; text-align:center">Is dit artikel goed te lezen?
+        <div class="rating" id="articledifficulty">
+                <span rating="5"><i class="fa fa-star-o"></i></span>
+                <span rating="4"><i class="fa fa-star-o"></i></span>
+                <span rating="3"><i class="fa fa-star-o"></i></span>
+                <span rating="2"><i class="fa fa-star-o"></i></span>
+                <span rating="1"><i class="fa fa-star-o"></i></span>
+        </div>
+    </div></h4>
+{% endblock %}
+
+{% block extraScripts %}
+	<!-- jquery mobile for hashchange event -->
+    <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
+ 	<script src="{% static 'js/interface.js' %}"></script>
+	<script src="{% static 'js/carddeck.js' %}"></script>
+ 	<script src="{% static 'js/widget_articleviewer.js' %}"></script>
+ 	<script src="{% static 'js/widget_dummy.js' %}"></script>
+ 	<script src="{% static 'js/widget_dictionary.js' %}"></script>
+	<script src="{% static 'js/widget_carddeck.js' %}"></script>
+ 	<script src="{% static 'js/widget_seemore.js' %}"></script>
+ 	<script src="{% static 'js/custom.js' %}"></script>
+ 	
+	<script src={% static 'js/isotope.pkgd.min.js' %}></script>
+    <script src={% static 'js/filteringIsotope.js' %}></script>
+    
+    <!-- Parallax -->
+    <script src={% static 'js/jquery.scrolly.js' %}></script>
+    <script>
+        $(document).ready(function(){
+           $('.parallax').scrolly({bgParallax: true});
+        });
+    </script>
+ 	
+    <script>
+    $('span').click(function(){
+        var rating = parseInt(this.getAttribute('rating'));
+        this.parentElement.innerHTML = Array(rating+1).join("<i class='fa fa-star' style='color: #22ADC2'></i>");
+    });
+    $('.contentFrame').scroll( function(){
+        if($('#article').innerHeight()*0.5 > $(this).scrollTop()){
+            $('.footer').removeClass('open');
+        }else{
+            $('.footer').addClass('open');
+        }
+    });
+    $(function(){
+        $("#article").articleviewer(
+            {'article': "{{ article.get_absolute_url }}" });
+        $("#cards").carddeck({
+			'cover': $("#cover"),
+			'carddecks': [
+				{'url': '/widgets/dictionary/', 'params': {'word':"%%WORD%%"}},
+				{'url': '/widgets/askteacher/'}
+			]
+		});
+    });
+	</script>
+{% endblock extraScripts %}

@@ -43,18 +43,18 @@
 .topbar .content img{
     position: absolute;
     top:0;
-    right:0;
+    left:0;
     height:100%;
 }
 #buttons{
     position:absolute;
     top:0;
-    left:0;
-    width:640px;
+    right:0;
+    width:60%;
     height:100%;
 }
 #buttons button{
-    float: left;
+    float: right;
     height: 64px;
     padding:  0;
     width:124px;
@@ -112,7 +112,7 @@
     max-height:100%;
     margin-top:-60px;
     background-color: #222;
-    z-index:2000;
+    z-index:5;
 }
 .footer.open{
     top: initial;
@@ -129,32 +129,36 @@
         width: 576px
     }
     .topbar .content{
-        width: 576px
+        width: 600px
     }
-
-}
-@media screen and (max-width: 616px) {
-    .contentHolder{
-        width: 320px;
+    #buttons{
+        width: 80%;
     }
     .topbar .content{
-        width: 320px;
+        width: 556px;
         margin: auto;
         background-image: url('/static/img/layout/logo_test_small.png');
-        background-position: right;
+        background-position: left;
         background-size: contain;
         background-repeat: no-repeat;
     }
     .topbar .content img{
         display: none;
     }
+}
+@media screen and (max-width: 616px) {
+    .contentHolder{
+        width: 580px;
+    }
+
+
     #buttons button{
         width:64px;
         font-size: 12px;
     }
 
 }
-@media screen and (max-width: 540px) {
+@media screen and (max-width: 580px) {
     .footer{
         display:none;
     }
