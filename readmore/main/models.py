@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from allauth.account.signals import user_signed_up
 from readmore.content.views import article_read
 from django.dispatch import receiver
@@ -10,12 +11,15 @@ import allauth.app_settings
 from allauth.socialaccount import providers
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, unique=True)       
-    badges = models.ManyToManyField('Badge', blank='True')
-    school = models.CharField(max_length=255)
+    user = models.OneToOneField(User, unique=True)
+    badges = models.ManyToManyField('Badge', blank=True, related_name='users')
+    groups = models.ManyToManyField('Group', blank=True, related_name='users')
+    institute = models.ForeignKey('Institute', blank=True, null=True,
+            related_name='users')
 
 class Institute(models.Model):
     title = models.CharField(max_length=255)
+    site_id = models.ForeignKey(Site)
     provider = models.CharField(verbose_name=('provider'),
                                 max_length=30,
                                 choices = providers.registry.as_choices())
@@ -25,12 +29,17 @@ class Institute(models.Model):
     def __unicode__(self):
         return unicode(self.title)
 
+class Group(models.Model):
+    title = models.CharField(max_length=255)
+    leader = models.ForeignKey(User, null=True, blank=True)
+    institute = models.ForeignKey('Institute', null=True, blank=True)
+
 class Statistics(models.Model):
     STATS = [('docsRead','docsRead')]
 
     user = models.ForeignKey(User, unique=True, related_name='statistics')
     docsRead = models.IntegerField(default=0)
-    
+
     class Meta:
         verbose_name_plural = "User Statistics"
 
@@ -40,10 +49,10 @@ class Statistics(models.Model):
     def __unicode__(self):
         name = 'Statistics (%s)' % (self.user.username,)
         return unicode(name)
-        
+
 class History(models.Model):
     user = models.ForeignKey(User)
-    opened = models.DateTimeField(auto_now_add=True)        
+    opened = models.DateTimeField(auto_now_add=True)
     article_id = models.CharField(max_length=255)
     class Meta:
         verbose_name_plural = "Article History"
