@@ -35,6 +35,7 @@ class ArticleAdmin(PolymorphicParentModelAdmin):
     polymorphic_list = True
     search_fields = ['title',]
     list_display = ('title', 'main_category', 'publication_date',)
+    list_filter = ('categories',)
     def main_category(self, obj):
         return obj.categories.first()
     def publication_date(self, obj):

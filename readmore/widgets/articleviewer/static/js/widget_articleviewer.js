@@ -51,7 +51,9 @@ $.widget( "readmore.articleviewer", {
 		// Replace each word
 		$(textnodes).each(function(){
 			// Create string containing new HTML
-			content = this.textContent.replace(/(\w+)/g, "<span class='word'>$1</span>")
+			content = this.textContent.replace(
+				/([^\s.,;:'\"`~!@#\$%\^&*()_\+\-=\[\]\{\}\\\|\?\/<>]+)/g,
+				"<span class='word'>$1</span>");
 			// Add new HTML to DOM
 			$("<span>"+content+"</span>").insertBefore(this)
 			// Remove old textnode
