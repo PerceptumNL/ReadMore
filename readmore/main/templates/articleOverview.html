@@ -36,22 +36,19 @@
     
 {% block footer %}       
     <div id="filters"class="buttonHolder">
-        <div class="btn" id="morecategories">
-        <h4>Meer</h4> <a type="button"></a></div>
-        <div class="btn"><h4>Recent</h4>
+        <a type="button" id="morecategories"><button>Meer</button></a>
         <a type="button"
 		    href="#category/recent" id="category-recent"
             data-url="{% url 'content_query' %}"
-            data-filter="*"></a>
-        </div>
+            data-filter="*"><button>Recent</button></a>
         {% for category in categories %}
-           <div class="btn"><h4>{{category.title}}</h4>
+           
             <a type="button"
 			    href='#category/{{category.id}}'
 			    id="category-{{category.id}}"
 			    data-filter="{{category.title}}"
 			    data-url="{{category.get_absolute_url}}"
-		    ></a></div>
+		    ><button>{{category.title}}</button></a>
         {% endfor %}
     </div>
 {% endblock %}

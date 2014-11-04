@@ -138,11 +138,17 @@
     .topbar .content{
         width: 320px;
         margin: auto;
+        background-image: url('/static/img/layout/logo_test_small.png');
+        background-position: right;
+        background-size: contain;
+        background-repeat: no-repeat;
     }
     .topbar .content img{
-        width:128px;
-        height:auto;
- 
+        display: none;
+    }
+    #buttons button{
+        width:64px;
+        font-size: 12px;
     }
 
 }
