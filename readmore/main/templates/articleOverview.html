@@ -79,11 +79,19 @@
         $('#morecategories').click(function(){
             if($('.footer').hasClass('open')){
                 $('.footer').removeClass('open');
-                this.firstElementChild.innerHTML = "Meer  <i class='fa fa-fw fa-lg fa-arrow-up'></i> "
+                this.firstElementChild.innerHTML = "Meer  <i class='fa fa-fw fa-lg fa-arrow-up'></i> ";
             } else{
                 $('.footer').addClass('open');
-                this.firstElementChild.innerHTML = "Minder  <i class='fa fa-fw fa-lg fa-arrow-down'></i>"
+                this.firstElementChild.innerHTML = "Minder  <i class='fa fa-fw fa-lg fa-arrow-down'></i>";
             }
         });
+        
+        $(window).hashchange( function(){
+            if($('.footer').hasClass('open')){
+                $('.footer').removeClass('open');
+                $('#morecategories')[0].firstElementChild.innerHTML = "Meer  <i class='fa fa-fw fa-lg fa-arrow-up'></i> ";
+            }
+        });
+        
     </script>
 {% endblock %}
