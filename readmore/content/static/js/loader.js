@@ -8,20 +8,23 @@ function Loader(container){
 	var css_background_image = [
 		"",
 		"-webkit-gradient(linear, left top, left bottom,"+
-			"from(rgba(0,0,0,0)), to(rgba(0,0,0,255))),",
-		"-webkit-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0),"+
-			"rgba(0,0,0,0), rgba(0,0,0,255)),",
-		"-moz-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0),"+
-			"rgba(0,0,0,0), rgba(0,0,0,255)),",
-		"-ms-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0),"+
-			"rgba(0,0,0,0), rgba(0,0,0,255)),",
-		"-o-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0),"+
-			"rgba(0,0,0,0), rgba(0,0,0,255)),",
-		"linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0),"+
-			"rgba(0,0,0,0), rgba(0,0,0,255)),"];
+			"from(rgba(0,0,0,0.65)), to(rgba(0,0,0,95))),",
+		"-webkit-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.10),"+
+			"rgba(0,0,0,0.65), rgba(0,0,0,0.95)),",
+		"-moz-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.10),"+
+			"rgba(0,0,0,0.65), rgba(0,0,0,0.95)),",
+		"-ms-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.10),"+
+			"rgba(0,0,0,0.65), rgba(0,0,0,0.95)),",
+		"-o-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.10),"+
+			"rgba(0,0,0,0.65), rgba(0,0,0,0.95)),",
+		"linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.10),"+
+			"rgba(0,0,0,0.65), rgba(0,0,0,0.95)),"];
 
 	_self.create_article = function(data){
 		var article = $("<div class='articleTile'>");
+		if(Math.random()<0.1){
+		    article = $("<div class='articleTile popular'>");
+		}
 		var inner = $("<a>").attr("href", data['url']);
 		var content = $("<div class='articleContent'>");
 		content.attr('style', 'background-color: #333; border: 2px solid white;')
@@ -63,14 +66,22 @@ function Loader(container){
 			}
 		}
 		$(container).isotope('insert', articles);
+		$(container).isotope('layout')
 	}
 
 	_self.update = function(){
 		_self.clear();
+		var category = $(location.hash.replace("category/","category-"));
+	    if(category && category.attr('data-filter')){
+	        if(category.attr('data-filter')=="*"){
+                $('#categorytitle')[0].innerText = "Recent";
+            }else{
+		        $('#categorytitle')[0].innerText = category.attr('data-filter');
+	        }
+        }
 		if( location.hash in _self.cache ){
 			_self.load(_self.cache[location.hash]);
 		} else {
-			var category = $(location.hash.replace("category/","category-"));
 			if( category && category.attr('data-url') ){
 				$.get(category.attr('data-url'), function(data){
 					_self.cache[location.hash] = data;
@@ -78,6 +89,7 @@ function Loader(container){
 				})
 			}
 		}
+		
 	}
 
 	$(window).hashchange(_self.update);

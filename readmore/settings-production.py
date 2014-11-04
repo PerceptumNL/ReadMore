@@ -108,7 +108,7 @@ AUTH_PROFILE_MODULE = 'main.UserProfile'
 
 SOCIALACCOUNT_PROVIDERS = \
     { 'google':
-        { 'SCOPE': ['https://www.googleapis.com/auth/userinfo.profile'],
+        { 'SCOPE': ['profile', 'email'],
           'AUTH_PARAMS': { 'access_type': 'online' } }}
 
 # Template Context
