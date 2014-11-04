@@ -23,10 +23,11 @@
             <div class="background">
                 <div class="topbar">
                     <div class="content">
-                        <img src="{%static 'img/layout/logo_test.png'%}" >
                         <div id="buttons">
                             {% block menu %}{% endblock %}
                         </div>
+                        <img src="{%static 'img/layout/logo_test.png'%}" >
+
                     </div>
                 </div>
                 <div class="random_images">
@@ -34,7 +35,7 @@
                 </div>
             </div>
             
-            <div class="contentFrame">
+            <div class="contentFrame"  data-scroll='{"x":"0", "y":"0"}'>
                 <div class="contentHolder">
                     <div class="contentbody">
                         {% block body %}{% endblock %}
@@ -46,6 +47,8 @@
                 {% block footer %}{% endblock%}
             </div>
         </div>
+
+        {% block overlay %}{% endblock %}
 
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

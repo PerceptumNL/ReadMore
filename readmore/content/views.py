@@ -130,7 +130,7 @@ def article(request, identifier, source='local'):
         # Fetch random articles from the same categories for reading suggestions.
         random_articles = []
         for category in categories:
-            random_articles += category.get_random_articles(2)
+            random_articles += category.get_random_articles(3)
 
         # Ensure the current article is not suggested again
         if article in random_articles:
@@ -146,7 +146,7 @@ def article(request, identifier, source='local'):
                         category=category,
                         article_id=identifier,
                         article=article)
-        return render(request, 'articleView.html',
+        return render(request, 'article_page.html',
                 {"article": article, "random_articles": random_articles})
     else:
         # Return JSON with article properties
