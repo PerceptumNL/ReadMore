@@ -71,10 +71,17 @@ function Loader(container){
 
 	_self.update = function(){
 		_self.clear();
+		var category = $(location.hash.replace("category/","category-"));
+	    if(category && category.attr('data-filter')){
+	        if(category.attr('data-filter')=="*"){
+                $('#categorytitle')[0].innerText = "Recent";
+            }else{
+		        $('#categorytitle')[0].innerText = category.attr('data-filter');
+	        }
+        }
 		if( location.hash in _self.cache ){
 			_self.load(_self.cache[location.hash]);
 		} else {
-			var category = $(location.hash.replace("category/","category-"));
 			if( category && category.attr('data-url') ){
 				$.get(category.attr('data-url'), function(data){
 					_self.cache[location.hash] = data;
@@ -82,6 +89,7 @@ function Loader(container){
 				})
 			}
 		}
+		
 	}
 
 	$(window).hashchange(_self.update);
