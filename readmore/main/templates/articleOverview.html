@@ -76,8 +76,22 @@
             }
 	        $('#searchForm').submit(function(){
 	            $.get('content/search/', $(this).serialize(), function(data) {
-	                loader.clear();
-	                loader.load(data);
+	                if(data.articles.length > 0){
+	                    loader.clear();
+	                    loader.load(data);
+                    } else{
+                        var $el = $('#search');
+                        originalback = $el.css("background");
+                        originalcolor = $el.css("color");
+                        $el.val("Niks gevonden")
+                        $el.css('background', '#E57373');
+                        $el.css('color', '#FFF');
+                        setTimeout(function(){
+                          $el.val("")
+                          $el.css("background", originalback);
+                          $el.css("color", originalcolor);
+                        }, 2500);
+                    }
 	            });
 	            return false;
 	        });
