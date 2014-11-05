@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, \
         HttpResponseServerError, HttpResponseRedirect
 from django.conf import settings
+from django.db.models import Q
+import operator
 import json
 import requests
 from readmore.content.models import *
@@ -20,13 +22,19 @@ def update_feeds(request):
 def searchRelated(request):
     query_string = ''
     matching = []
+    articles = []
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
         querylist = [Q(body__icontains=query) for query in normalize_query(query_string)]
         querylist += [Q(title__icontains=query) for query in normalize_query(query_string)]
         matching = Article.objects.filter(reduce(operator.or_, querylist))
-    matches = [{'pk':match.pk, 'title':match.title} for match in matching]
-    return HttpResponse(json.dumps(matching), content_type="application/json")
+        for article in matching:
+            articles.append({
+                'url': article.get_absolute_url(),
+                'title': article.title,
+                'category-color': article.categories.all().first().color,
+                'image': article.image if article.image else article.categories.all().first().image})
+    return HttpResponse(json.dumps({'articles': articles}), content_type="application/json")
 
 def normalize_query(query_string,
                     findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
@@ -53,7 +61,7 @@ def index(request):
                 content_type='application/json')
     else:
         # Render HTML of the landing page containing top categories
-        return render(request, 'overview.html',{
+        return render(request, 'articleOverview.html',{
                 "articles": articles,
                 "categories": categories})
 
