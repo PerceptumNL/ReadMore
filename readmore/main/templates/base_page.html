@@ -60,5 +60,22 @@
 	    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	    <![endif]-->
         {% block extraScripts %}{% endblock extraScripts %}
+        
+        <script>
+            $('.contentFrame').scroll( function(){
+                var scrollData = $(this).data('scroll');
+                
+                if(scrollData.y > $(this).scrollTop()){
+                    // up
+                    $('.topbar').css('top', 0);
+                }else if($(this).scrollTop()>64 && scrollData.y != $(this).scrollTop()){
+                    // down
+                    $('.topbar').css('top', -56);
+                }
+
+                scrollData.y = $(this).scrollTop();
+                $(this).data('scroll', scrollData);
+            });
+        </script>
     </body>
 </html>
