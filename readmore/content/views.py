@@ -18,29 +18,6 @@ def update_feeds(request):
         category.update_feed()
     return HttpResponse()
 
-# Search related Content
-def searchRelated(request):
-    query_string = ''
-    matching = []
-    articles = []
-    if ('q' in request.GET) and request.GET['q'].strip():
-        query_string = request.GET['q']
-        querylist = [Q(body__icontains=query) for query in normalize_query(query_string)]
-        querylist += [Q(title__icontains=query) for query in normalize_query(query_string)]
-        matching = Article.objects.filter(reduce(operator.or_, querylist))
-        for article in matching:
-            articles.append({
-                'url': article.get_absolute_url(),
-                'title': article.title,
-                'category-color': article.categories.all().first().color,
-                'image': article.image if article.image else article.categories.all().first().image})
-    return HttpResponse(json.dumps({'articles': articles}), content_type="application/json")
-
-def normalize_query(query_string,
-                    findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
-                    normspace=re.compile(r'\s{2,}').sub):
-    return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)] 
-
 @login_required
 def index(request):
     """Return response containing overview of categories and articles."""
@@ -68,16 +45,38 @@ def index(request):
 @login_required
 def query(request):
     """Return response containing articles matching the query."""
-    # Fetch any subcategories and articles contained in the category.
-    articles = []
-    for article in RSSArticle.objects.order_by('-publication_date').all()[:50]:
-        category = article.get_categories()[0]
-        articles.append({
-            'url': article.get_absolute_url(),
-            'title': article.title,
-            'category-color': category.color,
-            'image': article.image if article.image else category.image})
-    return HttpResponse(json.dumps({'articles': articles}), content_type='application/json')
+    query_string = request.GET.get('q', None)
+    if query_string is None:
+        # Fetch any subcategories and articles contained in the category.
+        articles = []
+        for article in RSSArticle.objects.order_by('-publication_date').all()[:50]:
+            category = article.get_categories()[0]
+            articles.append({
+                'url': article.get_absolute_url(),
+                'title': article.title,
+                'category-color': category.color,
+                'image': article.image if article.image else category.image})
+        return HttpResponse(json.dumps({'articles': articles}), content_type='application/json')
+    elif query_string.strip():
+        matching = []
+        articles = []
+        querylist = [Q(body__icontains=query) for query in normalize_query(query_string)]
+        querylist += [Q(title__icontains=query) for query in normalize_query(query_string)]
+        matching = Article.objects.filter(reduce(operator.or_, querylist))
+        for article in matching:
+            articles.append({
+                'url': article.get_absolute_url(),
+                'title': article.title,
+                'category-color': article.categories.all().first().color,
+                'image': article.image if article.image else article.categories.all().first().image})
+        return HttpResponse(json.dumps({'articles': articles}), content_type="application/json")
+    else:
+        return HttpResponse(json.dumps({'articles': []}), content_type="application/json")
+
+def normalize_query(query_string,
+                    findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
+                    normspace=re.compile(r'\s{2,}').sub):
+    return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)] 
 
 @login_required
 def category(request, identifier, source='local'):
