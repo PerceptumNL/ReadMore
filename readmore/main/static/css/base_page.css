@@ -40,7 +40,7 @@
 }
 .topbar .content{
     position:relative;
-    width:800px;
+    width:1024px;
     margin: 0 auto;
     height:100%;
 }
@@ -126,14 +126,16 @@
 }
 
 @media screen and (max-width: 1024px) {
-
+    .topbar .content{
+        width: 800px;
+    }
 }
 @media screen and (max-width: 872px) {
     .contentHolder{
         width: 576px
     }
     .topbar .content{
-        width: 600px
+        width: 512px;
     }
     #buttons{
         width: 80%;
@@ -151,6 +153,9 @@
     }
 }
 @media screen and (max-width: 616px) {
+    .topbar .content{
+        width: 384px;
+    }
     .contentHolder{
         width: 580px;
     }
