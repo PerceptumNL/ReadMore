@@ -109,7 +109,7 @@
     border: none;
     margin:0;
     cursor: pointer;
-    background-color: #438EB9;
+    background-color: #39BAF4;
     color: #FFF;
 }
 #searchForm button:hover{
@@ -146,7 +146,7 @@
     background-color:#555;
 }
 #morecategories button{
-    background-color: #438EB9;
+    background-color: #39BAF4;
     border: 1px solid #0D5D8D;
     color: #fff;
 }

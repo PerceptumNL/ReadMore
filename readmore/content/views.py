@@ -16,6 +16,23 @@ def update_feeds(request):
         category.update_feed()
     return HttpResponse()
 
+# Search related Content
+def searchRelated(request):
+    query_string = ''
+    matching = []
+    if ('q' in request.GET) and request.GET['q'].strip():
+        query_string = request.GET['q']
+        querylist = [Q(body__icontains=query) for query in normalize_query(query_string)]
+        querylist += [Q(title__icontains=query) for query in normalize_query(query_string)]
+        matching = Article.objects.filter(reduce(operator.or_, querylist))
+    matches = [{'pk':match.pk, 'title':match.title} for match in matching]
+    return HttpResponse(json.dumps(matching), content_type="application/json")
+
+def normalize_query(query_string,
+                    findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
+                    normspace=re.compile(r'\s{2,}').sub):
+    return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)] 
+
 @login_required
 def index(request):
     """Return response containing overview of categories and articles."""

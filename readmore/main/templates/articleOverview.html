@@ -67,6 +67,9 @@
 	<script src={% static "js/loader.js"%}></script>
 
 	<script>
+	
+
+	
 	    $( function(){
 		    loader = new Loader("#articles");
 		    if(location.hash == ""){
@@ -74,6 +77,13 @@
             } else {
                 loader.update();
             }
+	        $('#searchForm').submit(function(){
+	            $.get('content/search/', $(this).serialize(), function(data) {
+	                loader.clear();
+	                loader.load(data);
+	            });
+	            return false;
+	        });
         });
 
         $('#morecategories').click(function(){
