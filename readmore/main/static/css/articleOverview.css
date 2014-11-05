@@ -18,7 +18,6 @@
     width:256px;
     height:256px;
     margin-bottom:32px;
-    float: left;
     position:relative;
     z-index:4;
     cursor: pointer;
@@ -101,7 +100,11 @@
     margin:0;
     padding:0 8px;
     border: none;
-    background-color:#eee;
+    background:#eee;
+    -webkit-transition: background 0.5s ;
+    -moz-transition: background 0.5s ;
+    -o-transition: background 0.5s ;
+    transition: background 0.5s ; 
 }
 #searchForm button{
     display: inline-block;
@@ -110,7 +113,7 @@
     border: none;
     margin:0;
     cursor: pointer;
-    background-color: #438EB9;
+    background-color: #39BAF4;
     color: #FFF;
 }
 #searchForm button:hover{
@@ -147,7 +150,7 @@
     background-color:#555;
 }
 #morecategories button{
-    background-color: #438EB9;
+    background-color: #39BAF4;
     border: 1px solid #0D5D8D;
     color: #fff;
 }
@@ -193,7 +196,7 @@
         overflow-y: auto;
     }
 }
-@media screen and (max-width: 540px) {
+@media screen and (max-width: 580px) {
     .footer{
         display:block;
     }

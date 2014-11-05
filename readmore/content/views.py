@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, \
         HttpResponseServerError, HttpResponseRedirect
 from django.conf import settings
+from django.db.models import Q
+import operator
 import json
 import requests
 from readmore.content.models import *
@@ -36,23 +38,45 @@ def index(request):
                 content_type='application/json')
     else:
         # Render HTML of the landing page containing top categories
-        return render(request, 'overview.html',{
+        return render(request, 'articleOverview.html',{
                 "articles": articles,
                 "categories": categories})
 
 @login_required
 def query(request):
     """Return response containing articles matching the query."""
-    # Fetch any subcategories and articles contained in the category.
-    articles = []
-    for article in RSSArticle.objects.order_by('-publication_date').all()[:50]:
-        category = article.get_categories()[0]
-        articles.append({
-            'url': article.get_absolute_url(),
-            'title': article.title,
-            'category-color': category.color,
-            'image': article.image if article.image else category.image})
-    return HttpResponse(json.dumps({'articles': articles}), content_type='application/json')
+    query_string = request.GET.get('q', None)
+    if query_string is None:
+        # Fetch any subcategories and articles contained in the category.
+        articles = []
+        for article in RSSArticle.objects.order_by('-publication_date').all()[:50]:
+            category = article.get_categories()[0]
+            articles.append({
+                'url': article.get_absolute_url(),
+                'title': article.title,
+                'category-color': category.color,
+                'image': article.image if article.image else category.image})
+        return HttpResponse(json.dumps({'articles': articles}), content_type='application/json')
+    elif query_string.strip():
+        matching = []
+        articles = []
+        querylist = [Q(body__icontains=query) for query in normalize_query(query_string)]
+        querylist += [Q(title__icontains=query) for query in normalize_query(query_string)]
+        matching = Article.objects.filter(reduce(operator.or_, querylist))
+        for article in matching:
+            articles.append({
+                'url': article.get_absolute_url(),
+                'title': article.title,
+                'category-color': article.categories.all().first().color,
+                'image': article.image if article.image else article.categories.all().first().image})
+        return HttpResponse(json.dumps({'articles': articles}), content_type="application/json")
+    else:
+        return HttpResponse(json.dumps({'articles': []}), content_type="application/json")
+
+def normalize_query(query_string,
+                    findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
+                    normspace=re.compile(r'\s{2,}').sub):
+    return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)] 
 
 @login_required
 def category(request, identifier, source='local'):
@@ -130,7 +154,7 @@ def article(request, identifier, source='local'):
         # Fetch random articles from the same categories for reading suggestions.
         random_articles = []
         for category in categories:
-            random_articles += category.get_random_articles(2)
+            random_articles += category.get_random_articles(3)
 
         # Ensure the current article is not suggested again
         if article in random_articles:
@@ -146,7 +170,7 @@ def article(request, identifier, source='local'):
                         category=category,
                         article_id=identifier,
                         article=article)
-        return render(request, 'articleView.html',
+        return render(request, 'article_page.html',
                 {"article": article, "random_articles": random_articles})
     else:
         # Return JSON with article properties
