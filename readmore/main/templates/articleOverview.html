@@ -75,7 +75,7 @@
                 loader.update();
             }
 	        $('#searchForm').submit(function(){
-	            $.get('content/search/', $(this).serialize(), function(data) {
+	            $.get('content/query/', $(this).serialize(), function(data) {
 	                if(data.articles.length > 0){
 	                    loader.clear();
 	                    loader.load(data);

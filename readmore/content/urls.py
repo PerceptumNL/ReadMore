@@ -16,6 +16,5 @@ urlpatterns = patterns('',
         'readmore.content.views.category', {'source':'wikipedia'},
         name='wikipedia_category'),
     url(r'query/?$', 'readmore.content.views.query', name='content_query'),
-    url(r'^search/?$', 'readmore.content.views.searchRelated', name='content_search'),
     )
 
