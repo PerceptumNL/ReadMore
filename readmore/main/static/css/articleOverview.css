@@ -150,12 +150,41 @@
     background-color:#555;
 }
 #morecategories button{
-    background-color: #39BAF4;
-    border: 1px solid #0D5D8D;
+    background-color: #03A9F4;
+    border: none;
     color: #fff;
+    height:80px;
+    margin-top:-20px;
+    overflow: visible;
+    box-shadow: 0 0 4px #000;
+    -webkit-transition: all 0.25s ;
+    -moz-transition: all 0.25s ;
+    -o-transition: all 0.25s ;
+    transition: all 0.25s ;
 }
+
+.footer #morecategories i{
+    -webkit-transition: all 0.5s ;
+    -moz-transition: all 0.5s ;
+    -o-transition: all 0.5s ;
+    transition: all 0.5s ;
+}
+.footer.open #morecategories i{
+    -ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+    transform: rotate(180deg);
+}
+
 #morecategories button:hover{
-    background-color: #67A8CF;
+    background-color: #39BAF4;
+    height:88px;
+    margin-top:-28px;
+    padding-top:8px;
+}
+.footer.open #morecategories button{
+    height: 60px;
+    margin-top: 0;
+    padding-top:0;
 }
 
 @media screen and (max-width: 1024px) {
@@ -214,6 +243,17 @@
     }
     .buttonHolder button{
         width:100%;
+    }
+    #morecategories button{
+        height: 60px;
+        margin-top:0;
+        padding-top: 0;
+        box-shadow: 0 0 16px #000;
+    }
+    #morecategories button:hover{
+        height: 60px;
+        margin-top:0;
+        padding-top: 0;
     }
     div.btn{
         width:80%;
