@@ -122,7 +122,8 @@
     <script>
     $(document).ready(function(){
         $.post( "/add_to_history/", {   
-                value: '{{article.id}}',
+                article: '{{article.id}}',
+                value: '',
                 type: 'content',
                 csrfmiddlewaretoken: getCookie('csrftoken'),
             });
@@ -132,6 +133,7 @@
         var rating_type = this.parentElement.id;  
         this.parentElement.innerHTML = Array(rating+1).join("<i class='fa fa-star' style='color: #22ADC2'></i>");
         $.post( "/add_to_history/", {   
+                article: '{{article.id}}',
                 value: rating,
                 type: rating_type,
                 csrfmiddlewaretoken: getCookie('csrftoken'),

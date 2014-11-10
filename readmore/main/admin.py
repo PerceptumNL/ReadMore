@@ -32,10 +32,8 @@ class StatisticsAdmin(admin.ModelAdmin):
     
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
-
 admin.site.register(Institute, InstituteAdmin)
-admin.site.register(Badge, BadgeAdmin)    
-admin.site.register(Statistics, StatisticsAdmin)
+
 admin.site.register(ArticleHistoryItem)
 admin.site.register(ArticleRatingItem)
 admin.site.register(ArticleDifficultyItem)

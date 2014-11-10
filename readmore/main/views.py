@@ -11,13 +11,15 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def history(request):
     if request.method == 'POST':
+        article_id = request.POST.get('article', None)
         value = request.POST.get('value', None)
         history_type = request.POST.get('type', None)
-        if value is not None and history_type is not None:
+        if article_id is not None and value is not None and history_type is not None:
             try:
                 # Handle ratings here
+                crt_article = Article.objects.get(id=article_id)
                 if history_type == 'content':
-                    pass
+                    ArticleHistoryItem.objects.create(article = crt_article, user = request.user)
                 elif history_type == 'word':
                     pass
                 elif history_type == 'articlerating':
@@ -29,8 +31,8 @@ def history(request):
                 
                 # Ratings worked
                 return HttpResponse(status=204)
-            except:
-                # Bad request
+            except Exception as e:
+                # Bad request         
                 return HttpResponse(status=400)
     # Not a post request
     return HttpResponseRedirect("/")

@@ -19,7 +19,7 @@ class UserProfile(models.Model):
 
 class ArticleHistoryItem(models.Model):
     article = models.ForeignKey('content.Article')
-    user = models.ForeignKey(User, unique=True)
+    user = models.ForeignKey(User)
     date = models.DateTimeField(auto_now=True)
     
     class Meta:
@@ -36,7 +36,7 @@ class ArticleHistoryItem(models.Model):
 
 class ArticleRatingItem(models.Model):
     article = models.ForeignKey('content.Article')
-    user = models.ForeignKey(User, unique=True)
+    user = models.ForeignKey(User)
     rating = models.IntegerField()
     date = models.DateTimeField(auto_now=True)
     class Meta:
@@ -53,7 +53,7 @@ class ArticleRatingItem(models.Model):
 
 class ArticleDifficultyItem(models.Model):
     article = models.ForeignKey('content.Article')
-    user = models.ForeignKey(User, unique=True)
+    user = models.ForeignKey(User)
     rating = models.IntegerField()
     date = models.DateTimeField(auto_now=True)
     class Meta:
@@ -70,7 +70,7 @@ class ArticleDifficultyItem(models.Model):
 
 class WordHistoryItem(models.Model):
     article = models.ForeignKey('content.Article')
-    user = models.ForeignKey(User, unique=True)
+    user = models.ForeignKey(User)
     word = models.CharField(max_length=255)
     date = models.DateTimeField(auto_now=True)
     
