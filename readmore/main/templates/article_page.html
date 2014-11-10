@@ -124,7 +124,7 @@
         $.post( "/add_to_history/", {   
                 value: '{{article.id}}',
                 type: 'content',
-                csrfmiddlewaretoken: '{{ csrf_token }}',
+                csrfmiddlewaretoken: getCookie('csrftoken'),
             });
         });
     $('.rating span').click(function(){
@@ -134,7 +134,7 @@
         $.post( "/add_to_history/", {   
                 value: rating,
                 type: rating_type,
-                csrfmiddlewaretoken: '{{ csrf_token }}',
+                csrfmiddlewaretoken: getCookie('csrftoken'),
             });
     });
     $('.contentFrame').scroll( function(){
