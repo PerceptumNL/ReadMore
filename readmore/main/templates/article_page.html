@@ -120,9 +120,24 @@
     </script>
  	
     <script>
-    $('span').click(function(){
+    $(document).ready(function(){
+        $.post( "/add_to_history/", {   
+                article: '{{article.id}}',
+                value: '',
+                type: 'content',
+                csrfmiddlewaretoken: getCookie('csrftoken'),
+            });
+        });
+    $('.rating span').click(function(){
         var rating = parseInt(this.getAttribute('rating'));
+        var rating_type = this.parentElement.id;  
         this.parentElement.innerHTML = Array(rating+1).join("<i class='fa fa-star' style='color: #22ADC2'></i>");
+        $.post( "/add_to_history/", {   
+                article: '{{article.id}}',
+                value: rating,
+                type: rating_type,
+                csrfmiddlewaretoken: getCookie('csrftoken'),
+            });
     });
     $('.contentFrame').scroll( function(){
         if($('#article').innerHeight()*0.5 > $(this).scrollTop()){

@@ -29,10 +29,28 @@ class BadgeAdmin(admin.ModelAdmin):
 class StatisticsAdmin(admin.ModelAdmin):
     base_model = Statistics
     list_display = ('user', 'docsRead')
-    
+
+class WordHistoryItemAdmin(admin.ModelAdmin):
+    base_model = WordHistoryItem
+    list_display = ('word', 'user', 'article', 'date')
+
+class ArticleHistoryItemAdmin(admin.ModelAdmin):
+    base_model = ArticleHistoryItem
+    list_display = ('user', 'article', 'date')   
+
+class ArticleRatingItemAdmin(admin.ModelAdmin):
+    base_model = ArticleRatingItem
+    list_display = ('rating', 'user', 'article', 'date')   
+
+class ArticleDifficultyItemAdmin(admin.ModelAdmin):
+    base_model = ArticleDifficultyItem
+    list_display = ('rating', 'user', 'article', 'date')
+
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
-
 admin.site.register(Institute, InstituteAdmin)
-admin.site.register(Badge, BadgeAdmin)    
-admin.site.register(Statistics, StatisticsAdmin)
+
+admin.site.register(ArticleHistoryItem, ArticleHistoryItemAdmin)
+admin.site.register(ArticleRatingItem, ArticleRatingItemAdmin)
+admin.site.register(ArticleDifficultyItem, ArticleDifficultyItemAdmin)
+admin.site.register(WordHistoryItem, WordHistoryItemAdmin)
