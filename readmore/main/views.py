@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def history(request):
     if request.method == 'POST':
-        article_id = request.POST.get('article', None)
+        article_id = int(request.POST.get('article', None))
         value = request.POST.get('value', None)
         history_type = request.POST.get('type', None)
         if article_id is not None and value is not None and history_type is not None:
@@ -21,11 +21,11 @@ def history(request):
                 if history_type == 'content':
                     ArticleHistoryItem.objects.create(article = crt_article, user = request.user)
                 elif history_type == 'word':
-                    pass
+                    WordHistoryItem.objects.create(article = crt_article, user = request.user, word=value)
                 elif history_type == 'articlerating':
-                    pass
+                    ArticleRatingItem.objects.create(article = crt_article, user = request.user, rating=value)
                 elif history_type == 'articledifficulty':
-                    pass
+                    ArticleDifficultyItem.objects.create(article = crt_article, user = request.user, rating=value)
                 else:
                     return HttpResponse(status=400)
                 
