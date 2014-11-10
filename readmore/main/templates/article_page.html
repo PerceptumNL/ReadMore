@@ -120,9 +120,22 @@
     </script>
  	
     <script>
-    $('span').click(function(){
+    $(document).ready(function(){
+        $.post( "/add_to_history/", {   
+                value: '{{article.id}}',
+                type: 'content',
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            });
+        });
+    $('.rating span').click(function(){
         var rating = parseInt(this.getAttribute('rating'));
+        var rating_type = this.parentElement.id;  
         this.parentElement.innerHTML = Array(rating+1).join("<i class='fa fa-star' style='color: #22ADC2'></i>");
+        $.post( "/add_to_history/", {   
+                value: rating,
+                type: rating_type,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            });
     });
     $('.contentFrame').scroll( function(){
         if($('#article').innerHeight()*0.5 > $(this).scrollTop()){

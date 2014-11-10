@@ -6,7 +6,35 @@ from allauth.socialaccount.models import SocialAccount
 from readmore.content.models import *
 from django.contrib.auth.decorators import login_required
 
+
 # New pages
+@login_required
+def history(request):
+    if request.method == 'POST':
+        value = request.POST.get('value', None)
+        history_type = request.POST.get('type', None)
+        if value is not None and history_type is not None:
+            try:
+                # Handle ratings here
+                if history_type == 'content':
+                    pass
+                elif history_type == 'word':
+                    pass
+                elif history_type == 'articlerating':
+                    pass
+                elif history_type == 'articledifficulty':
+                    pass
+                else:
+                    return HttpResponse(status=400)
+                
+                # Ratings worked
+                return HttpResponse(status=204)
+            except:
+                # Bad request
+                return HttpResponse(status=400)
+    # Not a post request
+    return HttpResponseRedirect("/")
+
 @login_required
 def article_overview(request):
     """Return response containing overview of categories and articles."""

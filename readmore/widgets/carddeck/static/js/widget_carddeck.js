@@ -37,6 +37,11 @@ $.widget( "readmore.carddeck", {
 			}
 			decks.push({'url':url, 'params':params});
 		}
+        $.post( "/add_to_history/", {   
+                value: word,
+                type: 'word',
+                csrfmiddlewaretoken: getCookie('csrftoken'),
+        });
 		return decks;
 	},
     load: function(word){
