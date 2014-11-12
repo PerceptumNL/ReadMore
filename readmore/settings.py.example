@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'readmore.widgets.dictionary',
     'readmore.widgets.carddeck',
     'readmore.content',
+    'readmore.teacher',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
