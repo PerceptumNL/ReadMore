@@ -134,6 +134,21 @@
         pages.selected = (pages.selected + 1) % pages.children.length;
       });
     </script>
+	<script src="{% static 'js/carddeck.js' %}"></script>
+	<script src="{% static 'js/widget_carddeck.js' %}"></script>
+	<script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static 'js/filteringIsotope.js' %}"></script>
+    <script>
+    $(function(){
+        $("#cards").carddeck({
+			'cover': $("#cover"),
+			'carddecks': [
+				{'url': '/widgets/dictionary/', 'params': {'word':"%%WORD%%"}},
+				{'url': '/widgets/askteacher/'}
+			]
+		});
+    });
+	</script>
 </body>
 
 </html>
