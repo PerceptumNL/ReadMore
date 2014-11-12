@@ -19,6 +19,7 @@
 
     <link rel="import"
     href="{% static 'components/core-toolbar/core-toolbar.html' %}">
+    <link rel="import" href="{% static 'components/core-pages/core-pages.html' %}">
     <link rel="import" href="{% static 'components/paper-elements/paper-elements.html' %}">
 
 <!--
@@ -41,7 +42,7 @@
     overflow: auto;
     -webkit-overflow-scrolling: touch; 
   }
-  .white-teal{
+  .azure-teal{
     background-color: #00bcd4;
     color: #fff;
     box-shadow: none;
@@ -49,7 +50,9 @@
   paper-tab::shadow #ink {
     color: #fff;
   }
-
+  #tabs{
+    width:100%;
+  }
   @media (min-width: 704px) {
 
   }  
@@ -60,51 +63,49 @@
     padding:16px;
     margin:16px;
   }
+  core-pages > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: inherit;
+}
   </style>
 
 </head>
 
 <body unresolved>
 
-  <core-header-panel mode="waterfall-tall" tallClass="medium-tall">
-      <core-toolbar class=" white-teal">
-      
+  <core-header-panel  mode="waterfall ">
+      <core-toolbar class="medium-tall azure-teal core-narrow">
         <paper-icon-button icon="menu"></paper-icon-button>
         <div flex>Dashboard</div>
         <paper-icon-button icon="search"></paper-icon-button>
         <paper-icon-button icon="more-vert"></paper-icon-button>
-       
-        <paper-tabs class="bottom fit core-narrow" selected="0"  flex>
-            <paper-tab>Overzicht</paper-tab>
-            <paper-tab>Leerlingen</paper-tab>
-            <paper-tab>Artikelen</paper-tab>
-            <paper-tab>Woorden</paper-tab>
-        </paper-tabs>
+            <paper-tabs class="bottom fit" selected="0">
+                <paper-tab>Overzicht</paper-tab>
+                <paper-tab>Leerlingen</paper-tab>
+                <paper-tab>Artikelen</paper-tab>
+                <paper-tab>Woorden</paper-tab>
+            </paper-tabs>
       </core-toolbar>
-
+   
+        <div class="container" layout vertical center>
+            <core-pages id="first" selected="0">
+                 <div class="statistics-card">1</div>
+                 <div class="statistics-card">2</div>
+            </core-pages>
+        </div>
+       
     
-    <core-pages selected="0">
-    <div class="container" layout vertical center>
-        <paper-shadow z="3">
-        <div class="statistics-card"></div>
-        </paper-shadow>
-    </div>
-    
-
-    
-
-    
-    </core-pages>
 
 </core-header-panel>
 
   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>   
     <script>
-      document.addEventListener('click', function(e) {
-        var pages = document.querySelector('core-pages');
-        pages.selected = (pages.selected + 1) % pages.children.length;
-      });
+    document.querySelector('#first').onclick = function(e) {
+        this.selected = (this.selected + 1) % this.items.length;      
+    };
     </script>
 	<script src="{% static 'js/carddeck.js' %}"></script>
 	<script src="{% static 'js/widget_carddeck.js' %}"></script>
