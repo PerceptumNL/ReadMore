@@ -42,19 +42,20 @@
     -webkit-overflow-scrolling: touch; 
   }
   .white-teal{
-    background-color: #FFF;
-    color: #00bcd4;
+    background-color: #00bcd4;
+    color: #fff;
     box-shadow: none;
   }
   paper-tab::shadow #ink {
-    color: #00bcd4;
+    color: #fff;
   }
 
   @media (min-width: 704px) {
 
   }  
-  .card{
+  .statistics-card{
     background: #FFF;
+    min-height:160px;
     width:480px;
     padding:16px;
     margin:16px;
@@ -65,62 +66,33 @@
 
 <body unresolved>
 
-  <core-header-panel>
-      <core-toolbar class="medium-tall white-teal">
+  <core-header-panel mode="waterfall-tall" tallClass="medium-tall">
+      <core-toolbar class=" white-teal">
       
         <paper-icon-button icon="menu"></paper-icon-button>
         <div flex>Dashboard</div>
         <paper-icon-button icon="search"></paper-icon-button>
         <paper-icon-button icon="more-vert"></paper-icon-button>
-        
-        <div class="bottom fit" horizontal layout>
-        
-          <paper-tabs selected="0" flex style="max-width: 600px;">
-        
-            <paper-tab>ITEM ONE</paper-tab>
-            <paper-tab>ITEM TWO</paper-tab>
-            <paper-tab>ITEM THREE</paper-tab>
-            
-          </paper-tabs>
-          
-        </div>
-      
+       
+        <paper-tabs class="bottom fit core-narrow" selected="0"  flex>
+            <paper-tab>Overzicht</paper-tab>
+            <paper-tab>Leerlingen</paper-tab>
+            <paper-tab>Artikelen</paper-tab>
+            <paper-tab>Woorden</paper-tab>
+        </paper-tabs>
       </core-toolbar>
 
     
     <core-pages selected="0">
     <div class="container" layout vertical center>
-        <div class="card"> 
-            <paper-shadow z="3"></paper-shadow>
-            Meest gelezen artikelen
-            <ul>
-                <li> Artikel 1
-                <li> Artikel 2
-            </ul>
-        </div>
+        <paper-shadow z="3">
+        <div class="statistics-card"></div>
+        </paper-shadow>
     </div>
     
-    <div class="container" layout vertical center>
-        <div class="card"> 
-            <paper-shadow z="3"></paper-shadow>
-            Meest gelezen artikelen
-            <ul>
-                <li> Artikel 3
-                <li> Artikel 4
-            </ul>
-        </div>
-    </div>
+
     
-    <div class="container" layout vertical center>
-        <div class="card"> 
-            <paper-shadow z="3"></paper-shadow>
-            Meest gelezen artikelen
-            <ul>
-                <li> Artikel 5
-                <li> Artikel 6
-            </ul>
-        </div>
-    </div>   
+
     
     </core-pages>
 
