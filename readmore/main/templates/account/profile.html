@@ -29,6 +29,12 @@
     </p>
     <a href="/"><button class="nav">Ga naar de artikelen</button></a>
     
+    <ul>
+        {% for history_item in history %}
+            <li> <a href="{% url 'article' history_item.pk %}">{{history_item}}</a>
+        {% endfor %}
+    <ul>
+    
 {% endblock %}
 
 {% block footer %}

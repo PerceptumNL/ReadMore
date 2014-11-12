@@ -23,7 +23,7 @@ class ArticleHistoryItem(models.Model):
     date = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ["date"]
+        ordering = ["-date"]
         
     def __repr__(self):
         return str(self)
@@ -40,7 +40,7 @@ class ArticleRatingItem(models.Model):
     rating = models.IntegerField()
     date = models.DateTimeField(auto_now=True)
     class Meta:
-        ordering = ["date"]
+        ordering = ["-date"]
         
     def __repr__(self):
         return str(self)
@@ -57,7 +57,7 @@ class ArticleDifficultyItem(models.Model):
     rating = models.IntegerField()
     date = models.DateTimeField(auto_now=True)
     class Meta:
-        ordering = ["date"]
+        ordering = ["-date"]
         
     def __repr__(self):
         return str(self)
@@ -75,7 +75,7 @@ class WordHistoryItem(models.Model):
     date = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ["date"]
+        ordering = ["-date"]
         
     def __repr__(self):
         return str(self)

@@ -32,19 +32,20 @@ class StatisticsAdmin(admin.ModelAdmin):
 
 class WordHistoryItemAdmin(admin.ModelAdmin):
     base_model = WordHistoryItem
-    list_display = ('word', 'user', 'article', 'date')
+    list_display = ('user', 'word', 'article', 'date')
 
+    
 class ArticleHistoryItemAdmin(admin.ModelAdmin):
     base_model = ArticleHistoryItem
     list_display = ('user', 'article', 'date')   
 
 class ArticleRatingItemAdmin(admin.ModelAdmin):
     base_model = ArticleRatingItem
-    list_display = ('rating', 'user', 'article', 'date')   
+    list_display = ('user', 'rating', 'article', 'date')   
 
 class ArticleDifficultyItemAdmin(admin.ModelAdmin):
     base_model = ArticleDifficultyItem
-    list_display = ('rating', 'user', 'article', 'date')
+    list_display = ('user', 'rating', 'article', 'date')
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)

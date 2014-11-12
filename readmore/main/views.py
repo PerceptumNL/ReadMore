@@ -59,22 +59,26 @@ def login(request):
     else:
         return render(request, 'login.html',{})
 
+@login_required
 def profile_self(request):
     """Return response containing the profile of the current user."""
+    user = request.user
+    # POSTGRESQL version
     try:
-        user = User.objects.get(username=request.user.username)
-    except User.DoesNotExist:
-        return HttpResponseRedirect("/")
-    socialaccount = SocialAccount.objects.filter(user_id=request.user.id)
-    if( len(socialaccount)>0 ):
-        socialaccount = socialaccount[0].extra_data
-    else:
-        socialaccount = {}
+        history = ArticleHistoryItem.objects.filter(user=user)
+        unique_articles = history.values('article').order_by().distinct()
+        unique_articles = [art['article'] for art in unique_articles]
+        history = Article.objects.filter(id__in=unique_articles)
+    except Exception as e:
+        print e
+        history = ArticleHistoryItem.objects.filter(user=user)
+    
     return render(request, 'account/profile.html', {
-            "first_name": socialaccount.get('first_name', ''),
-            "last_name": socialaccount.get('last_name', user.username),
-            "age": socialaccount.get('age', '?')})
+        "history": history
+    
+        })
 
+@login_required
 def profile(request, user_id):
     """Return response containing the profile of the given user."""
     try:
