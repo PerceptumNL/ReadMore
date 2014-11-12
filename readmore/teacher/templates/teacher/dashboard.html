@@ -8,6 +8,8 @@
 
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="{% static 'js/jquery-ui.js' %}"></script>
     <script src="{% static 'components/webcomponentsjs/webcomponents.js' %}"></script>
     <link rel="import" href="{% static 'components/core-elements/core-elements.html' %}"> 
     <link rel="import" href="{% static 'components/font-roboto/roboto.html' %}">
@@ -75,53 +77,67 @@
 
 <body unresolved>
 
-  <core-header-panel  mode="waterfall ">
-      <core-toolbar class="medium-tall azure-teal core-narrow">
-        <paper-icon-button icon="menu"></paper-icon-button>
-        <div flex>Dashboard</div>
-        <paper-icon-button icon="search"></paper-icon-button>
-        <paper-icon-button icon="more-vert"></paper-icon-button>
-            <paper-tabs class="bottom fit" selected="0">
-                <paper-tab>Overzicht</paper-tab>
-                <paper-tab>Leerlingen</paper-tab>
-                <paper-tab>Artikelen</paper-tab>
-                <paper-tab>Woorden</paper-tab>
-            </paper-tabs>
-      </core-toolbar>
-   
-        <div class="container" layout vertical center>
-            <core-pages id="first" selected="0">
-                 <div class="statistics-card">1</div>
-                 <div class="statistics-card">2</div>
-            </core-pages>
-        </div>
-       
-    
-
+<core-header-panel  mode="waterfall ">
+	<core-toolbar class="medium-tall azure-teal core-narrow">
+	<paper-icon-button icon="menu"></paper-icon-button>
+	<div flex>Dashboard</div>
+	<paper-icon-button icon="search"></paper-icon-button>
+	<paper-icon-button icon="more-vert"></paper-icon-button>
+		<paper-tabs class="bottom fit" selected="0">
+			<paper-tab>Overzicht</paper-tab>
+			<paper-tab>Leerlingen</paper-tab>
+			<paper-tab>Artikelen</paper-tab>
+			<paper-tab>Woorden</paper-tab>
+		</paper-tabs>
+	</core-toolbar>
+	<div class="container" layout vertical center>
+		<core-pages id="first" selected="0">
+		<div id='cards-0'>
+			<div class='element-item'>
+				<paper-shadow z="3">
+				<div class="statistics-card">1</div>
+				</paper-shadow>
+			</div>
+			<div class='element-item'>
+				<paper-shadow z="3">
+				<div class="statistics-card">2</div>
+				</paper-shadow>
+			</div>
+		</div>
+		<div id='cards-1'>
+			<div class='element-item'>
+				<paper-shadow z="3">
+				<div class="statistics-card">3</div>
+				</paper-shadow>
+			</div>
+			<div class='element-item'>
+				<paper-shadow z="3">
+				<div class="statistics-card">4</div>
+				</paper-shadow>
+			</div>
+		</div>
+		</core-pages>
+	</div>
 </core-header-panel>
-
-  
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>   
-    <script>
+<script>
     document.querySelector('#first').onclick = function(e) {
-        this.selected = (this.selected + 1) % this.items.length;      
+        this.selected = (this.selected + 1) % this.items.length;
     };
     </script>
 	<script src="{% static 'js/carddeck.js' %}"></script>
-	<script src="{% static 'js/widget_carddeck.js' %}"></script>
+	<script src="{% static 'js/widget_dashboard.js' %}"></script>
 	<script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
     <script src="{% static 'js/filteringIsotope.js' %}"></script>
     <script>
     $(function(){
-        $("#cards").carddeck({
-			'cover': $("#cover"),
+        $("#cards-0").dashboard({
 			'carddecks': [
 				{'url': '/widgets/dictionary/', 'params': {'word':"%%WORD%%"}},
 				{'url': '/widgets/askteacher/'}
 			]
 		});
     });
-	</script>
+</script>
 </body>
 
 </html>
