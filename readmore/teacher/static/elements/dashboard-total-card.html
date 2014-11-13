@@ -1,0 +1,24 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/core-ajax/core-ajax.html">
+
+<polymer-element name="dashboard-total-card"  attributes="card">
+        <template>
+            <core-ajax auto url="{{card.source}}" params='{}' handleAs="json" response="{{response}}">></core-ajax>
+            <paper-shadow  z="1">
+                <div class="card-element">
+                    <h2>{{card.title}}</h2>
+                    Deze week: {{response.week}}<br>
+                    Deze maand: {{response.month}}
+                </div>
+            </paper-shadow>
+        </template>
+<script>
+    Polymer('dashboard-total-card', {
+        // initialize the element's model
+        responseChanged: function(oldVal) {
+                
+            }
+    });
+</script>
+</polymer-element>
+
