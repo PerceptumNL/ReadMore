@@ -23,6 +23,15 @@ def dashboard(request):
 def carddeck_overview(request):
     return HttpResponse(json.dumps([
         {
+            'type': 'dashboard-list-events-card',
+            'data': {
+                'title': 'Laatste gebeurtenissen',
+                'description':
+                    "Overzicht van de laatste acties op het platform.",
+                'source': reverse('api_get_last_events')
+            }
+        },
+        {
             'type': 'dashboard-total-card',
             'data': {
                 'title': 'Artikelen bekeken',
