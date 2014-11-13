@@ -26,6 +26,9 @@ def carddeck_overview(request):
             'type': 'dashboard-total-card',
             'data': {
                 'title': 'Artikelen bekeken',
+                'description': (
+                    "Totaal aantal bekeken artikelen in een "
+                    "bepaalde periode."),
                 'source': reverse('api_get_total_views')
             }
         },
@@ -33,6 +36,31 @@ def carddeck_overview(request):
             'type': 'dashboard-total-card',
             'data': {
                 'title': 'Woorden bekeken',
+                'description': (
+                    "Totaal aantal geklikte woorden in een "
+                    "bepaalde periode."),
                 'source': reverse('api_get_total_covers')
+            }
+        },
+        {
+            'type': 'dashboard-total-card',
+            'data': {
+                'title': 'Moeilijkheid aangegeven',
+                'description': (
+                    "Totaal aantal keer dat de moeilijkheid "
+                    "van een artikel is aangegeven in een "
+                    "bepaalde periode."),
+                'source': reverse('api_get_total_difficulty_ratings')
+            }
+        },
+        {
+            'type': 'dashboard-total-card',
+            'data': {
+                'title': 'Interessantheid aangegeven',
+                'description': (
+                    "Totaal aantal keer dat de interessantheid "
+                    "van een artikel is aangegeven in een "
+                    "bepaalde periode."),
+                'source': reverse('api_get_total_like_ratings')
             }
         }]), content_type='application/json')
