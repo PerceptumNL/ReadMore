@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'readmore.widgets.dummy',
     'readmore.widgets.dictionary',
     'readmore.widgets.carddeck',
+    'readmore.widgets.dashboard',
     'readmore.content',
     'readmore.teacher',
     'allauth',

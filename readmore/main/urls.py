@@ -7,6 +7,12 @@ urlpatterns = patterns('',
     url(r'^profile/(?P<user_id>\w+)$', 'readmore.main.views.profile', name='profile'),
     url(r'^about/', 'readmore.main.views.about', name='about'),
     url(r'^add_to_history/$', 'readmore.main.views.history', name='history'),
+    url(r'^api/stats/total/views?$',
+        'readmore.main.views.api_get_total_views',
+        name='api_get_total_views'),
+    url(r'^api/stats/total/covers?$',
+        'readmore.main.views.api_get_total_covers',
+        name='api_get_total_covers'),
 )
 
 
