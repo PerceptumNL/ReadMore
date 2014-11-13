@@ -34,6 +34,14 @@ class Event(PolymorphicModel):
     def __str__(self):
         return unicode(self).encode('utf-8')
 
+    def describe(self):
+        """Return a dictionary-like object with key properties."""
+        return {'type': 'event',
+                'date': str(self.date),
+                'user': unicode(self.user).encode(
+                    'ascii', 'xmlcharrefreplace')
+                }
+
 
 class ArticleHistoryItem(Event):
     article = models.ForeignKey('content.Article')
@@ -41,12 +49,36 @@ class ArticleHistoryItem(Event):
     def __unicode__(self):
         return u'%s' % (self.article.title,)
 
+    def describe(self):
+        """Return a dictionary-like object with key properties."""
+        desc = super(ArticleHistoryItem, self).describe()
+        desc = {} if desc is None else desc
+        desc.update({
+            'type': 'event-article-view',
+            'article': unicode(self.article).encode(
+                'ascii', 'xmlcharrefreplace')
+            })
+        return desc
+
+
 class ArticleRatingItem(Event):
     article = models.ForeignKey('content.Article')
     rating = models.IntegerField()
 
     def __unicode__(self):
         return u'%s' % (self.article.title,)
+
+    def describe(self):
+        """Return a dictionary-like object with key properties."""
+        desc = super(ArticleRatingItem, self).describe()
+        desc = {} if desc is None else desc
+        desc.update({
+            'type': 'event-article-rating',
+            'rating': str(self.rating),
+            'article': unicode(self.article).encode(
+                'ascii', 'xmlcharrefreplace')
+            })
+        return desc
 
 
 class ArticleDifficultyItem(Event):
@@ -56,6 +88,18 @@ class ArticleDifficultyItem(Event):
     def __unicode__(self):
         return u'%s' % (self.article.title,)
 
+    def describe(self):
+        """Return a dictionary-like object with key properties."""
+        desc = super(ArticleDifficultyItem, self).describe()
+        desc = {} if desc is None else desc
+        desc.update({
+            'type': 'event-article-difficulty',
+            'rating': str(self.rating),
+            'article': unicode(self.article).encode(
+                'ascii', 'xmlcharrefreplace')
+            })
+        return desc
+
 
 class WordHistoryItem(Event):
     article = models.ForeignKey('content.Article')
@@ -63,6 +107,18 @@ class WordHistoryItem(Event):
 
     def __unicode__(self):
         return u'%s' % (self.word,)
+
+    def describe(self):
+        """Return a dictionary-like object with key properties."""
+        desc = super(WordHistoryItem, self).describe()
+        desc = {} if desc is None else desc
+        desc.update({
+            'type': 'event-word-cover',
+            'rating': str(self.rating),
+            'article': unicode(self.article).encode(
+                'ascii', 'xmlcharrefreplace')
+            })
+        return desc
 
 
 class Institute(models.Model):

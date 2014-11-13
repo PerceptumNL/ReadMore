@@ -19,4 +19,7 @@ urlpatterns = patterns('',
     url(r'^api/stats/total/ratings/difficulty/?$',
         'readmore.main.views.api_get_total_difficulty_ratings',
         name='api_get_total_difficulty_ratings'),
+    url(r'^api/events/last/?$',
+        'readmore.main.views.api_get_last_events',
+        name='api_get_last_events'),
 )

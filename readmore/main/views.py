@@ -153,4 +153,12 @@ def api_get_total_like_ratings(request):
 @login_required
 def api_get_last_events(request):
     user_id = request.GET.get('user', None)
-    pass
+    num = int(request.GET.get('num', 10))
+    events = Event.objects
+    if user_id is not None:
+        events = events.filter(user__id=int(user_id))
+    last_events = []
+    for event in events.all()[:num]:
+        last_events.append(event.describe());
+    return HttpResponse(json.dumps(last_events),
+            content_type='application/json')
