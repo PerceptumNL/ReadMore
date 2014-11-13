@@ -11,7 +11,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="{% static 'js/jquery-ui.js' %}"></script>
     <script src="{% static 'components/webcomponentsjs/webcomponents.js' %}"></script>
-    <link rel="import" href="{% static 'components/core-elements/core-elements.html' %}"> 
+
     <link rel="import" href="{% static 'components/font-roboto/roboto.html' %}">
     <link rel="import" href="{% static 'components/core-icon-button/core-icon-button.html' %}">
     <link rel="import" href="{% static 'components/core-icons/core-icons.html' %}">
@@ -92,8 +92,10 @@
 	</core-toolbar>
 	<div class="container" layout vertical center>
 		<core-pages id="first" selected="0">
-		<div id='cards-0' class='cards'></div>
-		<div id='cards-1' class='cards'></div>
+		    <div id='cards-0' class='cards'></div>
+		    <div id='cards-1' class='cards'></div>
+		    <div id='cards-2' class='cards'></div>
+		    <div id='cards-3' class='cards'></div>
 		</core-pages>
 	</div>
 </core-header-panel>
@@ -119,6 +121,23 @@
 				{'url': '/teacher/carddeck/overview/'}
 			]
 		});
+        $("#cards-2").dashboard({
+			'carddecks': [
+				{'url': '/teacher/carddeck/overview/'}
+			]
+		});
+        $("#cards-3").dashboard({
+			'carddecks': [
+				{'url': '/teacher/carddeck/overview/'}
+			]
+		});
+    });
+</script>
+<script>
+    var tabs = document.querySelector('paper-tabs');
+    var pages = document.querySelector('core-pages');
+    tabs.addEventListener('core-select', function() {
+        pages.selected = tabs.selected;
     });
 </script>
 </body>
