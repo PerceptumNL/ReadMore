@@ -24,6 +24,8 @@
     <link rel="import" href="{% static 'components/core-pages/core-pages.html' %}">
     <link rel="import" href="{% static 'components/paper-elements/paper-elements.html' %}">
 
+    <link rel="import" href="{% static 'elements/statistics-card.html' %}">
+
 <!--
     Primary: #F44336 (500)
     light: #FFCDD2 (100)
@@ -58,13 +60,7 @@
   @media (min-width: 704px) {
 
   }  
-  .statistics-card{
-    background: #FFF;
-    min-height:160px;
-    width:480px;
-    padding:8px;
-    margin:16px 32px;;
-  }
+
   core-pages > div {
 
 }
@@ -75,14 +71,32 @@
     #first{
         height:100%;
     }
-    .cards{
+    .page{
         display: none;
         height:100%;
         width:100%;
     }
-    .cards.core-selected{
+    .page.core-selected{
         display:block;
     }
+    paper-dropdown-menu{
+        margin:16px;
+    }
+    paper-dropdown{
+
+    }
+    paper-item{
+
+    }
+    .card-element{
+        background: #FFF;
+        min-height:160px;
+        width:480px;
+        padding:8px;
+        margin:16px 32px;
+    }
+
+    
   </style>
 
 </head>
@@ -104,10 +118,32 @@
 	</core-toolbar>
 	<div class="container">
 		<core-pages id="first" selected="0">
-		    <div id='cards-0' class='cards'></div>
-		    <div id='cards-1' class='cards'></div>
-		    <div id='cards-2' class='cards'></div>
-		    <div id='cards-3' class='cards'></div>
+		    <div id="overzicht" class="page">
+    		    <div id='cards-0' class='cards'>
+    		        <statistics-card></statistics-card>
+    		    </div>
+		    </div>
+		    <div id="leerlingen" class="page">
+                <paper-dropdown-menu label="Selecteer een leerling">
+                    <paper-dropdown class="dropdown">
+                        <core-menu class="menu">
+                            <paper-item>John</paper-item>
+                            <paper-item>Paul</paper-item>
+                            <paper-item>George</paper-item>
+                            <paper-item>That other drummer guy that is not even the best drummer in the Beatles</paper-item>
+                        </core-menu>
+                    </paper-dropdown>
+                </paper-dropdown-menu>		        
+		        <div id='cards-1' class='cards'>
+		            
+		        </div>
+		    </div>
+		    <div id="artikelen" class="page">
+		        <div id='cards-2' class='cards'></div>
+		    </div>
+		    <div id="woorden" class="page">
+		        <div id='cards-3' class='cards'></div>
+		    </div>
 		</core-pages>
 	</div>
 </core-header-panel>
@@ -119,6 +155,15 @@
     <script src="{% static 'js/filteringIsotope.js' %}"></script>
     <script>
     $(function(){
+        var cards = [];
+        // Load current course
+        $( document ).ready( function() { 
+            $.getJSON( "/teacher/carddeck/overview/", function( data ) {
+                document.querySelector('statistics-card').cards = data;
+            });
+        });
+
+    /*
         $("#cards-0").dashboard({
 			'carddecks': [
 				{'url': '/teacher/carddeck/overview/'}
@@ -139,6 +184,7 @@
 				{'url': '/teacher/carddeck/overview/'}
 			]
 		});
+		*/
     });
 </script>
 <script>

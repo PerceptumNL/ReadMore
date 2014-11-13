@@ -1,0 +1,23 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../elements/dashboard-total-card.html">
+
+<polymer-element name="statistics-card">
+    <template >
+        <template repeat="{{card in cards}}">
+            <template bind ref="{{card.type}}"></template>
+        </template>
+
+        <!-- Card types -->
+        <template id="dashboard-total-card">
+            <dashboard-total-card card="{{card.data}}"></dashboard-total-card>
+        </template>
+        
+        
+        
+    </template>
+    <script>
+        Polymer('statistics-card', {
+        });
+    </script>
+</polymer-element>
+
