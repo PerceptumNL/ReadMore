@@ -7,6 +7,7 @@ from allauth.account.signals import user_signed_up
 from readmore.content.views import article_read
 from django.dispatch import receiver
 
+from polymorphic import PolymorphicModel
 import allauth.app_settings
 from allauth.socialaccount import providers
 
@@ -17,74 +18,52 @@ class UserProfile(models.Model):
     institute = models.ForeignKey('Institute', blank=True, null=True,
             related_name='users')
 
-class ArticleHistoryItem(models.Model):
-    article = models.ForeignKey('content.Article')
+class Event(PolymorphicModel):
     user = models.ForeignKey(User)
     date = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         ordering = ["-date"]
-        
+
     def __repr__(self):
         return str(self)
 
     def __unicode__(self):
-        return u'%s' % (self.article.title,)
+        return u'Event'
 
     def __str__(self):
         return unicode(self).encode('utf-8')
 
-class ArticleRatingItem(models.Model):
+
+class ArticleHistoryItem(Event):
     article = models.ForeignKey('content.Article')
-    user = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return u'%s' % (self.article.title,)
+
+class ArticleRatingItem(Event):
+    article = models.ForeignKey('content.Article')
     rating = models.IntegerField()
-    date = models.DateTimeField(auto_now=True)
-    class Meta:
-        ordering = ["-date"]
-        
-    def __repr__(self):
-        return str(self)
 
     def __unicode__(self):
         return u'%s' % (self.article.title,)
 
-    def __str__(self):
-        return unicode(self).encode('utf-8')
 
-class ArticleDifficultyItem(models.Model):
+class ArticleDifficultyItem(Event):
     article = models.ForeignKey('content.Article')
-    user = models.ForeignKey(User)
     rating = models.IntegerField()
-    date = models.DateTimeField(auto_now=True)
-    class Meta:
-        ordering = ["-date"]
-        
-    def __repr__(self):
-        return str(self)
 
     def __unicode__(self):
         return u'%s' % (self.article.title,)
 
-    def __str__(self):
-        return unicode(self).encode('utf-8')
 
-class WordHistoryItem(models.Model):
+class WordHistoryItem(Event):
     article = models.ForeignKey('content.Article')
-    user = models.ForeignKey(User)
     word = models.CharField(max_length=255)
-    date = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        ordering = ["-date"]
-        
-    def __repr__(self):
-        return str(self)
 
     def __unicode__(self):
         return u'%s' % (self.word,)
 
-    def __str__(self):
-        return unicode(self).encode('utf-8')
 
 class Institute(models.Model):
     title = models.CharField(max_length=255)
