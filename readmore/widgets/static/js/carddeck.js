@@ -142,7 +142,7 @@ function DashboardCard(container, order, title, _self){
 	_self.create_content_container = function(){
 		var content_container = ($("<div class='statistics-card'></div>")
 				.append($("<div class='title'>"+title+"</div>")));
-		container.append($("<paper-shadow z='3'></paper-shadow>")
+		container.append($("<paper-shadow z='1'></paper-shadow>")
 				.append(content_container));
 		return content_container;
 	}
