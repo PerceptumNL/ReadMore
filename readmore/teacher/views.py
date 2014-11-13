@@ -23,14 +23,14 @@ def dashboard(request):
 def carddeck_overview(request):
     return HttpResponse(json.dumps([
         {
-            'type': 'DashboardTotalCard',
+            'type': 'dashboard-total-card',
             'data': {
                 'title': 'Artikelen bekeken',
                 'source': reverse('api_get_total_views')
             }
         },
         {
-            'type': 'DashboardTotalCard',
+            'type': 'dashboard-total-card',
             'data': {
                 'title': 'Woorden bekeken',
                 'source': reverse('api_get_total_covers')
