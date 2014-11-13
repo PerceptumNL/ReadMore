@@ -160,6 +160,11 @@ def article(request, identifier, source='local'):
         if article in random_articles:
             random_articles.remove(article)
 
+        recommendations = []
+        for rand_article in random_articles:
+            if rand_article.image:
+                recommendations.append(rand_article)
+
         # For all categories this article belongs to
         for category in categories:
             # If the category was stored in the database
@@ -171,7 +176,7 @@ def article(request, identifier, source='local'):
                         article_id=identifier,
                         article=article)
         return render(request, 'article_page.html',
-                {"article": article, "random_articles": random_articles})
+                {"article": article, "random_articles": recommendations})
     else:
         # Return JSON with article properties
         return HttpResponse(
