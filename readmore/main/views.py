@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from readmore.main.models import *
 from readmore.content.views import index
@@ -117,30 +117,44 @@ def about(request):
     return render(request, 'about.html')
 
 @login_required
-def api_get_total_views(request):
+def api_get_total_views(request, user_id=None):
     date = datetime.date.today()
     start_week = date - datetime.timedelta(date.weekday())
     end_week = start_week + datetime.timedelta(7)
-    total_all = ArticleHistoryItem.objects.count()
-    total_month = ArticleHistoryItem.objects.filter(
-            date__month=date.month).count()
-    total_week = ArticleHistoryItem.objects.filter(
-            date__range=[start_week, end_week]).count()
+    if user_id is not None:
+        total_all = ArticleHistoryItem.objects.filter(user__id=user_id).count()
+        total_month = ArticleHistoryItem.objects.filter(
+                date__month=date.month, user__id=user_id).count()
+        total_week = ArticleHistoryItem.objects.filter(
+                date__range=[start_week, end_week], user__id=user_id).count()
+    else:
+        total_all = ArticleHistoryItem.objects.count()
+        total_month = ArticleHistoryItem.objects.filter(
+                date__month=date.month).count()
+        total_week = ArticleHistoryItem.objects.filter(
+                date__range=[start_week, end_week]).count()
     return HttpResponse(json.dumps({
         'week': total_week,
         'month': total_month,
         'all': total_all}), content_type='application/json')
 
 @login_required
-def api_get_total_covers(request):
+def api_get_total_covers(request, user_id=None):
     date = datetime.date.today()
     start_week = date - datetime.timedelta(date.weekday())
     end_week = start_week + datetime.timedelta(7)
-    total_all = WordHistoryItem.objects.count()
-    total_month = WordHistoryItem.objects.filter(
-            date__month=date.month).count()
-    total_week = WordHistoryItem.objects.filter(
-            date__range=[start_week, end_week]).count()
+    if user_id is not None:
+        total_all = WordHistoryItem.objects.filter(user__id=user_id).count()
+        total_month = WordHistoryItem.objects.filter(
+                date__month=date.month, user__id=user_id).count()
+        total_week = WordHistoryItem.objects.filter(
+                date__range=[start_week, end_week], user__id=user_id).count()
+    else:
+        total_all = WordHistoryItem.objects.count()
+        total_month = WordHistoryItem.objects.filter(
+                date__month=date.month).count()
+        total_week = WordHistoryItem.objects.filter(
+                date__range=[start_week, end_week]).count()
     return HttpResponse(json.dumps({
         'week': total_week,
         'month': total_month,
