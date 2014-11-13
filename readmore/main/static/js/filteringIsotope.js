@@ -9,7 +9,7 @@ $( function(){
 });
 
 $( function(){
-    var $cardcontainer = $('#cards-0').isotope({
+    var $cardcontainer = $('.cards').isotope({
         itemSelector: '.element-item',
         getSortData: {
             order: '[data-order] parseInt'

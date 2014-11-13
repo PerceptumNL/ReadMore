@@ -5,7 +5,8 @@ from readmore.content.views import index
 from allauth.socialaccount.models import SocialAccount
 from readmore.content.models import *
 from django.contrib.auth.decorators import login_required
-
+import datetime
+import json
 
 # New pages
 @login_required
@@ -114,3 +115,33 @@ def profile(request, user_id):
 
 def about(request):
     return render(request, 'about.html')
+
+@login_required
+def api_get_total_views(request):
+    date = datetime.date.today()
+    start_week = date - datetime.timedelta(date.weekday())
+    end_week = start_week + datetime.timedelta(7)
+    total_all = ArticleHistoryItem.objects.count()
+    total_month = ArticleHistoryItem.objects.filter(
+            date__month=date.month).count()
+    total_week = ArticleHistoryItem.objects.filter(
+            date__range=[start_week, end_week]).count()
+    return HttpResponse(json.dumps({
+        'week': total_week,
+        'month': total_month,
+        'all': total_all}), content_type='application/json')
+
+@login_required
+def api_get_total_covers(request):
+    date = datetime.date.today()
+    start_week = date - datetime.timedelta(date.weekday())
+    end_week = start_week + datetime.timedelta(7)
+    total_all = WordHistoryItem.objects.count()
+    total_month = WordHistoryItem.objects.filter(
+            date__month=date.month).count()
+    total_week = WordHistoryItem.objects.filter(
+            date__range=[start_week, end_week]).count()
+    return HttpResponse(json.dumps({
+        'week': total_week,
+        'month': total_month,
+        'all': total_all}), content_type='application/json')

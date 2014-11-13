@@ -6,7 +6,8 @@ $.widget( "readmore.dashboard", {
 		carddecks: [{ 'url': '/widgets/dictionary/', 'params': {'word':"%%PARAM%%"}}]
 	},
 	_create: function(){
-		var _self = this
+		var _self = this;
+		_self.load()
 		// Find any instance of the controlwidget and
 		// bind to the `wordclick' event
 	},
@@ -23,7 +24,7 @@ $.widget( "readmore.dashboard", {
 		}
 		return decks;
 	},
-    load: function(word){
+    load: function(param){
         var _self = this;
 		if(this.options.cover){
 			if($(this.options.cover).hasClass('open')){
@@ -36,7 +37,7 @@ $.widget( "readmore.dashboard", {
 						function(){ window.history.back(); });
 			}
 		}
-		this.carddeck = new CardDeck(this.element, this.decks(word));
+		this.carddeck = new DashboardCardDeck(this.element, this.decks(param));
 	},
     close: function(cover){
 		if(cover){

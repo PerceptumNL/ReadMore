@@ -92,30 +92,8 @@
 	</core-toolbar>
 	<div class="container" layout vertical center>
 		<core-pages id="first" selected="0">
-		<div id='cards-0'>
-			<div class='element-item'>
-				<paper-shadow z="3">
-				<div class="statistics-card">1</div>
-				</paper-shadow>
-			</div>
-			<div class='element-item'>
-				<paper-shadow z="3">
-				<div class="statistics-card">2</div>
-				</paper-shadow>
-			</div>
-		</div>
-		<div id='cards-1'>
-			<div class='element-item'>
-				<paper-shadow z="3">
-				<div class="statistics-card">3</div>
-				</paper-shadow>
-			</div>
-			<div class='element-item'>
-				<paper-shadow z="3">
-				<div class="statistics-card">4</div>
-				</paper-shadow>
-			</div>
-		</div>
+		<div id='cards-0' class='cards'></div>
+		<div id='cards-1' class='cards'></div>
 		</core-pages>
 	</div>
 </core-header-panel>
@@ -124,6 +102,7 @@
         this.selected = (this.selected + 1) % this.items.length;
     };
     </script>
+	<script src="{% static 'js/interface.js' %}"></script>
 	<script src="{% static 'js/carddeck.js' %}"></script>
 	<script src="{% static 'js/widget_dashboard.js' %}"></script>
 	<script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
@@ -132,8 +111,12 @@
     $(function(){
         $("#cards-0").dashboard({
 			'carddecks': [
-				{'url': '/widgets/dictionary/', 'params': {'word':"%%WORD%%"}},
-				{'url': '/widgets/askteacher/'}
+				{'url': '/teacher/carddeck/overview/'}
+			]
+		});
+        $("#cards-1").dashboard({
+			'carddecks': [
+				{'url': '/teacher/carddeck/overview/'}
 			]
 		});
     });
