@@ -125,7 +125,7 @@ class WordHistoryItem(Event):
         desc.update({
             'type': 'event-word-cover',
             'word': unicode(self.word).encode(
-                'ascii', 'xmlcharrefreplace')
+                'ascii', 'xmlcharrefreplace'),
             'article': {
                 'url': reverse('article', args=(self.article.id,)),
                 'title': unicode(self.article).encode(
