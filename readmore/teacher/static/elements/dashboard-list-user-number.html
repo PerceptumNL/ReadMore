@@ -1,0 +1,21 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/core-ajax/core-ajax.html">
+
+<polymer-element name="dashboard-list-user-number"  attributes="card" noscript>
+        <template>
+            <core-ajax auto url="{{card.source}}" params='{}' handleAs="json" response="{{response}}">></core-ajax>
+            <paper-shadow  z="1">
+                <div class="card-element" style="padding:10px 20px; margin: 10px;">
+                    <h2>{{card.description}}</h2>
+                    <ol>
+                    <template repeat="{{user in response}}">
+                        <li>{{user.user}} heeft {{user.views}} artikelen bekeken
+                    </template>
+                    </ol>
+                    <p>{{card.description}}</p>
+                </div>
+            </paper-shadow>
+        </template>
+
+</polymer-element>
+
