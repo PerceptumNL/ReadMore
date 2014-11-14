@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
 from allauth.account.signals import user_signed_up
 from readmore.content.views import article_read
 from django.dispatch import receiver
@@ -55,8 +56,11 @@ class ArticleHistoryItem(Event):
         desc = {} if desc is None else desc
         desc.update({
             'type': 'event-article-view',
-            'article': unicode(self.article).encode(
-                'ascii', 'xmlcharrefreplace')
+            'article': {
+                'url': reverse('article', args=(self.article.id,)),
+                'title': unicode(self.article).encode(
+                    'ascii', 'xmlcharrefreplace')
+                }
             })
         return desc
 
@@ -75,8 +79,11 @@ class ArticleRatingItem(Event):
         desc.update({
             'type': 'event-article-rating',
             'rating': str(self.rating),
-            'article': unicode(self.article).encode(
-                'ascii', 'xmlcharrefreplace')
+            'article': {
+                'url': reverse('article', args=(self.article.id,)),
+                'title': unicode(self.article).encode(
+                    'ascii', 'xmlcharrefreplace')
+                }
             })
         return desc
 
@@ -95,8 +102,11 @@ class ArticleDifficultyItem(Event):
         desc.update({
             'type': 'event-article-difficulty',
             'rating': str(self.rating),
-            'article': unicode(self.article).encode(
-                'ascii', 'xmlcharrefreplace')
+            'article': {
+                'url': reverse('article', args=(self.article.id,)),
+                'title': unicode(self.article).encode(
+                    'ascii', 'xmlcharrefreplace')
+                }
             })
         return desc
 
@@ -115,8 +125,11 @@ class WordHistoryItem(Event):
         desc.update({
             'type': 'event-word-cover',
             'rating': str(self.rating),
-            'article': unicode(self.article).encode(
-                'ascii', 'xmlcharrefreplace')
+            'article': {
+                'url': reverse('article', args=(self.article.id,)),
+                'title': unicode(self.article).encode(
+                    'ascii', 'xmlcharrefreplace')
+                }
             })
         return desc
 

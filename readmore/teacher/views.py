@@ -32,6 +32,24 @@ def carddeck_overview(request):
             }
         },
         {
+            'type': 'dashboard-list-user-number',
+            'data': {
+                'title': 'Meest actieve leerlingen',
+                'description':
+                    "Overzicht van de meest actieve leerlingen.",
+                'source': reverse('api_get_most_active_users')
+            }
+        },
+        {
+            'type': 'dashboard-list-article-stars',
+            'data': {
+                'title': 'Moeilijkste artikelen',
+                'description':
+                    "Overzicht van de moeilijkste artikelen.",
+                'source': reverse('api_get_hardest_articles')
+            }
+        },
+        {
             'type': 'dashboard-total-card',
             'data': {
                 'title': 'Artikelen bekeken',

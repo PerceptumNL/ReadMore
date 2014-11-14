@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Sum, Count
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from readmore.main.models import *
 from readmore.content.views import index
 from allauth.socialaccount.models import SocialAccount
@@ -161,4 +163,37 @@ def api_get_last_events(request):
     for event in events.all()[:num]:
         last_events.append(event.describe());
     return HttpResponse(json.dumps(last_events),
+            content_type='application/json')
+
+@login_required
+def api_get_most_active_users(request):
+    num = int(request.GET.get('num', 10))
+    users = ArticleHistoryItem.objects.values('user')
+    users = users.annotate(views=Count('article')).order_by('views')
+    active_users = []
+    for user in users.all()[:num]:
+        active_users.append({
+            'user': str(User.objects.get(pk=int(user['user']))),
+            'views': user['views']})
+    return HttpResponse(json.dumps(active_users),
+            content_type='application/json')
+
+@login_required
+def api_get_hardest_articles(request):
+    user_id = request.GET.get('user', None)
+    num = int(request.GET.get('num', 10))
+    articles = ArticleDifficultyItem.objects.values('article', 'article__title')
+    if user_id is not None:
+        articles.filter(user__id=int(user_id))
+    articles = articles.annotate(score=Sum('rating')).order_by('score')
+    hardest_articles = []
+    for article in articles.all()[:num]:
+        hardest_articles.append({
+            'article': {
+                'url': reverse('article', args=(article['article'],)),
+                'title': unicode(article['article__title']).encode(
+                    'ascii', 'xmlcharrefreplace')
+            },
+            'rating': article['score']})
+    return HttpResponse(json.dumps(hardest_articles),
             content_type='application/json')
