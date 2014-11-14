@@ -28,4 +28,7 @@ urlpatterns = patterns('',
     url(r'^api/list/articles/hardest/?$',
         'readmore.main.views.api_get_hardest_articles',
         name='api_get_hardest_articles'),
+    url(r'^api/list/articles/favorite/?$',
+        'readmore.main.views.api_get_favorite_articles',
+        name='api_get_favorite_articles'),
 )
