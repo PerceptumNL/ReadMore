@@ -19,6 +19,26 @@ class UserProfile(models.Model):
     institute = models.ForeignKey('Institute', blank=True, null=True,
             related_name='users')
 
+
+class Institute(models.Model):
+    title = models.CharField(max_length=255)
+    site_id = models.ForeignKey(Site)
+    provider = models.CharField(verbose_name=('provider'),
+                                max_length=30,
+                                choices = providers.registry.as_choices())
+    def __repr__(self):
+        return '%s' % (self.title)
+
+    def __unicode__(self):
+        return unicode(self.title)
+
+
+class Group(models.Model):
+    title = models.CharField(max_length=255)
+    leader = models.ForeignKey(User, null=True, blank=True)
+    institute = models.ForeignKey('Institute', null=True, blank=True)
+
+
 class Event(PolymorphicModel):
     user = models.ForeignKey(User)
     date = models.DateTimeField(auto_now=True)
@@ -134,23 +154,6 @@ class WordHistoryItem(Event):
             })
         return desc
 
-
-class Institute(models.Model):
-    title = models.CharField(max_length=255)
-    site_id = models.ForeignKey(Site)
-    provider = models.CharField(verbose_name=('provider'),
-                                max_length=30,
-                                choices = providers.registry.as_choices())
-    def __repr__(self):
-        return '%s' % (self.title)
-
-    def __unicode__(self):
-        return unicode(self.title)
-
-class Group(models.Model):
-    title = models.CharField(max_length=255)
-    leader = models.ForeignKey(User, null=True, blank=True)
-    institute = models.ForeignKey('Institute', null=True, blank=True)
 
 class Statistics(models.Model):
     STATS = [('docsRead','docsRead')]

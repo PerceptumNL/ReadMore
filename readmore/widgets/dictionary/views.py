@@ -11,6 +11,9 @@ def process(request):
 
     # Get list of Terms and Forms for word
     info = api.get_info(word)
+    # If no results are found, and the word is capitalized.
+    if info == [] and word[0].isupper():
+        info = api.get_info(word.lower())
 
     cards = []
     for term in info:

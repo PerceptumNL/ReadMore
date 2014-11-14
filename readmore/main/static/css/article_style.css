@@ -202,7 +202,7 @@ li a p{
     margin-top: 5px;
 }
 
-span + .word {
+span.word {
     cursor: pointer;
 }
 

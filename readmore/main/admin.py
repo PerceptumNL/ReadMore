@@ -4,11 +4,6 @@ from polymorphic.admin import PolymorphicParentModelAdmin, \
         PolymorphicChildModelAdmin
 from models import *
 
-class InstituteAdmin(admin.ModelAdmin):
-    base_model = Institute
-    list_display = ('title', 'provider')
-
-
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     filter_horizontal = ('badges',)
@@ -69,5 +64,6 @@ class EventAdmin(PolymorphicParentModelAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(Institute, InstituteAdmin)
+admin.site.register(Institute)
+admin.site.register(Group)
 admin.site.register(Event, EventAdmin)
