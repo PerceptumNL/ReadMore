@@ -9,6 +9,7 @@ from readmore.content.models import *
 from django.contrib.auth.decorators import login_required
 import datetime
 import json
+import pytz
 
 # New pages
 @login_required
@@ -118,15 +119,27 @@ def profile(request, user_id):
 def about(request):
     return render(request, 'about.html')
 
+def filter_on_period(objects, period):
+    if period == 'month':
+        date = datetime.datetime.now(pytz.utc)
+        return objects.filter(date__month=date.month)
+    elif period == 'week':
+        date = datetime.datetime.now(pytz.utc)
+        start_week = date - datetime.timedelta(date.weekday())
+        end_week = start_week + datetime.timedelta(7)
+        return objects.filter(date__range=[start_week, end_week])
+    else:
+        return objects
+
 def api_get_history_totals(history, user_id=None):
     date = datetime.date.today()
     start_week = date - datetime.timedelta(date.weekday())
     end_week = start_week + datetime.timedelta(7)
     if user_id is not None:
         history = history.filter(user__id=int(user_id))
-    total_all = history.count()
-    total_month = history.filter(date__month=date.month).count()
-    total_week = history.filter(date__range=[start_week, end_week]).count()
+    total_all = filter_on_period(history, 'all').count()
+    total_month = filter_on_period(history, 'month').count()
+    total_week = filter_on_period(history, 'week').count()
     return HttpResponse(json.dumps({
         'week': total_week,
         'month': total_month,
@@ -168,7 +181,9 @@ def api_get_last_events(request):
 @login_required
 def api_get_most_active_users(request):
     num = int(request.GET.get('num', 10))
+    period = request.GET.get('period', 'all')
     users = ArticleHistoryItem.objects.values('user')
+    users = filter_on_period(users, period)
     users = users.annotate(views=Count('article')).order_by('views')
     active_users = []
     for user in users.all()[:num]:
@@ -182,7 +197,9 @@ def api_get_most_active_users(request):
 def api_get_hardest_articles(request):
     user_id = request.GET.get('user', None)
     num = int(request.GET.get('num', 10))
+    period = request.GET.get('period', 'all')
     articles = ArticleDifficultyItem.objects.values('article', 'article__title')
+    articles = filter_on_period(articles, period)
     if user_id is not None:
         articles = articles.filter(user__id=int(user_id))
     articles = articles.annotate(score=Avg('rating')).order_by('score')
@@ -202,7 +219,9 @@ def api_get_hardest_articles(request):
 def api_get_favorite_articles(request):
     user_id = request.GET.get('user', None)
     num = int(request.GET.get('num', 10))
+    period = request.GET.get('period', 'all')
     articles = ArticleRatingItem.objects.values('article', 'article__title')
+    articles = filter_on_period(articles, period)
     if user_id is not None:
         articles = articles.filter(user__id=int(user_id))
     articles = articles.annotate(score=Avg('rating')).order_by('-score')
@@ -222,7 +241,9 @@ def api_get_favorite_articles(request):
 def api_get_most_clicked_words(request):
     user_id = request.GET.get('user', None)
     num = int(request.GET.get('num', 10))
+    period = request.GET.get('period', 'all')
     words = WordHistoryItem.objects.values('word')
+    words = filter_on_period(words, period)
     if user_id is not None:
         words = words.filter(user__id=int(user_id))
     words = words.annotate(score=Count('date')).order_by('-score')
@@ -239,7 +260,9 @@ def api_get_most_clicked_words(request):
 def api_get_viewed_articles(request):
     user_id = request.GET.get('user', None)
     num = int(request.GET.get('num', 10))
+    period = request.GET.get('period', 'all')
     history = ArticleHistoryItem.objects
+    history = filter_on_period(history, period)
     if user_id is not None:
         history = history.filter(user__id=int(user_id))
     viewed_articles = []
