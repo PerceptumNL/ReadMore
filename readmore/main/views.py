@@ -184,7 +184,7 @@ def api_get_hardest_articles(request):
     num = int(request.GET.get('num', 10))
     articles = ArticleDifficultyItem.objects.values('article', 'article__title')
     if user_id is not None:
-        articles.filter(user__id=int(user_id))
+        articles = articles.filter(user__id=int(user_id))
     articles = articles.annotate(score=Avg('rating')).order_by('score')
     hardest_articles = []
     for article in articles.all()[:num]:
@@ -204,7 +204,7 @@ def api_get_favorite_articles(request):
     num = int(request.GET.get('num', 10))
     articles = ArticleRatingItem.objects.values('article', 'article__title')
     if user_id is not None:
-        articles.filter(user__id=int(user_id))
+        articles = articles.filter(user__id=int(user_id))
     articles = articles.annotate(score=Avg('rating')).order_by('-score')
     hardest_articles = []
     for article in articles.all()[:num]:
@@ -216,4 +216,40 @@ def api_get_favorite_articles(request):
             },
             'rating': article['score']})
     return HttpResponse(json.dumps(hardest_articles),
+            content_type='application/json')
+
+@login_required
+def api_get_most_clicked_words(request):
+    user_id = request.GET.get('user', None)
+    num = int(request.GET.get('num', 10))
+    words = WordHistoryItem.objects.values('word')
+    if user_id is not None:
+        words = words.filter(user__id=int(user_id))
+    words = words.annotate(score=Count('date')).order_by('-score')
+    clicked_words = []
+    for word in words.all()[:num]:
+        clicked_words.append({
+            'word': unicode(word['word']).encode(
+                'ascii', 'xmlcharrefreplace'),
+            'clicks': word['score']})
+    return HttpResponse(json.dumps(clicked_words),
+            content_type='application/json')
+
+@login_required
+def api_get_viewed_articles(request):
+    user_id = request.GET.get('user', None)
+    num = int(request.GET.get('num', 10))
+    history = ArticleHistoryItem.objects
+    if user_id is not None:
+        history = history.filter(user__id=int(user_id))
+    viewed_articles = []
+    for view in history.all()[:num]:
+        viewed_articles.append({
+            'article': {
+                'url': reverse('article', args=(view.article.id,)),
+                'title': unicode(view.article).encode(
+                    'ascii', 'xmlcharrefreplace')
+            },
+            'date': str(view.date)})
+    return HttpResponse(json.dumps(viewed_articles),
             content_type='application/json')
