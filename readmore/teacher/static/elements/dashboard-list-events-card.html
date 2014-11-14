@@ -9,12 +9,28 @@
                     <h2>{{card.title}}</h2>
                     <ol>
                         <template repeat="{{item in response}}">
-                            <li>{{item}}
+                            <li> {{item.user}} <template bind="{{item}}" ref="{{item.type}}" ></template> {{item.date}}
                         </template>
                     </ol>
                     <p>{{card.description}}</p>
                 </div>
             </paper-shadow>
+            <!-- Card types -->
+            <template id="event-article-view">
+                  leest <a href="{{article.url}}" style="font-style: italic"> {{article.title}}</a>
+            </template>
+
+            <template id="event-word-cover">
+                 bekijkt <a href="{{article.url}}" style="font-style: italic">{{word}}</a>
+            </template>
+
+            <template id="event-article-rating">
+                 beoordeelt <a href="{{article.url}}" style="font-style: italic"> {{article.title}}</a> met {{rating}} sterren
+            </template>
+
+            <template id="event-article-difficulty">
+                 beoordeelt makkelijkheid <a href="{{article.url}}" style="font-style: italic"> {{article.title}}</a> met {{rating}} sterren
+            </template>
         </template>
 
 </polymer-element>
