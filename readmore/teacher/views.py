@@ -41,6 +41,24 @@ def carddeck_overview(request):
             }
         },
         {
+            'type': 'dashboard-list-word-number',
+            'data': {
+                'title': 'Meest bekeken woorden',
+                'description':
+                    "Overzicht van de meest bekeken woorden.",
+                'source': reverse('api_get_most_clicked_words')
+            }
+        },
+        {
+            'type': 'dashboard-list-articles',
+            'data': {
+                'title': 'Bekeken artikelen',
+                'description':
+                    "Overzicht van de bekeken artikelen.",
+                'source': reverse('api_get_viewed_articles')
+            }
+        },
+        {
             'type': 'dashboard-list-article-stars',
             'data': {
                 'title': 'Moeilijkste artikelen',
