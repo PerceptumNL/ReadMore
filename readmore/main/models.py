@@ -124,7 +124,8 @@ class WordHistoryItem(Event):
         desc = {} if desc is None else desc
         desc.update({
             'type': 'event-word-cover',
-            'rating': str(self.rating),
+            'word': unicode(self.word).encode(
+                'ascii', 'xmlcharrefreplace')
             'article': {
                 'url': reverse('article', args=(self.article.id,)),
                 'title': unicode(self.article).encode(
