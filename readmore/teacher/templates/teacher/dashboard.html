@@ -24,7 +24,7 @@
     <link rel="import" href="{% static 'components/core-pages/core-pages.html' %}">
     <link rel="import" href="{% static 'components/paper-elements/paper-elements.html' %}">
 
-    <link rel="import" href="{% static 'elements/statistics-card.html' %}">
+    <link rel="import" href="{% static 'elements/card-deck.html' %}">
 
 <!--
     Primary: #F44336 (500)
@@ -34,81 +34,60 @@
     Accent: #2196F3 (500)
     fallback (100) #BBDEFB, (700) #1976D2
 -->
-  <style shim-shadowdom>
-  html,body {
-    height: 100%;
-    margin: 0;
-    background-color: #fff;
-    font-family: 'RobotoDraft', sans-serif;
-  }
-  core-header-panel {
-    height: 100%;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch; 
-  }
-  .azure-teal{
-    background-color: #00bcd4;
-    color: #fff;
-    box-shadow: none;
-  }
-  paper-tab::shadow #ink {
-    color: #fff;
-  }
-  #tabs{
-    width:100%;
-  }
-  @media (min-width: 704px) {
-
-  }  
-
-  core-pages > div {
-
-}
-    .container{
-        height:100%;
+<style shim-shadowdom>
+    html,body {
+        height: 100%;
         width:100%;
+        margin: 0;
+        background-color: #fff;
+        font-family: 'RobotoDraft', sans-serif;
     }
-    #first{
-        height:100%;
+
+    .azure-teal{
+        background-color: #00bcd4;
+        color: #fff;
+        box-shadow: none;
     }
+    paper-tabs{
+    
+    }
+    paper-tab::shadow #ink {
+        color: #fff;
+    }
+    
     .page{
-        display: none;
-        height:100%;
-        width:100%;
+        display: none;     
     }
     .page.core-selected{
         display:block;
     }
     paper-dropdown-menu{
-        margin:16px;
+        margin:8px 16px;
     }
-    paper-dropdown{
-
+    .container {
+        width: 80%;
+        margin: 50px auto 128px;
     }
-    paper-item{
-
+    dashboard-total-card{
+        padding: 10px 20px;
     }
-    .card-element{
-        background: #FFF;
-        min-height:160px;
-        width:480px;
-        padding:8px;
-        margin:16px 32px;
-    }
-
-    
-  </style>
+    @media (min-width: 800px) {
+        .container {
+            width: 700px;
+            margin: 50px auto 128px;
+        }
+    }  
+</style>
 
 </head>
 
-<body unresolved>
+<body fullbleed vertical layout unresolved>
 
-<core-header-panel  mode="waterfall ">
+<core-header-panel  mode="waterfall " flex>
 	<core-toolbar class="medium-tall azure-teal core-narrow">
-	<paper-icon-button icon="menu"></paper-icon-button>
+	<paper-icon-button icon="arrow-back" onclick="location.href='/';"></paper-icon-button>
 	<div flex>Dashboard</div>
-	<paper-icon-button icon="search"></paper-icon-button>
-	<paper-icon-button icon="more-vert"></paper-icon-button>
+	<paper-icon-button icon="refresh"></paper-icon-button>
 		<paper-tabs class="bottom fit" selected="0">
 			<paper-tab>Overzicht</paper-tab>
 			<paper-tab>Leerlingen</paper-tab>
@@ -116,34 +95,33 @@
 			<paper-tab>Woorden</paper-tab>
 		</paper-tabs>
 	</core-toolbar>
-	<div class="container">
-		<core-pages id="first" selected="0">
+    <div class="container" fullbleed> 
+		<core-pages id="first" selected="0" fullbleed vertical layout center>
 		    <div id="overzicht" class="page">
-    		    <div id='cards-0' class='cards'>
-    		        <statistics-card></statistics-card>
-    		    </div>
+		        <card-deck id="overview"></card-deck>
 		    </div>
 		    <div id="leerlingen" class="page">
-                <paper-dropdown-menu label="Selecteer een leerling">
+                {% verbatim %}
+		        <template is="auto-binding">
+                <paper-dropdown-menu label="Leerlingen">
                     <paper-dropdown class="dropdown">
-                        <core-menu class="menu">
-                            <paper-item>John</paper-item>
-                            <paper-item>Paul</paper-item>
-                            <paper-item>George</paper-item>
-                            <paper-item>That other drummer guy that is not even the best drummer in the Beatles</paper-item>
+                        <core-menu class="menu" >
+                            <template repeat="{{users}}">
+                                <paper-item>{{}}</paper-item>
+                            </template>
                         </core-menu>
                     </paper-dropdown>
-                </paper-dropdown-menu>		        
-		        <div id='cards-1' class='cards'>
-		            
-		        </div>
+                </paper-dropdown-menu>
+	             <card-deck id="students"></card-deck>
+                </template>
+                {% endverbatim %}
 		    </div>
 		    <div id="artikelen" class="page">
-		        <div id='cards-2' class='cards'></div>
+	             <card-deck id="articles"></card-deck>
 		    </div>
 		    <div id="woorden" class="page">
-		        <div id='cards-3' class='cards'></div>
-		    </div>
+	             <card-deck id="words"></card-deck>
+	        </div>
 		</core-pages>
 	</div>
 </core-header-panel>
@@ -159,32 +137,22 @@
         // Load current course
         $( document ).ready( function() { 
             $.getJSON( "/teacher/carddeck/overview/", function( data ) {
-                document.querySelector('statistics-card').cards = data;
+                document.querySelector('#overview').cards = data;
             });
+            /*
+            $.getJSON( "/teacher/carddeck/students/", function( data ) {
+                document.querySelector('#students').cards = data;
+            });
+            $.getJSON( "/teacher/carddeck/articles/", function( data ) {
+                document.querySelector('#articles').cards = data;
+            });
+            $.getJSON( "/teacher/carddeck/words/", function( data ) {
+                document.querySelector('#words').cards = data;
+            });
+            */
         });
 
-    /*
-        $("#cards-0").dashboard({
-			'carddecks': [
-				{'url': '/teacher/carddeck/overview/'}
-			]
-		});
-        $("#cards-1").dashboard({
-			'carddecks': [
-				{'url': '/teacher/carddeck/overview/'}
-			]
-		});
-        $("#cards-2").dashboard({
-			'carddecks': [
-				{'url': '/teacher/carddeck/overview/'}
-			]
-		});
-        $("#cards-3").dashboard({
-			'carddecks': [
-				{'url': '/teacher/carddeck/overview/'}
-			]
-		});
-		*/
+
     });
 </script>
 <script>
@@ -194,6 +162,22 @@
         pages.selected = tabs.selected;        
     });
 </script>
+ <script>
+    scope = document.querySelector('template[is=auto-binding]');
+
+    scope.users = [
+      'Apple fritter',
+      'Croissant',
+      'Donut',
+      'Financier',
+      'Jello',
+      'Madeleine',
+      'Pound cake',
+      'Pretzel',
+      'Sfogliatelle'
+    ];
+
+  </script>
 </body>
 
 </html>
