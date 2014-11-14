@@ -50,6 +50,15 @@ def carddeck_overview(request):
             }
         },
         {
+            'type': 'dashboard-list-article-stars',
+            'data': {
+                'title': 'Favoriete artikelen',
+                'description':
+                    "Overzicht van de meest favoriete artikelen.",
+                'source': reverse('api_get_favorite_articles')
+            }
+        },
+        {
             'type': 'dashboard-total-card',
             'data': {
                 'title': 'Artikelen bekeken',
