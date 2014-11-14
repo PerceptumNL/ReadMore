@@ -22,6 +22,7 @@
     <link rel="import"
     href="{% static 'components/core-toolbar/core-toolbar.html' %}">
     <link rel="import" href="{% static 'components/core-pages/core-pages.html' %}">
+    <link rel="import" href="{% static 'components/core-menu/core-menu.html' %}">
     <link rel="import" href="{% static 'components/paper-elements/paper-elements.html' %}">
 
     <link rel="import" href="{% static 'elements/card-deck.html' %}">
@@ -105,10 +106,10 @@
 		        <template is="auto-binding">
                 <paper-dropdown-menu label="Leerlingen">
                     <paper-dropdown class="dropdown">
-                        <core-menu class="menu" >
-                            <template repeat="{{users}}">
-                                <paper-item>{{}}</paper-item>
-                            </template>
+                        <core-menu selected="0">
+                        <template repeat="{{user in users}}">
+                            <paper-item label="{{user}}"></paper-item>
+                        </template>
                         </core-menu>
                     </paper-dropdown>
                 </paper-dropdown-menu>
@@ -139,17 +140,15 @@
             $.getJSON( "/teacher/carddeck/overview/", function( data ) {
                 document.querySelector('#overview').cards = data;
             });
-            /*
-            $.getJSON( "/teacher/carddeck/students/", function( data ) {
+            $.getJSON( "/teacher/carddeck/user/", function( data ) {
                 document.querySelector('#students').cards = data;
             });
-            $.getJSON( "/teacher/carddeck/articles/", function( data ) {
+            $.getJSON( "/teacher/carddeck/article/", function( data ) {
                 document.querySelector('#articles').cards = data;
             });
-            $.getJSON( "/teacher/carddeck/words/", function( data ) {
+            $.getJSON( "/teacher/carddeck/word/", function( data ) {
                 document.querySelector('#words').cards = data;
             });
-            */
         });
 
 
@@ -166,15 +165,8 @@
     scope = document.querySelector('template[is=auto-binding]');
 
     scope.users = [
-      'Apple fritter',
-      'Croissant',
-      'Donut',
-      'Financier',
-      'Jello',
-      'Madeleine',
-      'Pound cake',
-      'Pretzel',
-      'Sfogliatelle'
+      'robrecht',
+      'nazari',
     ];
 
   </script>
