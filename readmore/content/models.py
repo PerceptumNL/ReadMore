@@ -188,7 +188,7 @@ class RSSCategory(Category):
                     article.categories.add(self)
                     article.save()
             self.last_update = updated
-            self.save()
+            super(RSSCategory, self).save()
 
     def save(self, *args, **kwargs):
         super(RSSCategory, self).save(*args, **kwargs)
