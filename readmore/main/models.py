@@ -8,6 +8,7 @@ from allauth.account.signals import user_signed_up
 from readmore.content.views import article_read
 from django.dispatch import receiver
 
+import pytz
 from polymorphic import PolymorphicModel
 import allauth.app_settings
 from allauth.socialaccount import providers
@@ -23,9 +24,11 @@ class UserProfile(models.Model):
 class Institute(models.Model):
     title = models.CharField(max_length=255)
     site_id = models.ForeignKey(Site)
+    timezone = models.CharField(max_length=100,
+            choices=zip(pytz.common_timezones, pytz.common_timezones))
     provider = models.CharField(verbose_name=('provider'),
                                 max_length=30,
-                                choices = providers.registry.as_choices())
+                                choices=providers.registry.as_choices())
     def __repr__(self):
         return '%s' % (self.title)
 
