@@ -2,11 +2,12 @@
 
 <link rel="import" href="../elements/dashboard-total-card.html">
 <link rel="import" href="../elements/dashboard-list-user-number.html">
+<link rel="import" href="../elements/dashboard-list-word-number.html">
 <link rel="import" href="../elements/dashboard-list-events-card.html">
 <link rel="import" href="../elements/dashboard-list-article-stars.html">
 
 
-<polymer-element name="card-deck">
+<polymer-element name="card-deck" attributes="user">
     <template >
         <template repeat="{{card in cards}}">
             <template bind ref="{{card.type}}" ></template>
@@ -29,6 +30,9 @@
             <dashboard-list-article-stars card="{{card.data}}" ></dashboard-list-article-stars>
         </template>
         
+        <template id="dashboard-list-word-number">
+            <dashboard-list-word-number card="{{card.data}}" ></dashboard-list-word-number>
+        </template>
         
     </template>
     <script>
