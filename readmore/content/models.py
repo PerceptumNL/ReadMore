@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from polymorphic import PolymorphicModel
 from readmore.content.thirdparty.wiki_api import MediaWikiAPI, NS_PAGE, \
         NS_CATEGORY, NS_PORTAL
@@ -139,15 +140,18 @@ class RSSCategory(Category):
             updated = datetime.fromtimestamp(mktime(data['published_parsed']))
         else:
             updated = datetime.now()
-        updated = updated.replace(tzinfo=None)
+        if timezone.is_naive(updated):
+            updated = timezone.make_aware(updated, timezone.utc)
         last_updated = self.last_update if self.last_update else \
                 datetime.fromtimestamp(0)
-        last_updated = last_updated.replace(tzinfo=None)
+        if timezone.is_naive(last_updated):
+            last_updated = timezone.make_aware(last_updated, timezone.utc)
         if updated > last_updated:
             for entry in data['entries']:
                 published = datetime.fromtimestamp(
                         mktime(entry['published_parsed']))
-                published = published.replace(tzinfo=None)
+                if timezone.is_naive(published):
+                    published = timezone.make_aware(published, timezone.utc)
                 if published > last_updated:
                     if 'content' in entry:
                         body = entry['content'][0]['value']
