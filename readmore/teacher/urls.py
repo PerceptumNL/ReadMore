@@ -10,6 +10,9 @@ urlpatterns = patterns('',
         name='dashboard_carddeck_article'),
     url(r'^carddeck/word/?$', 'readmore.teacher.views.carddeck_word',
         name='dashboard_carddeck_word'),
+    url(r'^lists/userlist/?$',
+        'readmore.teacher.views.retrieve_students',
+        name='retrieve_students'),
 )
 
 

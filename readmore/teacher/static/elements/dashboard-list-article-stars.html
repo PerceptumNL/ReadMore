@@ -1,12 +1,12 @@
 <link rel="import" href="../components/polymer/polymer.html">
 <link rel="import" href="../components/core-ajax/core-ajax.html">
 
-<polymer-element name="dashboard-list-article-stars"  attributes="card number">
+<polymer-element name="dashboard-list-article-stars"  attributes="card number user">
         <template>
-            <core-ajax auto url="{{card.source}}" params='{"num": {{number}}}' handleAs="json" response="{{response}}">></core-ajax>
+            <core-ajax auto url="{{card.source}}" params='{"num": "{{number}}"}' handleAs="json" response="{{response}}">></core-ajax>
             <paper-shadow  z="1">
                 <div class="card-element" style="padding:10px 20px; margin: 10px;">
-                    <h2>{{card.title}}</h2>
+                    <h2>{{card.title}} </h2>
                     <ol>
                         <template repeat="{{item in response}}">
                             <li><a href="{{item.article.url}}">{{item.article.title}} - {{item.rating}}</a>

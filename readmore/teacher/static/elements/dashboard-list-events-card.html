@@ -1,7 +1,7 @@
 <link rel="import" href="../components/polymer/polymer.html">
 <link rel="import" href="../components/core-ajax/core-ajax.html">
 
-<polymer-element name="dashboard-list-events-card"  attributes="card number">
+<polymer-element name="dashboard-list-events-card"  attributes="card number user">
         <template>
             <core-ajax auto url="{{card.source}}" params='{"num": {{number}}}' handleAs="json" response="{{response}}">></core-ajax>
             <paper-shadow  z="1">

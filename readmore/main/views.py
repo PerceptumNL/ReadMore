@@ -136,7 +136,7 @@ def api_get_history_totals(history, user_id=None):
     date = timezone.now()
     start_week = date - datetime.timedelta(date.weekday())
     end_week = start_week + datetime.timedelta(7)
-    if user_id is not None:
+    if user_id is not None and user_id != "all_students":
         history = history.filter(user__id=int(user_id))
     total_all = filter_on_period(history, 'all').count()
     total_month = filter_on_period(history, 'month').count()
