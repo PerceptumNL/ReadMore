@@ -1,7 +1,7 @@
 <link rel="import" href="../components/polymer/polymer.html">
 <link rel="import" href="../components/core-ajax/core-ajax.html">
 
-<polymer-element name="dashboard-list-word-number"  attributes="card number" >
+<polymer-element name="dashboard-list-word-number"  attributes="card number " >
         <template>
             <core-ajax auto url="{{card.source}}" params='{"num": {{number}}}' handleAs="json" response="{{response}}">></core-ajax>
             <paper-shadow  z="1">
@@ -13,10 +13,11 @@
                     </template>
                     </ol>
                     <p>{{card.description}}</p>
-                    <paper-fab icon='add' style="background: #00bcd4;
+                    <paper-fab mini icon='add' style="background: #00bcd4;
                     position:absolute; bottom:24px; right:24px;"
                     on-tap={{showmore}}></paper-fab>
-                    <paper-fab id="resetCard" icon='remove' style="display: none; background: #00bcd4;
+                    <paper-fab mini icon='undo' style="display: {{ number>10 ? 'block' : 'none' }};
+                    background: #00bcd4;
                     position:absolute; top:24px; right:24px;"
                     on-tap={{showless}}></paper-fab>
                 </div>
