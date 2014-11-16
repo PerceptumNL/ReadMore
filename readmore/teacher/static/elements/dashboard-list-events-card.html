@@ -3,7 +3,14 @@
 
 <polymer-element name="dashboard-list-events-card"  attributes="card number user">
         <template>
-            <core-ajax auto url="{{card.source}}" params='{"num": {{number}}}' handleAs="json" response="{{response}}">></core-ajax>
+            <core-ajax auto url="{{card.source}}" 
+                params='{"num": {{number}}, "user": "{{user}}"}' 
+                handleAs="json" response="{{response}}" 
+                if="{{user!=undefined}}"></core-ajax>
+            <core-ajax auto url="{{card.source}}" 
+                params='{"num": {{number}}}' 
+                handleAs="json" response="{{response}}" 
+                if="{{user==undefined}}"></core-ajax>
             <paper-shadow  z="1">
                 <div class="card-element" style="padding:10px 20px; margin: 10px;">
                     <h2>{{card.title}}</h2>

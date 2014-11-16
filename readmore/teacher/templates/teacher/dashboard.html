@@ -99,7 +99,7 @@
     <div class="container" fullbleed> 
 		<core-pages id="first" selected="0" fullbleed vertical layout center>
 		    <div id="overzicht" class="page">
-		        <card-deck id="overview" user="all_students"></card-deck>
+		        <card-deck id="overview"></card-deck>
 		    </div>
 		    <div id="leerlingen" class="page">
                 {% verbatim %}
@@ -113,16 +113,15 @@
                         </core-menu>
                     </paper-dropdown>
                 </paper-dropdown-menu>
-	             <card-deck id="students" user="{{selectedUser.id}}"></card-deck>
-	             
+	             <card-deck id="students" user="{{selectedUser.id}}" if="{{selectedUser.id!=undefined}}"></card-deck>
                 </template>
                 {% endverbatim %}
 		    </div>
 		    <div id="artikelen" class="page">
-	             <card-deck id="articles" user="all_students"></card-deck>
+	             <card-deck id="articles"></card-deck>
 		    </div>
 		    <div id="woorden" class="page">
-	             <card-deck id="words" user="all_students"></card-deck>
+	             <card-deck id="words"></card-deck>
 	        </div>
 		</core-pages>
 	</div>

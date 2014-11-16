@@ -3,7 +3,7 @@
 
 <polymer-element name="dashboard-list-user-number"  attributes="card number">
         <template>
-            <core-ajax auto url="{{card.source}}" params='{"num": "{{number}}"}' handleAs="json" response="{{response}}">></core-ajax>
+            <core-ajax auto url="{{card.source}}" params='{"num": "{{number}}"}' handleAs="json" response="{{response}}"></core-ajax>
             <paper-shadow  z="1">
                 <div class="card-element" style="padding:10px 20px; margin: 10px;">
                     <h2>{{card.description}}</h2>
