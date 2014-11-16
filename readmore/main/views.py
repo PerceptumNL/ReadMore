@@ -2,11 +2,12 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Avg, Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from readmore.main.models import *
 from readmore.content.views import index
-from allauth.socialaccount.models import SocialAccount
 from readmore.content.models import *
-from django.contrib.auth.decorators import login_required
+from allauth.socialaccount.models import SocialAccount
 import datetime
 import json
 import pytz
@@ -132,7 +133,7 @@ def filter_on_period(objects, period):
         return objects
 
 def api_get_history_totals(history, user_id=None):
-    date = datetime.date.today()
+    date = timezone.now()
     start_week = date - datetime.timedelta(date.weekday())
     end_week = start_week + datetime.timedelta(7)
     if user_id is not None:
@@ -273,6 +274,6 @@ def api_get_viewed_articles(request):
                 'title': unicode(view.article).encode(
                     'ascii', 'xmlcharrefreplace')
             },
-            'date': str(view.date)})
+            'date': str(timezone.localtime(view.date))})
     return HttpResponse(json.dumps(viewed_articles),
             content_type='application/json')

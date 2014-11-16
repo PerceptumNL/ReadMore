@@ -3,7 +3,9 @@ from __future__ import absolute_import
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.utils import timezone
 from django.core.urlresolvers import reverse
+from django.core.signals import request_started
 from allauth.account.signals import user_signed_up
 from readmore.content.views import article_read
 from django.dispatch import receiver
@@ -29,6 +31,18 @@ class Institute(models.Model):
     provider = models.CharField(verbose_name=('provider'),
                                 max_length=30,
                                 choices=providers.registry.as_choices())
+
+    @staticmethod
+    @receiver(request_started)
+    def set_current_timezone(*args, **kwargs):
+        try:
+            institute = Institute.objects.get(
+                    site_id=Site.objects.get_current())
+        except Institute.DoesNotExist:
+            pass
+        else:
+            timezone.activate(institute.timezone)
+
     def __repr__(self):
         return '%s' % (self.title)
 
@@ -61,7 +75,7 @@ class Event(PolymorphicModel):
     def describe(self):
         """Return a dictionary-like object with key properties."""
         return {'type': 'event',
-                'date': str(self.date),
+                'date': str(timezone.localtime(self.date)),
                 'user': unicode(self.user).encode(
                     'ascii', 'xmlcharrefreplace')
                 }
