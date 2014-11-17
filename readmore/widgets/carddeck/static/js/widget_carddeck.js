@@ -56,13 +56,13 @@ $.widget( "readmore.carddeck", {
 				$(this.options.cover).find("#closeCover").click(
 						function(){
 							alert(1);
-							window.history.back();
+							//window.history.back();
 							return false;
 						});
 				$(this.options.cover).find("#closeOnBackground").click(
 						function(){
 							alert(2);
-							window.history.back();
+							//window.history.back();
 							return false;
 						});
 			}
