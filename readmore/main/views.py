@@ -195,9 +195,11 @@ def api_get_most_active_users(request):
     users = filter_on_period(users, period)
     users = users.annotate(views=Count('article')).order_by('views')
     active_users = []
+    displayname = (lambda user: u' '.join([user.first_name, user.last_name])
+            if user.first_name else user.username)
     for user in users.all()[:num]:
         active_users.append({
-            'user': str(User.objects.get(pk=int(user['user']))),
+            'user': displayname(User.objects.get(pk=int(user['user']))),
             'views': user['views']})
     return HttpResponse(json.dumps(active_users),
             content_type='application/json')

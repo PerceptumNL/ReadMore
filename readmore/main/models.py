@@ -85,9 +85,11 @@ class Event(PolymorphicModel):
 
     def describe(self):
         """Return a dictionary-like object with key properties."""
+        displayname = (lambda user: u' '.join([user.first_name, user.last_name])
+                if user.first_name else user.username)
         return {'type': 'event',
                 'date': str(timezone.localtime(self.date)),
-                'user': unicode(self.user)
+                'user': unicode(displayname(self.user))
                 }
 
 
