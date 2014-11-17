@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from readmore.main.models import Group
 import json
 
 # Create your views here.
@@ -19,10 +20,13 @@ def dashboard(request):
 
 @login_required
 def retrieve_students(request):
-    user_list = User.objects.all()
+    user_list = []
+    for group in Group.objects.filter(leader__id=request.user.id):
+        user_list += [profile.user for profile in group.users.all()]
+    user_list.append(request.user)
     users = [{'label': user.username, 'id': user.pk} for user in user_list]
     return HttpResponse(json.dumps(users), content_type='application/json')
-    
+
 @login_required
 def carddeck_overview(request):
     return HttpResponse(json.dumps([
