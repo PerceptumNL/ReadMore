@@ -53,9 +53,13 @@ $.widget( "readmore.carddeck", {
 			}else{
 				$(this.options.cover).addClass('open');
 				$(this.options.cover).find("#closeCover").click(
-						function(){ window.history.back(); });
+						function(){
+							setTimeout(window.history.back, 1);
+						});
 				$(this.options.cover).find("#closeOnBackground").click(
-						function(){ window.history.back(); });
+						function(){
+							setTimeout(window.history.back,1);
+						});
 			}
 		}
 		this.carddeck = new CardDeck(this.element, this.decks(word));
