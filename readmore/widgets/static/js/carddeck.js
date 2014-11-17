@@ -135,6 +135,13 @@ function FormCard(container, data){
 	content.append(submit_btn);
 }
 
+function CustomCard(container, data){
+	var _parent = new Card(container, 100, data['title']);
+	container.addClass("custom_card");
+	var content = _parent.create_content_container();
+	content.append($("<p>").text(data['content']));
+}
+
 function DashboardCard(container, order, title, _self){
 	_self = (_self == undefined ? this : _self);
 	$.extend(_self, new Card(container, order, title, _self));

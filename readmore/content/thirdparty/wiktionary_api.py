@@ -44,6 +44,8 @@ import re
 from django.conf import settings
 from readmore.content.thirdparty.wiki_api import MediaWikiAPI
 from string import whitespace, punctuation
+from django.utils.translation import ugettext as _
+from django.utils.translation import pgettext as _c
 
 class Meaning(object):
     """Representation of a particular meaning of a term."""
@@ -543,7 +545,7 @@ class ConjunctiveTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "conjunctive"
+        return _c("word category","conjunctive")
 
 
 class PrepositionTerm(Term):
@@ -552,7 +554,7 @@ class PrepositionTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "preposition"
+        return _c("word category","preposition")
 
 
 class AbbreviationTerm(Term):
@@ -561,7 +563,7 @@ class AbbreviationTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "abbreviation"
+        return _c("word category","abbreviation")
 
 
 class AdjectiveTerm(Term):
@@ -570,7 +572,7 @@ class AdjectiveTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "adjective"
+        return _c("word category","adjective")
 
 
 class AdverbTerm(Term):
@@ -579,7 +581,7 @@ class AdverbTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "adverb"
+        return _c("word category","adverb")
 
 
 class AdverbNumberTerm(Term):
@@ -588,7 +590,7 @@ class AdverbNumberTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "adverbial number"
+        return _c("word category","adverbial number")
 
 
 class ArticleTerm(Term):
@@ -597,7 +599,7 @@ class ArticleTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "article"
+        return _c("word category","article")
 
 
 class ProperNameTerm(Term):
@@ -606,7 +608,7 @@ class ProperNameTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "proper name"
+        return _c("word category","proper name")
 
 
 class PronounTerm(Term):
@@ -615,7 +617,7 @@ class PronounTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "pronoun"
+        return _c("word category","pronoun")
 
 
 class DemonstrativePronounTerm(PronounTerm):
@@ -624,7 +626,7 @@ class DemonstrativePronounTerm(PronounTerm):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "demonstrative pronoun"
+        return _c("word category","demonstrative pronoun")
 
 
 class ExclaimingPronounTerm(PronounTerm):
@@ -633,7 +635,7 @@ class ExclaimingPronounTerm(PronounTerm):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "exclaiming pronoun"
+        return _c("word category","exclaiming pronoun")
 
 
 class IndefinitePronounTerm(PronounTerm):
@@ -642,7 +644,7 @@ class IndefinitePronounTerm(PronounTerm):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "indefinite pronoun"
+        return _c("word category","indefinite pronoun")
 
 
 class InterrogativePronounTerm(PronounTerm):
@@ -651,7 +653,7 @@ class InterrogativePronounTerm(PronounTerm):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "interrogative pronoun"
+        return _c("word category","interrogative pronoun")
 
 
 class PersonalPronounTerm(PronounTerm):
@@ -660,7 +662,7 @@ class PersonalPronounTerm(PronounTerm):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "personal pronoun"
+        return _c("word category","personal pronoun")
 
 
 class PossesivePronounTerm(PronounTerm):
@@ -669,7 +671,7 @@ class PossesivePronounTerm(PronounTerm):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "possesive pronoun"
+        return _c("word category","possesive pronoun")
 
 
 class ReciprocalPronounTerm(PronounTerm):
@@ -678,7 +680,7 @@ class ReciprocalPronounTerm(PronounTerm):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "reciprocal pronoun"
+        return _c("word category","reciprocal pronoun")
 
 
 class ReflexivePronounTerm(PronounTerm):
@@ -687,7 +689,7 @@ class ReflexivePronounTerm(PronounTerm):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "reflexive pronoun"
+        return _c("word category","reflexive pronoun")
 
 
 class RelativePronounTerm(PronounTerm):
@@ -696,7 +698,7 @@ class RelativePronounTerm(PronounTerm):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "relative pronoun"
+        return _c("word category","relative pronoun")
 
 
 class NumberTerm(Term):
@@ -705,7 +707,7 @@ class NumberTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "number"
+        return _c("word category","number")
 
 
 class IndefiniteNumeralTerm(Term):
@@ -714,7 +716,7 @@ class IndefiniteNumeralTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "indefinite numeral"
+        return _c("word category","indefinite numeral")
 
 
 class InterrogativeNumeralTerm(Term):
@@ -723,7 +725,7 @@ class InterrogativeNumeralTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "interrogative numeral"
+        return _c("word category","interrogative numeral")
 
 
 class OrdinalTerm(Term):
@@ -732,7 +734,7 @@ class OrdinalTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "ordinal"
+        return _c("word category","ordinal")
 
 
 class IndefiniteOrdinalTerm(Term):
@@ -741,7 +743,7 @@ class IndefiniteOrdinalTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "indefinite ordinal"
+        return _c("word category","indefinite ordinal")
 
 
 class NounTerm(Term):
@@ -760,7 +762,7 @@ class NounTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "noun"
+        return _c("word category","noun")
 
     @property
     def gender(self):
@@ -826,7 +828,7 @@ class VerbTerm(Term):
     @property
     def category_description(self):
         """Return human-readable description of the term category."""
-        return "verb"
+        return _c("word category","verb")
 
     @property
     def first_person_single(self):

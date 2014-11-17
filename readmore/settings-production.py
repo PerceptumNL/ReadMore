@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'readmore.widgets.articleviewer',
     'readmore.widgets.dummy',
     'readmore.widgets.dictionary',
+    'readmore.widgets.customcard',
     'readmore.widgets.carddeck',
     'readmore.widgets.dashboard',
     'readmore.content',
