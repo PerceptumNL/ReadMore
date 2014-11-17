@@ -207,30 +207,7 @@ def connect_statistics_to_user(sender, request, user, **kw):
     statistics.save()
     #print "Created Statistics for %s" % (user)
 
-def add_to_statistics(sender, user, category, article_id, article, **kw):
-    try:
-        statistics = Statistics.objects.get(user=user)
-        statistics.docsRead += 1
-        statistics.save()
-        # Check for new badges
-        all_badges = Badge.objects.all()
-        for badge in all_badges:
-            counter_badges = CounterBadge.objects.filter(badge=badge)
-            if len(counter_badges)>0:
-                statistic = getattr(statistics, badge.field_to_listen_to)
-                if(statistic>=counter_badges[0].trigger_at_greater_than):
-                    user.userprofile.badges.add(badge)
-    except:
-        #print "No statistics in database for (%s)" % (user)
-        pass
-    try:
-        article_in_current_history = History.objects.get(user=user,
-                article_id=article_id)
-    except History.DoesNotExist:
-        new_history_of_user = History.objects.create(user = user)
-        new_history_of_user.article_id = article_id
-        new_history_of_user.save()
-        
+
 # Create your models here.
 class Badge(models.Model):
     title = models.CharField(max_length=255)
