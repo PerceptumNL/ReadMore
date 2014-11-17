@@ -73,7 +73,9 @@ def retrieve_students(request):
         user_list = User.objects.filter(userprofile__groups__leader=request.user)
     displayname = (lambda user: u' '.join([user.first_name, user.last_name])
             if user.first_name else user.username)
-    users += [{'label': displayname(user), 'id': user.pk} for user in user_list]
+    users += sorted(
+            [{'label': displayname(user), 'id': user.pk} for user in user_list],
+            key=lambda x: x['label'])
     return HttpResponse(json.dumps(users), content_type='application/json')
 
 @login_required
