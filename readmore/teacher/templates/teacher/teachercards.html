@@ -36,8 +36,16 @@
       font-size: 16px;
       margin: 16px auto;
     }
+    div h1{
+        width:100%;
+        text-align: center;
+    }
     
-  
+    paper-button{
+        margin: 8px 0;
+        width:100%;
+    }
+    
 </style>
 
 </head>
@@ -45,9 +53,13 @@
 <body >
     <div>
         <h1> Woord Kaarten van Lees Meer </h1>
-        <a href="add_word"><paper-button raised>
+        <a href="add_word" style="color: black"><paper-button raised>
             <core-icon icon="add"></core-icon>
             Voeg een nieuwe kaart toe aan het systeem
+        </paper-button></a>
+        <a href="/teacher" style="color: black"><paper-button raised>
+            <core-icon icon="arrow-back"></core-icon>
+            Ga terug naar dashboard
         </paper-button></a>
     </div>
     {% for card in word_cards %}
@@ -55,6 +67,16 @@
             <h2> {{card.word}} </h2>
             <p> {{ card.content }} </p>
             <h4> door: {{ card.user }} </h4>
+            {% if request.user == card.user %}
+            <form id="removeWord" method="POST" action="/teacher/remove_word">
+                {% csrf_token %}
+                <input type="hidden" name="word" value="{{card.pk}}" />
+                <button class="primaryAction" type="submit" is="paper-button">
+                    <core-icon icon="delete"></core-icon>
+                    Verwijder woord uit het woordenboek (dit kan niet ongedaan gemaakt worden)
+                </button>
+            </form>
+            {% endif %}
         </div>
     {% endfor %}
 

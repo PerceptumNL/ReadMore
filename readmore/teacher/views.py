@@ -44,8 +44,21 @@ def add_word(request):
                 # Bad request         
                 return HttpResponse(status=404)
     # Not a post request
-    
-    
+@login_required 
+def remove_word(request):
+    if request.method == 'POST':
+        word_pk = request.POST.get('word', None)
+        if word_pk is not None :
+            try:
+                card = CustomCard.objects.get(pk=word_pk)
+                card.delete()
+                return HttpResponseRedirect("woordkaarten")
+
+            except Exception as e:
+                # Bad request         
+                return HttpResponse(status=404)
+    # Not a post request
+    return HttpResponseRedirect("woordkaarten")
     
 @login_required
 def retrieve_students(request):
