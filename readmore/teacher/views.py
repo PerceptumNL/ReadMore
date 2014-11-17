@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from readmore.widgets.customcard.models import CustomCard
 import json
 
 # Create your views here.
@@ -16,7 +17,36 @@ def dashboard(request):
         })
     else:
         return HttpResponseRedirect("/")
+@login_required
+def word_cards(request):
+    cards = CustomCard.objects.all()
+    return render(request, 'teacher/teachercards.html', {
+        "word_cards": cards
+    })
 
+@login_required 
+def add_word(request):
+    if request.method == "GET":
+        return render(request, 'teacher/teachercard.html')
+    if request.method == 'POST':
+        word = request.POST.get('word', None)
+        description = request.POST.get('description', None)
+        if len(word)==0:
+            word=None        
+        if len(description)==0:
+            description=None
+        if word is not None and description is not None :
+            try:
+                CustomCard.objects.create(word=word, content=description, user=request.user)
+                return HttpResponseRedirect("woordkaarten")
+
+            except Exception as e:
+                # Bad request         
+                return HttpResponse(status=404)
+    # Not a post request
+    
+    
+    
 @login_required
 def retrieve_students(request):
     user_list = User.objects.all()

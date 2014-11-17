@@ -1,0 +1,76 @@
+<!doctype html>
+{% load staticfiles %}
+<html>
+
+<head>
+
+  <title>Leraar Dashboard</title>
+
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="{% static 'js/jquery-ui.js' %}"></script>
+    <script src="{% static 'components/webcomponentsjs/webcomponents.js' %}"></script>
+
+    <link rel="import" href="{% static 'components/font-roboto/roboto.html' %}">  
+    <link rel="import" href="{% static 'components/paper-fab/paper-fab.html' %}">
+    <link rel="import" href="{% static 'components/paper-input/paper-input-decorator.html' %}">
+    <link rel="import" href="{% static 'components/paper-input/paper-input.html' %}">
+    <link rel="import" href="{% static 'components/paper-button/paper-button.html' %}">
+    
+<style>
+    body {
+        background: #eee;
+        font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
+        font-size: 14px;
+        margin: 0;
+        width:100%;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        -webkit-touch-callout: none;
+    }
+    
+    div {
+        background: #FFF;
+        width:640px;
+      padding: 16px 32px;
+      font-size: 16px;
+      margin: 16px auto;
+    }
+    
+  
+</style>
+
+</head>
+
+<body >
+    <div>
+        <h1> Woord Kaarten van Lees Meer </h1>
+        <a href="add_word"><paper-button raised>
+            <core-icon icon="add"></core-icon>
+            Voeg een nieuwe kaart toe aan het systeem
+        </paper-button></a>
+    </div>
+    {% for card in word_cards %}
+        <div>
+            <h2> {{card.word}} </h2>
+            <p> {{ card.content }} </p>
+            <h4> door: {{ card.user }} </h4>
+        </div>
+    {% endfor %}
+
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-56826657-1', 'auto');
+            ga('send', 'pageview');
+    </script>
+    
+</body>
+
+</html>
+
+
