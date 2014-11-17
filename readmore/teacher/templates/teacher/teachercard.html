@@ -1,0 +1,95 @@
+<!doctype html>
+{% load staticfiles %}
+<html>
+
+<head>
+
+  <title>Leraar Dashboard</title>
+
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="{% static 'js/jquery-ui.js' %}"></script>
+    <script src="{% static 'components/webcomponentsjs/webcomponents.js' %}"></script>
+
+    <link rel="import" href="{% static 'components/font-roboto/roboto.html' %}">  
+    <link rel="import" href="{% static 'components/paper-input/paper-autogrow-textarea.html' %}">
+    <link rel="import" href="{% static 'components/paper-input/paper-input-decorator.html' %}">
+    <link rel="import" href="{% static 'components/paper-input/paper-input.html' %}">
+    <link rel="import" href="{% static 'components/paper-button/paper-button.html' %}">
+    
+<style>
+    body {
+        background: #eee;
+        font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
+        font-size: 14px;
+        margin: 0;
+        width:100%;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        -webkit-touch-callout: none;
+    }
+    
+    div {
+        background: #FFF;
+        width:640px;
+      padding: 16px 32px;
+      font-size: 16px;
+      margin: 16px auto;
+    }
+    
+    paper-input {
+        width: 100%;
+    }
+
+    paper-input-decorator {
+        max-width: 100%;
+    }
+    button{
+        background: #00bcd4;
+        color: #FFF;
+        width:100%;
+        padding: 8px 0;
+        margin: 16px 0;
+    }
+</style>
+
+</head>
+
+<body >
+    <div id="create_new">
+        <h1> Maak een nieuwe woord-kaart aan</h1>
+        <form id="newWord" method="POST" action="/teacher/add_word">
+            {% csrf_token %}
+            <input type="hidden" name="redirect" value="/teacher/woordkaarten" />
+            <paper-input-decorator  label="Woord" floatingLabel>
+                <textarea name="word"></textarea>
+            </paper-input-decorator><br>
+            <paper-input-decorator label="Uitleg" floatingLabel>
+                <paper-autogrow-textarea>
+                    <textarea name="description"></textarea>
+                </paper-autogrow-textarea>
+            </paper-input-decorator>
+            <button class="primaryAction" type="submit" is="paper-button">
+                <core-icon icon="add"></core-icon>
+                Voeg toe aan woordenboek
+            </button>
+                
+            
+        </form>
+    </div>
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-56826657-1', 'auto');
+            ga('send', 'pageview');
+    </script>
+    
+</body>
+
+</html>
+
+
