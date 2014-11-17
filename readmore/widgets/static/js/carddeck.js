@@ -37,6 +37,7 @@ function CardDeck(container, decks, _self){
 	}
 
 	_self.close = function(){
+		alert(4);
 		elems = $(container).isotope('getItemElements');
 		$(container).isotope('remove', elems);
 	}
