@@ -49,16 +49,19 @@ $.widget( "readmore.carddeck", {
         var _self = this;
 		if(this.options.cover){
 			if($(this.options.cover).hasClass('open')){
+				alert(0);
 				this.carddeck.close();
 			}else{
 				$(this.options.cover).addClass('open');
 				$(this.options.cover).find("#closeCover").click(
 						function(){
+							alert(1);
 							window.history.back();
 							return false;
 						});
 				$(this.options.cover).find("#closeOnBackground").click(
 						function(){
+							alert(2);
 							window.history.back();
 							return false;
 						});
@@ -67,6 +70,7 @@ $.widget( "readmore.carddeck", {
 		this.carddeck = new CardDeck(this.element, this.decks(word));
 	},
     close: function(cover){
+		alert(3);
 		if(cover){
 		    $(cover).removeClass('open');
         }
