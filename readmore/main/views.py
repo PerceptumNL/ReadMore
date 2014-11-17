@@ -133,12 +133,15 @@ def filter_on_period(objects, period):
     else:
         return objects
 
-def api_get_history_totals(history, user_id=None):
+@login_required
+def api_get_history_totals(request, history, user_id=None):
     date = timezone.now()
     start_week = date - datetime.timedelta(date.weekday())
     end_week = start_week + datetime.timedelta(7)
     if user_id:
         history = history.filter(user__id=int(user_id))
+    if not request.user.is_superuser:
+        history = history.filter(user__userprofile__groups__leader=request.user)
     total_all = filter_on_period(history, 'all').count()
     total_month = filter_on_period(history, 'month').count()
     total_week = filter_on_period(history, 'week').count()
@@ -150,22 +153,22 @@ def api_get_history_totals(history, user_id=None):
 @login_required
 def api_get_total_views(request):
     user_id = request.GET.get('user', None)
-    return api_get_history_totals(ArticleHistoryItem.objects, user_id)
+    return api_get_history_totals(request, ArticleHistoryItem.objects, user_id)
 
 @login_required
 def api_get_total_covers(request):
     user_id = request.GET.get('user', None)
-    return api_get_history_totals(WordHistoryItem.objects, user_id)
+    return api_get_history_totals(request, WordHistoryItem.objects, user_id)
 
 @login_required
 def api_get_total_difficulty_ratings(request):
     user_id = request.GET.get('user', None)
-    return api_get_history_totals(ArticleDifficultyItem.objects, user_id)
+    return api_get_history_totals(request, ArticleDifficultyItem.objects, user_id)
 
 @login_required
 def api_get_total_like_ratings(request):
     user_id = request.GET.get('user', None)
-    return api_get_history_totals(ArticleRatingItem.objects, user_id)
+    return api_get_history_totals(request, ArticleRatingItem.objects, user_id)
 
 @login_required
 def api_get_last_events(request):
@@ -174,6 +177,8 @@ def api_get_last_events(request):
     events = Event.objects
     if user_id:
         events = events.filter(user__id=int(user_id))
+    if not request.user.is_superuser:
+        events = events.filter(user__userprofile__groups__leader=request.user)
     last_events = []
     for event in events.all()[:num]:
         last_events.append(event.describe());
@@ -185,6 +190,8 @@ def api_get_most_active_users(request):
     num = int(request.GET.get('num', 10))
     period = request.GET.get('period', 'all')
     users = ArticleHistoryItem.objects.values('user')
+    if not request.user.is_superuser:
+        users = users.filter(user__userprofile__groups__leader=request.user)
     users = filter_on_period(users, period)
     users = users.annotate(views=Count('article')).order_by('views')
     active_users = []
@@ -204,6 +211,9 @@ def api_get_hardest_articles(request):
     articles = filter_on_period(articles, period)
     if user_id:
         articles = articles.filter(user__id=int(user_id))
+    if not request.user.is_superuser:
+        articles = articles.filter(
+                user__userprofile__groups__leader=request.user)
     articles = articles.annotate(score=Avg('rating')).order_by('score')
     hardest_articles = []
     for article in articles.all()[:num]:
@@ -225,6 +235,9 @@ def api_get_favorite_articles(request):
     articles = filter_on_period(articles, period)
     if user_id:
         articles = articles.filter(user__id=int(user_id))
+    if not request.user.is_superuser:
+        articles = articles.filter(
+                user__userprofile__groups__leader=request.user)
     articles = articles.annotate(score=Avg('rating')).order_by('-score')
     hardest_articles = []
     for article in articles.all()[:num]:
@@ -246,6 +259,8 @@ def api_get_most_clicked_words(request):
     words = filter_on_period(words, period)
     if user_id:
         words = words.filter(user__id=int(user_id))
+    if not request.user.is_superuser:
+        words = words.filter(user__userprofile__groups__leader=request.user)
     words = words.annotate(score=Count('date')).order_by('-score')
     clicked_words = []
     for word in words.all()[:num]:
@@ -264,6 +279,9 @@ def api_get_viewed_articles(request):
     history = filter_on_period(history, period)
     if user_id:
         history = history.filter(user__id=int(user_id))
+    if not request.user.is_superuser:
+        history = history.filter(
+                user__userprofile__groups__leader=request.user)
     viewed_articles = []
     for view in history.all()[:num]:
         viewed_articles.append({

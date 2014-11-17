@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-17 16:17+0100\n"
+"POT-Creation-Date: 2014-11-17 23:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -226,6 +226,10 @@ msgid ""
 msgstr ""
 "Je staat op het punt om met je %(provider_name)s account in te loggen\n"
 "op %(site_name)s. Vul alstublieft het volgende formulier in als laatste stap."
+
+#: readmore/teacher/views.py:69
+msgid "Everybody"
+msgstr "Iedereen"
 
 #: readmore/widgets/customcard/views.py:16
 #, python-format
