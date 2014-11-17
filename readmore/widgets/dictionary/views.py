@@ -40,5 +40,7 @@ def process(request):
                 cards.append(create_term_card(main_terms[0]))
                 if isinstance(main_terms[0], VerbTerm):
                     cards.append(create_verb_conj_card(main_terms[0]))
+    if len(cards) == 0:
+        cards.append(create_empty_result_card())
     return HttpResponse(json.dumps(cards).encode('ascii', 'xmlcharrefreplace'),
             content_type='application/json')

@@ -1,4 +1,5 @@
 from readmore.content.thirdparty.wiktionary_api import WiktionaryParser
+from django.utils.translation import ugettext as _
 
 def create_term_card(term):
     clean = WiktionaryParser.clean_wikitext
@@ -34,5 +35,13 @@ def create_verb_conj_card(term):
         'past_plural': clean(term.past_plural),
         'auxiliary': clean(term.auxiliary),
         'past_participle': clean(term.past_participle)
+    }
+    return card
+
+def create_empty_result_card():
+    card = {'type': 'CustomCard'}
+    card['data'] = {
+        'content': _('No definitions were found for this word.'),
+        'title': _('No definitions found.')
     }
     return card
