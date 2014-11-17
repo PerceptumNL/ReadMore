@@ -4,9 +4,11 @@ from django.http import HttpResponse, HttpResponseNotFound, \
 from django.conf import settings
 from django.db.models import Q
 import operator
+import re
 import json
 import requests
 from readmore.content.models import *
+from readmore.main.models import *
 import django.dispatch
 from django.contrib.auth.decorators import login_required
 
@@ -153,12 +155,22 @@ def article(request, identifier, source='local'):
     if not request.is_ajax():
         # Fetch random articles from the same categories for reading suggestions.
         random_articles = []
+        read_articles = ArticleHistoryItem.objects.filter(user=request.user)
+        read_articles = list(set([history.article.pk for history in read_articles] + [article.pk]))
         for category in categories:
-            random_articles += category.get_random_articles(3)
+            random_articles += category.get_random_articles(3, read_articles)
 
         # Ensure the current article is not suggested again
         if article in random_articles:
             random_articles.remove(article)
+
+        difficulty_items = ArticleDifficultyItem.objects.filter(user=request.user, article=article)
+        rating_items = ArticleRatingItem.objects.filter(user=request.user, article=article)
+        
+        recommendations = []
+        for rand_article in random_articles:
+            if rand_article.image:
+                recommendations.append(rand_article)
 
         # For all categories this article belongs to
         for category in categories:
@@ -171,7 +183,12 @@ def article(request, identifier, source='local'):
                         article_id=identifier,
                         article=article)
         return render(request, 'article_page.html',
-                {"article": article, "random_articles": random_articles})
+                {
+                "article": article, 
+                "random_articles": recommendations,
+                "rating_given": len(rating_items)>0,
+                "difficulty_given": len(difficulty_items)>0,
+                })
     else:
         # Return JSON with article properties
         return HttpResponse(

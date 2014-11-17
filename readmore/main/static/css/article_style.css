@@ -17,6 +17,7 @@ Contrast:       #F35C9F
     position:relative;
     width:100%;
     height:auto;
+    z-index:0;
 }
 #randomarticles:after {
     content:'';
@@ -29,7 +30,7 @@ Contrast:       #F35C9F
     margin-bottom:32px;
     float: left;
     position:relative;
-    z-index:4;
+    z-index:1;
     cursor: pointer;
     -webkit-transition: all 0.15s ;
     -moz-transition: all 0.15s ;
@@ -109,6 +110,18 @@ li a p{
         padding: 5px 25px;
 }
 
+#article blockquote{
+    padding: 4px 8px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    font-size: 1em;
+    border-left: 5px solid #39BAF4;
+}
+
+#article blockquote.twitter-tweet::after{
+    
+}
+
 #cover {
     display:block;
     position: fixed;
@@ -130,6 +143,7 @@ li a p{
     position: fixed;
     overflow-y: auto;
     background-color: rgba(243, 243, 243, 0.9);
+    z-index: 10;
 }
 
 #cover.open  #closeOnBackground {
@@ -139,8 +153,7 @@ li a p{
     left:0;
     right:0;
     bottom:0;
-
-
+    z-index: 11;
 }
 
 #cover a{
@@ -153,7 +166,7 @@ li a p{
     min-height:5%;
     height:5%;
     width:100%;
-    z-index:11;
+    z-index:15;
     margin: auto 0px;
     -webkit-transition: all 0.4s, all 0.4s,-webkit-transform 0.4s;  /* For Safari 3.1 to 6.0 */
     transition: all 0.4s, all 0.4s, transform 0.4s;
@@ -201,7 +214,7 @@ li a p{
     margin-top: 5px;
 }
 
-span + .word {
+span.word {
     cursor: pointer;
 }
 

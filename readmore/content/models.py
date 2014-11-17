@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from polymorphic import PolymorphicModel
 from readmore.content.thirdparty.wiki_api import MediaWikiAPI, NS_PAGE, \
         NS_CATEGORY, NS_PORTAL
@@ -83,21 +84,17 @@ class Category(PolymorphicModel):
         else:
             return articles[:max_num]
 
-    def get_random_articles(self, num=5):
+    def get_random_articles(self, num=5, read_by_user=None):
         """Return a number of random articles.
 
         Keyword arguments:
         num -- The number of random articles to return (default 5)
         """
         article_list = self.get_articles()
-        random_list = []
-        if(len(article_list) >  num):
-            for i in range(0, num):
-                random_list.append(random.choice(article_list))
-            return random_list
-        else:
-            return article_list
-
+        if read_by_user is not None:
+            article_list = [article for article in article_list if article.pk not in read_by_user]
+        random.shuffle(article_list)
+        return article_list[:num]
 
     def get_absolute_url(self):
         """Return the URL identifiying this object.
@@ -139,15 +136,18 @@ class RSSCategory(Category):
             updated = datetime.fromtimestamp(mktime(data['published_parsed']))
         else:
             updated = datetime.now()
-        updated = updated.replace(tzinfo=None)
+        if timezone.is_naive(updated):
+            updated = timezone.make_aware(updated, timezone.utc)
         last_updated = self.last_update if self.last_update else \
                 datetime.fromtimestamp(0)
-        last_updated = last_updated.replace(tzinfo=None)
+        if timezone.is_naive(last_updated):
+            last_updated = timezone.make_aware(last_updated, timezone.utc)
         if updated > last_updated:
             for entry in data['entries']:
                 published = datetime.fromtimestamp(
                         mktime(entry['published_parsed']))
-                published = published.replace(tzinfo=None)
+                if timezone.is_naive(published):
+                    published = timezone.make_aware(published, timezone.utc)
                 if published > last_updated:
                     if 'content' in entry:
                         body = entry['content'][0]['value']
@@ -188,7 +188,7 @@ class RSSCategory(Category):
                     article.categories.add(self)
                     article.save()
             self.last_update = updated
-            self.save()
+            super(RSSCategory, self).save()
 
     def save(self, *args, **kwargs):
         super(RSSCategory, self).save(*args, **kwargs)

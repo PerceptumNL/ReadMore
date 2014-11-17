@@ -25,6 +25,16 @@ $.widget( "readmore.carddeck", {
 				}
 			}
 		});
+		$(this.options.cover).find("#closeCover").click(
+				function(){
+					window.history.back();
+					return false;
+				});
+		$(this.options.cover).find("#closeOnBackground").click(
+				function(){
+					window.history.back();
+					return false;
+				});
 	},
 	decks: function(word){
 		decks = []
@@ -37,6 +47,12 @@ $.widget( "readmore.carddeck", {
 			}
 			decks.push({'url':url, 'params':params});
 		}
+        $.post( "/add_to_history/", {
+                article: location.pathname.split('/')[3],
+                value: word,
+                type: 'word',
+                csrfmiddlewaretoken: getCookie('csrftoken'),
+        });
 		return decks;
 	},
     load: function(word){
@@ -46,10 +62,6 @@ $.widget( "readmore.carddeck", {
 				this.carddeck.close();
 			}else{
 				$(this.options.cover).addClass('open');
-				$(this.options.cover).find("#closeCover").click(
-						function(){ window.history.back(); });
-				$(this.options.cover).find("#closeOnBackground").click(
-						function(){ window.history.back(); });
 			}
 		}
 		this.carddeck = new CardDeck(this.element, this.decks(word));

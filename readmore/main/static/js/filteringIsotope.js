@@ -8,6 +8,16 @@ $( function(){
     });
 });
 
+$( function(){
+    var $cardcontainer = $('.cards').isotope({
+        itemSelector: '.element-item',
+        getSortData: {
+            order: '[data-order] parseInt'
+        },
+        sortBy: 'order'
+    });
+});
+
 var $container = $('#articles');
 $( function() {
     // init Isotope

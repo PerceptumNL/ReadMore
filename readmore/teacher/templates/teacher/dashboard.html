@@ -1,0 +1,177 @@
+<!doctype html>
+{% load staticfiles %}
+<html>
+
+<head>
+
+  <title>Leraar Dashboard</title>
+
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="{% static 'js/jquery-ui.js' %}"></script>
+    <script src="{% static 'components/webcomponentsjs/webcomponents.js' %}"></script>
+
+    <link rel="import" href="{% static 'components/font-roboto/roboto.html' %}">
+    <link rel="import" href="{% static 'components/core-icon-button/core-icon-button.html' %}">
+    <link rel="import" href="{% static 'components/core-icons/core-icons.html' %}">
+    <link rel="import"
+    href="{% static 'components/core-header-panel/core-header-panel.html' %}">
+    
+
+    <link rel="import"
+    href="{% static 'components/core-toolbar/core-toolbar.html' %}">
+    <link rel="import" href="{% static 'components/core-pages/core-pages.html' %}">
+    <link rel="import" href="{% static 'components/core-menu/core-menu.html' %}">
+    <link rel="import" href="{% static 'components/paper-elements/paper-elements.html' %}">
+
+    <link rel="import" href="{% static 'elements/card-deck.html' %}">
+
+<!--
+    Primary: #F44336 (500)
+    light: #FFCDD2 (100)
+    dark: #C62828 (800)
+    
+    Accent: #2196F3 (500)
+    fallback (100) #BBDEFB, (700) #1976D2
+-->
+<style shim-shadowdom>
+    html,body {
+        height: 100%;
+        width:100%;
+        margin: 0;
+        background-color: #fff;
+        font-family: 'RobotoDraft', sans-serif;
+    }
+
+    .azure-teal{
+        background-color: #00bcd4;
+        color: #fff;
+        box-shadow: none;
+    }
+    paper-tabs{
+    
+    }
+    paper-tab::shadow #ink {
+        color: #fff;
+    }
+    
+    .page{
+        display: none;     
+    }
+    .page.core-selected{
+        display:block;
+    }
+    paper-dropdown-menu{
+        margin:8px 16px;
+    }
+    .container {
+        width: 80%;
+        margin: 50px auto 128px;
+    }
+    dashboard-total-card{
+        padding: 10px 20px;
+    }
+    @media (min-width: 800px) {
+        .container {
+            width: 700px;
+            margin: 50px auto 128px;
+        }
+    }  
+</style>
+
+</head>
+
+<body fullbleed vertical layout unresolved>
+
+<core-header-panel  mode="waterfall " flex>
+	<core-toolbar class="medium-tall azure-teal core-narrow">
+	<paper-icon-button icon="arrow-back" onclick="location.href='/';"></paper-icon-button>
+	<div flex>Dashboard</div>
+	<paper-icon-button icon="refresh"></paper-icon-button>
+		<paper-tabs class="bottom fit" selected="0">
+			<paper-tab>Overzicht</paper-tab>
+			<paper-tab>Leerlingen</paper-tab>
+			<paper-tab>Artikelen</paper-tab>
+			<paper-tab>Woorden</paper-tab>
+		</paper-tabs>
+	</core-toolbar>
+    <div class="container" fullbleed> 
+		<core-pages id="first" selected="0" fullbleed vertical layout center>
+		    <div id="overzicht" class="page">
+		        <card-deck id="overview"></card-deck>
+		    </div>
+		    <div id="leerlingen" class="page">
+                {% verbatim %}
+		        <template is="auto-binding">
+                <paper-dropdown-menu label="Leerlingen">
+                    <paper-dropdown class="dropdown">
+                        <core-menu selected="0" selectedItem="{{selectedUser}}">
+                        <template repeat="{{user in users}}">
+                            <paper-item id={{user.id}}>{{user.label}}</paper-item>
+                        </template>
+                        </core-menu>
+                    </paper-dropdown>
+                </paper-dropdown-menu>
+	             <card-deck id="students" user="{{selectedUser.id}}" if="{{selectedUser.id!=undefined}}"></card-deck>
+                </template>
+                {% endverbatim %}
+		    </div>
+		    <div id="artikelen" class="page">
+	             <card-deck id="articles"></card-deck>
+		    </div>
+		    <div id="woorden" class="page">
+	             <card-deck id="words"></card-deck>
+	        </div>
+		</core-pages>
+	</div>
+</core-header-panel>
+
+	<script src="{% static 'js/interface.js' %}"></script>
+	<script src="{% static 'js/carddeck.js' %}"></script>
+	<script src="{% static 'js/widget_dashboard.js' %}"></script>
+	<script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static 'js/filteringIsotope.js' %}"></script>
+    <script>
+    $(function(){
+        var cards = [];
+        // Load current course
+        $( document ).ready( function() { 
+            $.getJSON( "/teacher/carddeck/overview/", function( data ) {
+                document.querySelector('#overview').cards = data;
+            });
+            $.getJSON( "/teacher/carddeck/user/", function( data ) {
+                document.querySelector('#students').cards = data;
+            });
+            $.getJSON( "/teacher/carddeck/article/", function( data ) {
+                document.querySelector('#articles').cards = data;
+            });
+            $.getJSON( "/teacher/carddeck/word/", function( data ) {
+                document.querySelector('#words').cards = data;
+            });
+        });
+
+        
+
+    });
+</script>
+<script>
+    var tabs = document.querySelector('paper-tabs');
+    var pages = document.querySelector('core-pages');
+    tabs.addEventListener('core-select', function() {
+        pages.selected = tabs.selected;        
+    });
+</script>
+ <script>
+    $(function(){
+        scope = document.querySelector('template[is=auto-binding]');
+        $.getJSON( "/teacher/lists/userlist/", function( data ) {
+                scope.users = data ;
+            });
+    });
+  </script>
+</body>
+
+</html>
+
+

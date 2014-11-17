@@ -1,0 +1,44 @@
+<link rel="import" href="../components/polymer/polymer.html">
+
+<link rel="import" href="../elements/dashboard-total-card.html">
+<link rel="import" href="../elements/dashboard-list-user-number.html">
+<link rel="import" href="../elements/dashboard-list-word-number.html">
+<link rel="import" href="../elements/dashboard-list-events-card.html">
+<link rel="import" href="../elements/dashboard-list-article-stars.html">
+
+
+<polymer-element name="card-deck" attributes="user">
+    <template >
+        <template repeat="{{card in cards}}">
+            <template bind ref="{{card.type}}"  ></template>
+        </template>
+
+        <!-- Card types -->
+        <template id="dashboard-total-card">
+            <dashboard-total-card card="{{card.data}}" user="{{user}}"></dashboard-total-card>
+        </template>
+
+        <template id="dashboard-list-user-number">
+            <dashboard-list-user-number card="{{card.data}}" user="{{user}}"></dashboard-list-user-number>
+        </template>
+
+        <template id="dashboard-list-events-card">
+            <dashboard-list-events-card card="{{card.data}}" user="{{user}}"></dashboard-list-events-card>
+        </template>
+
+        <template id="dashboard-list-article-stars">
+            <dashboard-list-article-stars card="{{card.data}}" user="{{user}}"></dashboard-list-article-stars>
+        </template>
+        
+        <template id="dashboard-list-word-number">
+            <dashboard-list-word-number card="{{card.data}}" user="{{user}}"></dashboard-list-word-number>
+        </template>
+        
+    </template>
+    <script>
+        Polymer('card-deck', {
+            
+        });
+    </script>
+</polymer-element>
+

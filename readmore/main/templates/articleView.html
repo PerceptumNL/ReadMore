@@ -93,11 +93,11 @@ Card for rating through CSS, javascript below catches rating and parses it to in
  	<script src="{% static 'js/widget_seemore.js' %}"></script>
  	<script src="{% static 'js/custom.js' %}"></script>
  	
-	<script src={% static 'js/isotope.pkgd.min.js' %}></script>
-    <script src={% static 'js/filteringIsotope.js' %}></script>
+	<script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static 'js/filteringIsotope.js' %}"></script>
     
     <!-- Parallax -->
-    <script src={% static 'js/jquery.scrolly.js' %}></script>
+    <script src="{% static 'js/jquery.scrolly.js' %}"></script>
     <script>
         $(document).ready(function(){
            $('.parallax').scrolly({bgParallax: true});
@@ -117,7 +117,7 @@ Card for rating through CSS, javascript below catches rating and parses it to in
 			'cover': $("#cover"),
 			'carddecks': [
 				{'url': '/widgets/dictionary/', 'params': {'word':"%%WORD%%"}},
-				{'url': '/widgets/askteacher/'}
+				{'url': '/widgets/customcard/', 'params': {'word':"%%WORD%%"}}
 			]
 		});
     });

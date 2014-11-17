@@ -14,14 +14,14 @@ function annotate_special_word(phrase){
 }
 
 
-function CardDeck(container, decks){
-	var _self = this;
+function CardDeck(container, decks, _self){
+	_self = (_self == undefined ? this : _self);
 
-	this.create_empty_card = function(){
+	_self.create_empty_card = function(){
 		return $("<div class='element-item col-lg-4 col-md-6 col-xs-12'>");
 	}
 
-	this.load_deck = function(deck){
+	_self.load_deck = function(deck){
 		for(var i = 0; i < deck.length; i++){
 			if(deck[i]['type'] in window){
 				var card = _self.create_empty_card();
@@ -33,18 +33,28 @@ function CardDeck(container, decks){
 	}
 
 	for(var i = 0; i < decks.length; i++){
-		api_call(decks[i]['url'], decks[i]['params'], 'get', this.load_deck)
+		api_call(decks[i]['url'], decks[i]['params'], 'get', _self.load_deck)
 	}
 
-	this.close = function(){
+	_self.close = function(){
 		elems = $(container).isotope('getItemElements');
 		$(container).isotope('remove', elems);
 	}
 }
 
-function Card(container, order, title){
+function DashboardCardDeck(container, decks, _self){
+	_self = (_self == undefined ? this : _self);
+	$.extend(_self, new CardDeck(container, decks, _self));
 
-	this.create_content_container = function(){
+	_self.create_empty_card = function(){
+		return $("<div class='element-item'>");
+	}
+}
+
+function Card(container, order, title, _self){
+	_self = (_self == undefined ? this : _self);
+
+	_self.create_content_container = function(){
 		content_container = $("<div class='well'></div>");
 		content_container.append($("<div class='title'>"+title+"</div>"))
 		container.append(content_container);
@@ -124,3 +134,41 @@ function FormCard(container, data){
 	submit_btn.text("Verstuur je bericht");
 	content.append(submit_btn);
 }
+
+function CustomCard(container, data){
+	var _parent = new Card(container, 100, data['title']);
+	container.addClass("custom_card");
+	var content = _parent.create_content_container();
+	content.append($("<p>").text(data['content']));
+}
+
+function DashboardCard(container, order, title, _self){
+	_self = (_self == undefined ? this : _self);
+	$.extend(_self, new Card(container, order, title, _self));
+
+	_self.create_content_container = function(){
+		var content_container = ($("<div class='statistics-card'></div>")
+				.append($("<div class='title'>"+title+"</div>")));
+		container.append($("<paper-shadow z='1'></paper-shadow>")
+				.append(content_container));
+		return content_container;
+	}
+}
+
+function DashboardTotalCard(container, data, _self){
+	_self = (_self == undefined ? this : _self);
+	$.extend(_self, new DashboardCard(container, 100, data['title']));
+	container.addClass("total_card");
+	var content = _self.create_content_container();
+	api_call(data['source'], {}, 'get', function(totals){
+		var dlist = $('<dl>');
+		dlist.append($('<dt>').text('Deze week'));
+		dlist.append($('<dd>').text(totals['week']));
+		dlist.append($('<dt>').text('Deze maand'));
+		dlist.append($('<dd>').text(totals['month']));
+		dlist.append($('<dt>').text('In totaal'));
+		dlist.append($('<dd>').text(totals['all']));
+		content.append(dlist);
+	})
+}
+

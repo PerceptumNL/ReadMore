@@ -28,6 +28,8 @@ SECRET_KEY = 'nam+hzdm-pw7$l5y$k+yk)xfhm*1nmy2v!^d$7&yp29n%t8@y!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+SITE_ID = 1
+
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -52,8 +54,11 @@ INSTALLED_APPS = (
     'readmore.widgets.articleviewer',
     'readmore.widgets.dummy',
     'readmore.widgets.dictionary',
+    'readmore.widgets.customcard',
     'readmore.widgets.carddeck',
+    'readmore.widgets.dashboard',
     'readmore.content',
+    'readmore.teacher',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -85,9 +90,6 @@ WSGI_APPLICATION = 'readmore.wsgi.application'
 import dj_database_url
 DATABASES = {'default': dj_database_url.config()}
 
-# Django sites
-SITE_ID = 1
-
 # Authentication back-end
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -105,6 +107,8 @@ SOCIALACCOUNT_EMAIL_REQUIRED = 'True'
 SOCIALACCOUNT_AUTO_SIGNUP = 'True'
 ACCOUNT_EMAIL_VERIFICATION = 'False'
 AUTH_PROFILE_MODULE = 'main.UserProfile'
+SIGNUP_ENABLED = False
+ACCOUNT_ADAPTER = "readmore.main.adapter.ReadMoreAccountAdapter"
 
 SOCIALACCOUNT_PROVIDERS = \
     { 'google':
@@ -125,8 +129,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -136,6 +138,8 @@ USE_L10N = True
 USE_TZ = True
 
 # Wikipedia source
+
+LOCALE_PATHS = (os.path.join(os.path.dirname(BASE_DIR), 'locale'),)
 
 SUMMERNOTE_CONFIG = {
     # Using SummernoteWidget - iframe mode
