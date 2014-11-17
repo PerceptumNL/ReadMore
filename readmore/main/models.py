@@ -75,8 +75,7 @@ class Event(PolymorphicModel):
         """Return a dictionary-like object with key properties."""
         return {'type': 'event',
                 'date': str(timezone.localtime(self.date)),
-                'user': unicode(self.user).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'user': unicode(self.user)
                 }
 
 
@@ -94,8 +93,7 @@ class ArticleHistoryItem(Event):
             'type': 'event-article-view',
             'article': {
                 'url': reverse('article', args=(self.article.id,)),
-                'title': unicode(self.article).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'title': unicode(self.article)
                 }
             })
         return desc
@@ -117,8 +115,7 @@ class ArticleRatingItem(Event):
             'rating': str(self.rating),
             'article': {
                 'url': reverse('article', args=(self.article.id,)),
-                'title': unicode(self.article).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'title': unicode(self.article)
                 }
             })
         return desc
@@ -140,8 +137,7 @@ class ArticleDifficultyItem(Event):
             'rating': str(self.rating),
             'article': {
                 'url': reverse('article', args=(self.article.id,)),
-                'title': unicode(self.article).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'title': unicode(self.article)
                 }
             })
         return desc
@@ -160,12 +156,10 @@ class WordHistoryItem(Event):
         desc = {} if desc is None else desc
         desc.update({
             'type': 'event-word-cover',
-            'word': unicode(self.word).encode(
-                'ascii', 'xmlcharrefreplace'),
+            'word': unicode(self.word),
             'article': {
                 'url': reverse('article', args=(self.article.id,)),
-                'title': unicode(self.article).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'title': unicode(self.article)
                 }
             })
         return desc

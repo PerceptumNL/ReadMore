@@ -210,8 +210,7 @@ def api_get_hardest_articles(request):
         hardest_articles.append({
             'article': {
                 'url': reverse('article', args=(article['article'],)),
-                'title': unicode(article['article__title']).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'title': unicode(article['article__title'])
             },
             'rating': article['score']})
     return HttpResponse(json.dumps(hardest_articles),
@@ -232,8 +231,7 @@ def api_get_favorite_articles(request):
         hardest_articles.append({
             'article': {
                 'url': reverse('article', args=(article['article'],)),
-                'title': unicode(article['article__title']).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'title': unicode(article['article__title'])
             },
             'rating': article['score']})
     return HttpResponse(json.dumps(hardest_articles),
@@ -252,8 +250,7 @@ def api_get_most_clicked_words(request):
     clicked_words = []
     for word in words.all()[:num]:
         clicked_words.append({
-            'word': unicode(word['word']).encode(
-                'ascii', 'xmlcharrefreplace'),
+            'word': unicode(word['word']),
             'clicks': word['score']})
     return HttpResponse(json.dumps(clicked_words),
             content_type='application/json')
@@ -272,8 +269,7 @@ def api_get_viewed_articles(request):
         viewed_articles.append({
             'article': {
                 'url': reverse('article', args=(view.article.id,)),
-                'title': unicode(view.article).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'title': unicode(view.article)
             },
             'date': str(timezone.localtime(view.date))})
     return HttpResponse(json.dumps(viewed_articles),
