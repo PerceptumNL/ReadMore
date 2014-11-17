@@ -146,6 +146,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = 'collectstatic'
 
+LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
+
 SUMMERNOTE_CONFIG = {
     # Using SummernoteWidget - iframe mode
     'iframe': True,  # or set False to use SummernoteInplaceWidget - no iframe mode
