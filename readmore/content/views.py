@@ -4,9 +4,11 @@ from django.http import HttpResponse, HttpResponseNotFound, \
 from django.conf import settings
 from django.db.models import Q
 import operator
+import re
 import json
 import requests
 from readmore.content.models import *
+from readmore.main.models import ArticleHistoryItem
 import django.dispatch
 from django.contrib.auth.decorators import login_required
 
@@ -153,8 +155,10 @@ def article(request, identifier, source='local'):
     if not request.is_ajax():
         # Fetch random articles from the same categories for reading suggestions.
         random_articles = []
+        read_articles = ArticleHistoryItem.objects.filter(user=request.user)
+        read_articles = list(set([history.article.pk for history in read_articles] + [article.pk]))
         for category in categories:
-            random_articles += category.get_random_articles(3)
+            random_articles += category.get_random_articles(6, read_articles)
 
         # Ensure the current article is not suggested again
         if article in random_articles:

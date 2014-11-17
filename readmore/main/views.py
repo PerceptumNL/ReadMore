@@ -77,7 +77,6 @@ def profile_self(request):
         unique_articles = [art['article'] for art in unique_articles]
         history = Article.objects.filter(id__in=unique_articles)
     except Exception as e:
-        print e
         history = ArticleHistoryItem.objects.filter(user=user)
     
     return render(request, 'account/profile.html', {
