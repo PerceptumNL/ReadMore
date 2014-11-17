@@ -106,14 +106,14 @@
 		        <template is="auto-binding">
                 <paper-dropdown-menu label="Leerlingen">
                     <paper-dropdown class="dropdown">
-                        <core-menu selected="0">
+                        <core-menu selected="0" selectedItem="{{selectedUser}}">
                         <template repeat="{{user in users}}">
-                            <paper-item label="{{user}}"></paper-item>
+                            <paper-item id={{user.id}}>{{user.label}}</paper-item>
                         </template>
                         </core-menu>
                     </paper-dropdown>
                 </paper-dropdown-menu>
-	             <card-deck id="students"></card-deck>
+	             <card-deck id="students" user="{{selectedUser.id}}" if="{{selectedUser.id!=undefined}}"></card-deck>
                 </template>
                 {% endverbatim %}
 		    </div>
@@ -151,6 +151,7 @@
             });
         });
 
+        
 
     });
 </script>
@@ -162,13 +163,12 @@
     });
 </script>
  <script>
-    scope = document.querySelector('template[is=auto-binding]');
-
-    scope.users = [
-      'robrecht',
-      'nazari',
-    ];
-
+    $(function(){
+        scope = document.querySelector('template[is=auto-binding]');
+        $.getJSON( "/teacher/lists/userlist/", function( data ) {
+                scope.users = data ;
+            });
+    });
   </script>
 </body>
 

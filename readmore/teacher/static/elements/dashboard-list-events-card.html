@@ -1,9 +1,16 @@
 <link rel="import" href="../components/polymer/polymer.html">
 <link rel="import" href="../components/core-ajax/core-ajax.html">
 
-<polymer-element name="dashboard-list-events-card"  attributes="card" noscript>
+<polymer-element name="dashboard-list-events-card"  attributes="card number user">
         <template>
-            <core-ajax auto url="{{card.source}}" params='{}' handleAs="json" response="{{response}}">></core-ajax>
+            <core-ajax auto url="{{card.source}}" 
+                params='{"num": {{number}}, "user": "{{user}}"}' 
+                handleAs="json" response="{{response}}" 
+                if="{{user!=undefined}}"></core-ajax>
+            <core-ajax auto url="{{card.source}}" 
+                params='{"num": {{number}}}' 
+                handleAs="json" response="{{response}}" 
+                if="{{user==undefined}}"></core-ajax>
             <paper-shadow  z="1">
                 <div class="card-element" style="padding:10px 20px; margin: 10px;">
                     <h2>{{card.title}}</h2>
@@ -13,6 +20,15 @@
                         </template>
                     </ol>
                     <p>{{card.description}}</p>
+                    <paper-fab mini icon='add' style="background: #00bcd4;
+                    position:absolute; bottom:24px; right:24px;"
+                    on-tap={{showmore}}></paper-fab>
+                    
+                    <paper-fab mini icon='undo' style="display: {{ number>10 ? 'block' : 'none' }};
+                    background: #00bcd4;
+                    position:absolute; top:24px; right:24px;"
+                    on-tap={{showless}}></paper-fab>
+                    
                 </div>
             </paper-shadow>
             <!-- Card types -->
@@ -32,6 +48,17 @@
                  beoordeelt makkelijkheid <a href="{{article.url}}" style="font-style: italic"> {{article.title}}</a> met {{rating}} sterren
             </template>
         </template>
+        <script>
+            Polymer('dashboard-list-events-card', {
+                number: '10',
+                showmore: function(){ 
+                    this.number += 100;
 
+                },
+                showless: function(){ 
+                    this.number = 10;
+                },
+            });
+        </script>
 </polymer-element>
 

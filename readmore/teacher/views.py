@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -8,17 +9,20 @@ import json
 @login_required
 def dashboard(request):
     # If user is teacher
+    user_list = User.objects.all()
     if True:
-    
-    
-    
         return render(request, 'teacher/dashboard.html', {
-        
+            'users': user_list,
         })
     else:
         return HttpResponseRedirect("/")
 
-
+@login_required
+def retrieve_students(request):
+    user_list = User.objects.all()
+    users = [{'label': user.username, 'id': user.pk} for user in user_list]
+    return HttpResponse(json.dumps(users), content_type='application/json')
+    
 @login_required
 def carddeck_overview(request):
     return HttpResponse(json.dumps([

@@ -1,12 +1,13 @@
 <link rel="import" href="../components/polymer/polymer.html">
 <link rel="import" href="../components/core-ajax/core-ajax.html">
 
-<polymer-element name="dashboard-total-card"  attributes="card">
+<polymer-element name="dashboard-total-card"  attributes="card user">
         <template>
-            <core-ajax auto url="{{card.source}}" params='{}' handleAs="json" response="{{response}}">></core-ajax>
+                <core-ajax auto url="{{card.source}}" params='{"user": "{{user}}"}' handleAs="json" response="{{response}}" if="{{user!=undefined}}"></core-ajax>
+                <core-ajax auto url="{{card.source}}" params='{}' handleAs="json" response="{{response}}" if="{{ user==undefined}}"></core-ajax>
             <paper-shadow  z="1">
                 <div class="card-element" style="padding:10px 20px; margin: 10px;">
-                    <h2>{{card.title}}</h2>
+                    <h2> {{card.title}} </h2>
                     <ul style="list-style-type:none">
                         <li> Deze week: {{response.week}}
                         <li> Deze maand: {{response.month}}
@@ -18,10 +19,7 @@
         </template>
 <script>
     Polymer('dashboard-total-card', {
-        // initialize the element's model
-        responseChanged: function(oldVal) {
-                
-            }
+        'no_user': true,
     });
 </script>
 </polymer-element>
