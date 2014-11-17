@@ -21,6 +21,12 @@ class UserProfile(models.Model):
     institute = models.ForeignKey('Institute', blank=True, null=True,
             related_name='users')
 
+    def __unicode__(self):
+        return unicode(user)
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
+
 
 class Institute(models.Model):
     title = models.CharField(max_length=255)
@@ -54,6 +60,12 @@ class Group(models.Model):
     leader = models.ForeignKey(User, null=True, blank=True)
     institute = models.ForeignKey('Institute', null=True, blank=True)
 
+    def __unicode__(self):
+        return u'Group of %s' % (leader,)
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
+
 
 class Event(PolymorphicModel):
     user = models.ForeignKey(User)
@@ -75,8 +87,7 @@ class Event(PolymorphicModel):
         """Return a dictionary-like object with key properties."""
         return {'type': 'event',
                 'date': str(timezone.localtime(self.date)),
-                'user': unicode(self.user).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'user': unicode(self.user)
                 }
 
 
@@ -94,8 +105,7 @@ class ArticleHistoryItem(Event):
             'type': 'event-article-view',
             'article': {
                 'url': reverse('article', args=(self.article.id,)),
-                'title': unicode(self.article).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'title': unicode(self.article)
                 }
             })
         return desc
@@ -117,8 +127,7 @@ class ArticleRatingItem(Event):
             'rating': str(self.rating),
             'article': {
                 'url': reverse('article', args=(self.article.id,)),
-                'title': unicode(self.article).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'title': unicode(self.article)
                 }
             })
         return desc
@@ -140,8 +149,7 @@ class ArticleDifficultyItem(Event):
             'rating': str(self.rating),
             'article': {
                 'url': reverse('article', args=(self.article.id,)),
-                'title': unicode(self.article).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'title': unicode(self.article)
                 }
             })
         return desc
@@ -160,12 +168,10 @@ class WordHistoryItem(Event):
         desc = {} if desc is None else desc
         desc.update({
             'type': 'event-word-cover',
-            'word': unicode(self.word).encode(
-                'ascii', 'xmlcharrefreplace'),
+            'word': unicode(self.word),
             'article': {
                 'url': reverse('article', args=(self.article.id,)),
-                'title': unicode(self.article).encode(
-                    'ascii', 'xmlcharrefreplace')
+                'title': unicode(self.article)
                 }
             })
         return desc
