@@ -9,6 +9,8 @@ urlpatterns = patterns('',
         name='widget_dictionary'),
     url(r'askteacher/?$', 'readmore.widgets.askteacher.views.process',
         name='widget_askteacher'),
+    url(r'customcard/?$', 'readmore.widgets.customcard.views.process',
+        name='widget_customcard'),
     url(r'seemore/', 'readmore.widgets.seemore.views.process',
     	name='widget_seemore'))
 
