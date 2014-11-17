@@ -141,6 +141,8 @@ USE_TZ = True
 
 # Wikipedia source
 
+LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
+
 SUMMERNOTE_CONFIG = {
     # Using SummernoteWidget - iframe mode
     'iframe': True,  # or set False to use SummernoteInplaceWidget - no iframe mode
