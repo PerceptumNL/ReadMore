@@ -86,9 +86,12 @@
 
 <core-header-panel  mode="waterfall " flex>
 	<core-toolbar class="medium-tall azure-teal core-narrow">
-	<paper-icon-button icon="arrow-back" onclick="location.href='/';"></paper-icon-button>
-	<div flex>Dashboard</div>
-	<paper-icon-button icon="refresh"></paper-icon-button>
+	    <paper-icon-button icon="arrow-back" onclick="location.href='/';"></paper-icon-button>
+	    <div flex>Dashboard</div>
+        <a href="woordkaarten" style="background: rgba(0,0,0,0.1); color: white"><paper-button>
+        Ga naar woord kaarten <core-icon icon="description" style="margin: 0 8px"></core-icon>
+        </paper-button></a>
+
 		<paper-tabs class="bottom fit" selected="0">
 			<paper-tab>Overzicht</paper-tab>
 			<paper-tab>Leerlingen</paper-tab>
@@ -113,7 +116,7 @@
                         </core-menu>
                     </paper-dropdown>
                 </paper-dropdown-menu>
-	             <card-deck id="students" user="{{selectedUser.id}}" if="{{selectedUser.id!=undefined}}"></card-deck>
+	             <card-deck id="students" user="{{selectedUser.id}}" if="{{selectedUser.id}}"></card-deck>
                 </template>
                 {% endverbatim %}
 		    </div>
