@@ -91,14 +91,8 @@ class Category(PolymorphicModel):
         num -- The number of random articles to return (default 5)
         """
         article_list = self.get_articles()
-        random_list = []
-        if(len(article_list) >  num):
-            for i in range(0, num):
-                random_list.append(random.choice(article_list))
-            return random_list
-        else:
-            return article_list
-
+        random.shuffle(article_list)
+        return article_list[:num]
 
     def get_absolute_url(self):
         """Return the URL identifiying this object.
