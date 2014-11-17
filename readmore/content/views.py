@@ -8,7 +8,7 @@ import re
 import json
 import requests
 from readmore.content.models import *
-from readmore.main.models import ArticleHistoryItem
+from readmore.main.models import *
 import django.dispatch
 from django.contrib.auth.decorators import login_required
 
@@ -158,12 +158,15 @@ def article(request, identifier, source='local'):
         read_articles = ArticleHistoryItem.objects.filter(user=request.user)
         read_articles = list(set([history.article.pk for history in read_articles] + [article.pk]))
         for category in categories:
-            random_articles += category.get_random_articles(6, read_articles)
+            random_articles += category.get_random_articles(3, read_articles)
 
         # Ensure the current article is not suggested again
         if article in random_articles:
             random_articles.remove(article)
 
+        difficulty_items = ArticleDifficultyItem.objects.filter(user=request.user, article=article)
+        rating_items = ArticleRatingItem.objects.filter(user=request.user, article=article)
+        
         recommendations = []
         for rand_article in random_articles:
             if rand_article.image:
@@ -180,7 +183,12 @@ def article(request, identifier, source='local'):
                         article_id=identifier,
                         article=article)
         return render(request, 'article_page.html',
-                {"article": article, "random_articles": recommendations})
+                {
+                "article": article, 
+                "random_articles": recommendations,
+                "rating_given": len(rating_items)>0,
+                "difficulty_given": len(difficulty_items)>0,
+                })
     else:
         # Return JSON with article properties
         return HttpResponse(
