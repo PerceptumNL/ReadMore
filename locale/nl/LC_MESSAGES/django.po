@@ -1,9 +1,8 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Dutch translation of ReadMore
+# Copyright (C) 2014
+# This file is distributed under the same license as the ReadMore package.
+# Sander Latour <sander@perceptum.nl>, 2014
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -57,118 +56,118 @@ msgstr ""
 #: readmore/content/thirdparty/wiktionary_api.py:547
 msgctxt "word category"
 msgid "conjunctive"
-msgstr ""
+msgstr "voegwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:556
 msgctxt "word category"
 msgid "preposition"
-msgstr ""
+msgstr "voorzetsel"
 
 #: readmore/content/thirdparty/wiktionary_api.py:565
 msgctxt "word category"
 msgid "abbreviation"
-msgstr ""
+msgstr "afkorting"
 
 #: readmore/content/thirdparty/wiktionary_api.py:574
 msgctxt "word category"
 msgid "adjective"
-msgstr ""
+msgstr "bijvoeglijk naamwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:583
 msgctxt "word category"
 msgid "adverb"
-msgstr ""
+msgstr "bijwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:592
 msgctxt "word category"
 msgid "adverbial number"
-msgstr ""
+msgstr "telbijwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:601
 msgctxt "word category"
 msgid "article"
-msgstr ""
+msgstr "lidwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:610
 msgctxt "word category"
 msgid "proper name"
-msgstr ""
+msgstr "eigennaam"
 
 #: readmore/content/thirdparty/wiktionary_api.py:619
 msgctxt "word category"
 msgid "pronoun"
-msgstr ""
+msgstr "voornaamwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:628
 msgctxt "word category"
 msgid "demonstrative pronoun"
-msgstr ""
+msgstr "aanwijzend voornaamwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:637
 msgctxt "word category"
 msgid "exclaiming pronoun"
-msgstr ""
+msgstr "uitroepend voornaamwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:646
 #, fuzzy
 msgctxt "word category"
 msgid "indefinite pronoun"
-msgstr "Geen definities gevonden."
+msgstr "onbepaald voornaamwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:655
 msgctxt "word category"
 msgid "interrogative pronoun"
-msgstr ""
+msgstr "vragend voornaamwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:664
 msgctxt "word category"
 msgid "personal pronoun"
-msgstr ""
+msgstr "persoonlijk voornaamwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:673
 msgctxt "word category"
 msgid "possesive pronoun"
-msgstr ""
+msgstr "bezittelijk voornaamwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:682
 msgctxt "word category"
 msgid "reciprocal pronoun"
-msgstr ""
+msgstr "wederkerig voornaamwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:691
 msgctxt "word category"
 msgid "reflexive pronoun"
-msgstr ""
+msgstr "wederkerend voornaamwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:700
 msgctxt "word category"
 msgid "relative pronoun"
-msgstr ""
+msgstr "betrekkelijk voornaamwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:709
 msgctxt "word category"
 msgid "number"
-msgstr ""
+msgstr "getal"
 
 #: readmore/content/thirdparty/wiktionary_api.py:718
 msgctxt "word category"
 msgid "indefinite numeral"
-msgstr ""
+msgstr "onbepaald hoofdtelwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:727
 msgctxt "word category"
 msgid "interrogative numeral"
-msgstr ""
+msgstr "vragend telwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:736
 msgctxt "word category"
 msgid "ordinal"
-msgstr ""
+msgstr "rangtelwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:745
 msgctxt "word category"
 msgid "indefinite ordinal"
-msgstr ""
+msgstr "onbepaald rangtelwoord"
 
 #: readmore/content/thirdparty/wiktionary_api.py:764
 msgctxt "word category"
@@ -182,7 +181,7 @@ msgstr "werkwoord"
 
 #: readmore/main/templates/account/accounts.html:26
 msgid "Log Out"
-msgstr ""
+msgstr "Log Uit"
 
 #: readmore/main/templates/account/accounts.html:56
 #: readmore/main/templates/account/signup.html:25
@@ -191,16 +190,16 @@ msgstr ""
 
 #: readmore/main/templates/account/accounts.html:84
 msgid "Log In"
-msgstr ""
+msgstr "Log In"
 
 #: readmore/main/templates/account/login.html:20
 #: readmore/main/templates/account/login.html:32
 msgid "Sign In"
-msgstr ""
+msgstr "Schrijf je in"
 
 #: readmore/main/templates/account/login.html:31
 msgid "Forgot Password?"
-msgstr ""
+msgstr "Wachtwoord Vergeten?"
 
 #: readmore/main/templates/account/profile.html:24
 msgid "Welkom bij Lees Meer"
@@ -212,12 +211,12 @@ msgstr ""
 
 #: readmore/main/templates/socialaccount/signup.html:6
 msgid "Signup"
-msgstr ""
+msgstr "Inschrijven"
 
 #: readmore/main/templates/socialaccount/signup.html:10
 #: readmore/main/templates/socialaccount/signup.html:21
 msgid "Sign Up"
-msgstr ""
+msgstr "Schrijf je in"
 
 #: readmore/main/templates/socialaccount/signup.html:12
 #, python-format
@@ -225,6 +224,8 @@ msgid ""
 "You are about to use your %(provider_name)s account to login to\n"
 "%(site_name)s. As a final step, please complete the following form:"
 msgstr ""
+"Je staat op het punt om met je %(provider_name)s account in te loggen\n"
+"op %(site_name)s. Vul alstublieft het volgende formulier in als laatste stap."
 
 #: readmore/widgets/customcard/views.py:16
 #, python-format
