@@ -5,14 +5,17 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from readmore.main.models import Group
 from readmore.widgets.customcard.models import CustomCard
+from django.utils.translation import ugettext as _
 import json
 
 # Create your views here.
 @login_required
 def dashboard(request):
-    # If user is teacher
-    user_list = User.objects.all()
-    if True:
+    if request.user.is_superuser:
+        user_list = User.objects.all()
+    else:
+        user_list = User.objects.filter(userprofile__groups__leader=request.user)
+    if user_list.count():
         return render(request, 'teacher/dashboard.html', {
             'users': user_list,
         })
@@ -63,11 +66,12 @@ def remove_word(request):
 
 @login_required
 def retrieve_students(request):
-    user_list = []
-    for group in Group.objects.filter(leader__id=request.user.id):
-        user_list += [profile.user for profile in group.users.all()]
-    user_list.append(request.user)
-    users = [{'label': user.username, 'id': user.pk} for user in user_list]
+    users = [{'label': _('Everybody'), 'id': ''}]
+    if request.user.is_superuser:
+        user_list = User.objects.all()
+    else:
+        user_list = User.objects.filter(userprofile__groups__leader=request.user)
+    users += [{'label': user.username, 'id': user.pk} for user in user_list]
     return HttpResponse(json.dumps(users), content_type='application/json')
 
 @login_required
