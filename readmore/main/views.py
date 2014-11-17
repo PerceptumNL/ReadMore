@@ -137,7 +137,7 @@ def api_get_history_totals(history, user_id=None):
     date = timezone.now()
     start_week = date - datetime.timedelta(date.weekday())
     end_week = start_week + datetime.timedelta(7)
-    if user_id is not None:
+    if user_id:
         history = history.filter(user__id=int(user_id))
     total_all = filter_on_period(history, 'all').count()
     total_month = filter_on_period(history, 'month').count()
@@ -172,7 +172,7 @@ def api_get_last_events(request):
     user_id = request.GET.get('user', None)
     num = int(request.GET.get('num', 10))
     events = Event.objects
-    if user_id is not None:
+    if user_id:
         events = events.filter(user__id=int(user_id))
     last_events = []
     for event in events.all()[:num]:
@@ -202,7 +202,7 @@ def api_get_hardest_articles(request):
     period = request.GET.get('period', 'all')
     articles = ArticleDifficultyItem.objects.values('article', 'article__title')
     articles = filter_on_period(articles, period)
-    if user_id is not None:
+    if user_id:
         articles = articles.filter(user__id=int(user_id))
     articles = articles.annotate(score=Avg('rating')).order_by('score')
     hardest_articles = []
@@ -224,7 +224,7 @@ def api_get_favorite_articles(request):
     period = request.GET.get('period', 'all')
     articles = ArticleRatingItem.objects.values('article', 'article__title')
     articles = filter_on_period(articles, period)
-    if user_id is not None:
+    if user_id:
         articles = articles.filter(user__id=int(user_id))
     articles = articles.annotate(score=Avg('rating')).order_by('-score')
     hardest_articles = []
@@ -246,7 +246,7 @@ def api_get_most_clicked_words(request):
     period = request.GET.get('period', 'all')
     words = WordHistoryItem.objects.values('word')
     words = filter_on_period(words, period)
-    if user_id is not None:
+    if user_id:
         words = words.filter(user__id=int(user_id))
     words = words.annotate(score=Count('date')).order_by('-score')
     clicked_words = []
@@ -265,7 +265,7 @@ def api_get_viewed_articles(request):
     period = request.GET.get('period', 'all')
     history = ArticleHistoryItem.objects
     history = filter_on_period(history, period)
-    if user_id is not None:
+    if user_id:
         history = history.filter(user__id=int(user_id))
     viewed_articles = []
     for view in history.all()[:num]:
