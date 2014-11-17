@@ -22,7 +22,7 @@ class UserProfile(models.Model):
             related_name='users')
 
     def __unicode__(self):
-        return unicode(user)
+        return unicode(self.user)
 
     def __str__(self):
         return unicode(self).encode('utf-8')
@@ -61,7 +61,7 @@ class Group(models.Model):
     institute = models.ForeignKey('Institute', null=True, blank=True)
 
     def __unicode__(self):
-        return u'Group of %s' % (leader,)
+        return u'Group of %s' % (self.leader,)
 
     def __str__(self):
         return unicode(self).encode('utf-8')
