@@ -26,7 +26,7 @@ ADMINS = (('Sander', 'sander@perceptum.nl'),)
 SECRET_KEY = 'nam+hzdm-pw7$l5y$k+yk)xfhm*1nmy2v!^d$7&yp29n%t8@y!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
