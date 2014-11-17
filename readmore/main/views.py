@@ -127,6 +127,10 @@ def filter_on_period(objects, period):
         return objects.filter(date__month=date.month)
     elif period == 'week':
         date = datetime.datetime.now(pytz.utc)
+        date -= datetime.timedelta(hours=date.hour)
+        date -= datetime.timedelta(minutes=date.minute)
+        date -= datetime.timedelta(seconds=date.second)
+        date -= datetime.timedelta(microseconds=date.microsecond)
         start_week = date - datetime.timedelta(date.weekday())
         end_week = start_week + datetime.timedelta(7)
         return objects.filter(date__range=[start_week, end_week])
@@ -135,9 +139,6 @@ def filter_on_period(objects, period):
 
 @login_required
 def api_get_history_totals(request, history, user_id=None):
-    date = timezone.now()
-    start_week = date - datetime.timedelta(date.weekday())
-    end_week = start_week + datetime.timedelta(7)
     if user_id:
         history = history.filter(user__id=int(user_id))
     if not request.user.is_superuser:
