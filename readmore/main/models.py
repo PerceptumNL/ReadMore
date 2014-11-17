@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.utils import timezone
+from django.utils import formats
 from django.core.urlresolvers import reverse
 from django.core.signals import request_started
 from allauth.account.signals import user_signed_up
@@ -88,7 +89,9 @@ class Event(PolymorphicModel):
         displayname = (lambda user: u' '.join([user.first_name, user.last_name])
                 if user.first_name else user.username)
         return {'type': 'event',
-                'date': str(timezone.localtime(self.date)),
+                'date': formats.date_format(
+                    timezone.localtime(self.date),
+                    "DATETIME_FORMAT"),
                 'user': unicode(displayname(self.user))
                 }
 
