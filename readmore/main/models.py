@@ -21,6 +21,12 @@ class UserProfile(models.Model):
     institute = models.ForeignKey('Institute', blank=True, null=True,
             related_name='users')
 
+    def __unicode__(self):
+        return unicode(user)
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
+
 
 class Institute(models.Model):
     title = models.CharField(max_length=255)
@@ -53,6 +59,12 @@ class Group(models.Model):
     title = models.CharField(max_length=255)
     leader = models.ForeignKey(User, null=True, blank=True)
     institute = models.ForeignKey('Institute', null=True, blank=True)
+
+    def __unicode__(self):
+        return u'Group of %s' % (leader,)
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
 
 
 class Event(PolymorphicModel):
