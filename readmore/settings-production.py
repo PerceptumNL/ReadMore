@@ -87,41 +87,41 @@ ROOT_URLCONF = 'readmore.urls'
 WSGI_APPLICATION = 'readmore.wsgi.application'
 
 # Parse database configuration from $DATABASE_URL
-    import dj_database_url
-    DATABASES = {'default': dj_database_url.config()}
+import dj_database_url
+DATABASES = {'default': dj_database_url.config()}
 
 # Authentication back-end
-    AUTHENTICATION_BACKENDS = (
-        # Needed to login by username in Django admin, regardless of `allauth`
-        "django.contrib.auth.backends.ModelBackend",
-        # `allauth` specific authentication methods, such as login by e-mail
-        "allauth.account.auth_backends.AuthenticationBackend"
-    )
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend"
+)
 
 # auth and allauth settings
 # Settings for social providers
 # Note: Windows Live requires no settings
 #LOGIN_REDIRECT_URL = '/'
-    ACCOUNT_EMAIL_REQUIRED = 'True'
-    SOCIALACCOUNT_EMAIL_REQUIRED = 'True'
-    SOCIALACCOUNT_AUTO_SIGNUP = 'True'
-    ACCOUNT_EMAIL_VERIFICATION = 'False'
-    AUTH_PROFILE_MODULE = 'main.UserProfile'
-    SIGNUP_ENABLED = False
-    ACCOUNT_ADAPTER = "readmore.main.adapter.ReadMoreAccountAdapter"
+ACCOUNT_EMAIL_REQUIRED = 'True'
+SOCIALACCOUNT_EMAIL_REQUIRED = 'True'
+SOCIALACCOUNT_AUTO_SIGNUP = 'True'
+ACCOUNT_EMAIL_VERIFICATION = 'False'
+AUTH_PROFILE_MODULE = 'main.UserProfile'
+SIGNUP_ENABLED = False
+ACCOUNT_ADAPTER = "readmore.main.adapter.ReadMoreAccountAdapter"
 
-    SOCIALACCOUNT_PROVIDERS = \
-        { 'google':
-            { 'SCOPE': ['profile', 'email'],
-              'AUTH_PARAMS': { 'access_type': 'online' } }}
+SOCIALACCOUNT_PROVIDERS = \
+    { 'google':
+        { 'SCOPE': ['profile', 'email'],
+          'AUTH_PARAMS': { 'access_type': 'online' } }}
 
 # Template Context
-    TEMPLATE_CONTEXT_PROCESSORS = (
-        "django.core.context_processors.request",
-        "django.contrib.auth.context_processors.auth",
-        "allauth.account.context_processors.account",
-        "allauth.socialaccount.context_processors.socialaccount",
-    )
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.request",
+    "django.contrib.auth.context_processors.auth",
+    "allauth.account.context_processors.account",
+    "allauth.socialaccount.context_processors.socialaccount",
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
