@@ -54,11 +54,11 @@ $.widget( "readmore.carddeck", {
 				$(this.options.cover).addClass('open');
 				$(this.options.cover).find("#closeCover").click(
 						function(){
-							setTimeout(window.history.back, 1);
+							setTimeout(function(){window.history.back();}, 1);
 						});
 				$(this.options.cover).find("#closeOnBackground").click(
 						function(){
-							setTimeout(window.history.back,1);
+							setTimeout(function(){window.history.back();},1);
 						});
 			}
 		}
