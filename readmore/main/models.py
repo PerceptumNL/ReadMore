@@ -7,7 +7,6 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.core.signals import request_started
 from allauth.account.signals import user_signed_up
-from readmore.content.views import article_read
 from django.dispatch import receiver
 
 import pytz
@@ -208,7 +207,6 @@ def connect_statistics_to_user(sender, request, user, **kw):
     statistics.save()
     #print "Created Statistics for %s" % (user)
 
-@receiver(article_read)
 def add_to_statistics(sender, user, category, article_id, article, **kw):
     try:
         statistics = Statistics.objects.get(user=user)

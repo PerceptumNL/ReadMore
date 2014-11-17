@@ -84,13 +84,15 @@ class Category(PolymorphicModel):
         else:
             return articles[:max_num]
 
-    def get_random_articles(self, num=5):
+    def get_random_articles(self, num=5, read_by_user=None):
         """Return a number of random articles.
 
         Keyword arguments:
         num -- The number of random articles to return (default 5)
         """
         article_list = self.get_articles()
+        if read_by_user is not None:
+            article_list = [article for article in article_list if article.pk not in read_by_user]
         random.shuffle(article_list)
         return article_list[:num]
 
