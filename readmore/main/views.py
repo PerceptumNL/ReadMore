@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.conf import settings
 from django.db.models import Avg, Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -62,7 +63,8 @@ def login(request):
         return index(request)
     # Else go to login page
     else:
-        return render(request, 'login.html',{})
+    
+        return render(request, 'login.html',{'signup_enabled': settings.SIGNUP_ENABLED})
 
 @login_required
 def profile_self(request):
