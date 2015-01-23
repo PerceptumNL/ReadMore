@@ -9,6 +9,8 @@ class ContentArticle():
 		self.title = kwargs['title']
 		self.body = kwargs['body']
 		self.image = kwargs['image']
-		
+	
+	def get_body(self):
+		return self.body
 
 

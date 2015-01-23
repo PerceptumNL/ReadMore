@@ -8,106 +8,9 @@ from AuthUser import AuthUser
 from ContentArticle import ContentArticle
 from RssArticle import RssArticle
 from Event import Event
-
-
-def parse_command_line():
-    """Parse command line arguments
-
-    Returns: 
-    decompress -- a boolean specifying whether dumps should be extracted
-    parse_db -- a boolean specifying whether dbs should be parsed into files
-    dump_directory -- the directory of the dump files
-    db_directory -- the directory of the database files
-    output_directory -- the directory of the output files
-    """
-    parser = argparse.ArgumentParser(description="Run simulation")
-    parser.add_argument('-decompress', metavar='Decompress dump files? y/n', type=str)
-    parser.add_argument('-parse_db', metavar='Parse database file? y/n', type=str)
-    parser.add_argument('-dump_directory', metavar='Specify dump file directory.', type=str)
-    parser.add_argument('-db_directory', metavar='Specify database file directory.', type=str)
-    parser.add_argument('-output_directory', metavar='Specify output directory.', type=str)
-    args = parser.parse_args()
-
-    decompress = 'n'
-    parse_db = 'n'
-    dump_directory = 'dumps'
-    db_directory = 'dbs'
-    output_directory = 'output'
-
-    if(vars(args)['decompress'] is not None):
-        decompress = vars(args)['decompress']
-    if(vars(args)['parse_db'] is not None):
-        parse_db = vars(args)['parse_db']
-    if(vars(args)['dump_directory'] is not None):
-        dump_directory = vars(args)['dump_directory']
-    if(vars(args)['db_directory'] is not None):
-        db_directory = vars(args)['db_directory']		
-    if(vars(args)['output_directory'] is not None):
-        output_directory = vars(args)['output_directory']
-
-    if decompress == 'y':
-        decompress = True
-    else:
-    	decompress = False
-    if parse_db == 'y':
-        parse_db = True
-    else:
-    	parse_db = False
-
-
-    if decompress and not parse_db:
-    	print "========"
-    	print "Warning:"
-    	print "You want to decompress files without parsing the new database."
-    	print "This means the data that will be used may belong to another database."
-    	print "========"
-
-    return decompress, parse_db, dump_directory, db_directory, output_directory
-
-def get_files(dump_directory):
-    """Retrieve all dump files from the specified directory
-
-    Arguments:
-    directory -- the directory to retrieve dump files from
-
-    Returns:
-    dump_path_list -- a list of paths to checked dump files
-    """
-    #List all files in directory
-    dump_files = os.listdir(dump_directory)
-    dump_path_list = []
-    for dump in dump_files:
-    	#If file is a dump file
-        if dump.lower().endswith('.dump'):
-        	#Append to dump_path_list
-            dump_path_list.append(dump_directory + '/' + dump)
-    return dump_path_list
-
-def decompress_files(dump_path_list, db_directory, decompress):
-	"""Decompress all files in dump_path_list to Postgresql
-
-	Arguments:
-	dump_path_list -- the list of relative paths to compressed files
-
-	Returns:
-	pg_path_list -- a list of paths to decompressed Postgresql files
-
-	TODO: weird printing bug, doesn't seem to mess up the function tho
-	"""
-	db_files = []
-	if not os.path.exists(db_directory):
-		os.makedirs(db_directory)
-	for dump in dump_path_list:
-		#pg_file_path = db_directory + '/' + dump.split('/')[1].split('.')[0]
-		db_file_path = os.path.join(db_directory, dump.split('/')[1].split('.')[0]+".txt")
-		db_files.append(db_file_path)
-		#command = 'pg_restore -O ' + dump + ' >> ' + pg_file_path
-		if decompress:
-			print "Loading dump file '" + dump + "'..."
-			command = 'pg_restore -O ' + dump + ' >> ' + db_file_path
-			p = subprocess.Popen(command, shell=True)
-			print "Dumped file to '" + db_file_path + "'."
-	return db_files
+from Word import Word
+import parse_dbs
+import extract_dumps
 
 def process_database(db, output_directory, write_files=True):
 	"""Process the database and load its contents into the correct objects.
@@ -209,7 +112,27 @@ def process_database(db, output_directory, write_files=True):
 				break
 			elif event_data == 0:
 				continue	
-		database.close()	
+		database.close()
+		database = open(db, 'r')	
+		word_data = 0
+		word_counter = 0
+		for line in database:
+			#Get all dumped lines following main_wordhistoryitem line
+			if line.split(' ')[0] == 'COPY' and line.split(' ')[1] == 'main_wordhistoryitem':
+				word_data = 1
+				word_counter += 1
+				g = open(output_directory + '/' + db_name + '/word_data', 'w')
+				output_list.append(output_directory + '/' + db_name + '/word_data')
+				g.write('WORD\n')
+			elif line.split('.')[0] != '\\' and word_data == 1:
+				g.write(line)
+			elif line.split('.')[0] == '\\' and word_data == 1:
+				word_data = 0
+				g.close()
+				break
+			elif event_data == 0:
+				continue	
+		database.close()
 	else:
 		output_directory_list = os.listdir(output_directory + '/' + db_name)
 		output_list = []
@@ -235,8 +158,7 @@ def load_to_class(database_data_files):
 		for data_type in database_list:
 			data = open(data_type, 'r')
 			object_type =  data.readline().split('\n')[0]
-			print object_type
-			object_list = []
+			object_list = {}
 			if object_type == 'USER':
 				for line in data:
 					all_data = line.split('\t')
@@ -252,7 +174,7 @@ def load_to_class(database_data_files):
 					arguments['is_active'] = all_data[9]
 					arguments['date_joined'] = all_data[10].split('\n')[0]
 					user_object = AuthUser(arguments)
-					object_list.append(user_object)
+					object_list[all_data[0]] = user_object
 			elif object_type == 'ARTICLE':
 				for line in data:
 					all_data = line.split('\t')
@@ -262,7 +184,7 @@ def load_to_class(database_data_files):
 					arguments['body'] = all_data[3]
 					arguments['image'] = all_data[4]
 					article_object = ContentArticle(arguments)
-					object_list.append(article_object)
+					object_list[all_data[0]] = article_object
 			elif object_type == 'RSS':
 				for line in data:
 					all_data = line.split('\t')
@@ -271,7 +193,7 @@ def load_to_class(database_data_files):
 					arguments['time'] = all_data[1]
 					arguments['url'] = all_data[2].split('\n')[0]
 					rss_object = RssArticle(arguments)
-					object_list.append(rss_object)
+					object_list[all_data[0]] = rss_object
 			elif object_type == 'EVENT':
 				for line in data:
 					all_data = line.split('\t')
@@ -285,33 +207,18 @@ def load_to_class(database_data_files):
 					arguments['action_flag'] = all_data[6]
 					arguments['message'] = all_data[7]
 					event_object = Event(arguments)
-					object_list.append(event_object)
+					object_list[all_data[0]] = event_object
+			elif object_type == 'WORD':
+				for line in data:
+					all_data = line.split('\t')
+					arguments = {}
+					arguments['aid'] = all_data[0]
+					arguments['word'] = all_data[1].decode('utf-8').encode('ascii', 'xmlcharrefreplace')
+					arguments['eid'] = all_data[2].split('\n')[0]
+					word_object = Word(arguments)
+					object_list[all_data[2].split('\n')[0]] = word_object
 			try:
 				object_dictionary[database][object_type] = object_list
 			except KeyError:
 				object_dictionary[database] = {object_type: object_list}
 	return object_dictionary
-
-if __name__ == "__main__":
-    decompress, parse_db, dump_directory, db_directory, output_directory = parse_command_line()
-    dump_path_list = get_files(dump_directory)
-    print "---"
-    if decompress:
-    	print "Getting dump files from '" + dump_directory + "'..."
-    	print "---"
-    	print "Decompressing dump files to '" + db_directory + "'..."
-    	print "---"
-    pg_path_list = decompress_files(dump_path_list, db_directory, decompress)
-    data_files = {}
-    print "---"
-    for db in pg_path_list:
-    	if parse_db:
-    		print "Parsing database file '" + db + "'..."
-    	data_files[db.split('/')[1]] = process_database(db, output_directory, parse_db)
-    print "---"
-    print "Loading data objects from '" + output_directory + "'..."
-    print "---"
-    object_dictionary = load_to_class(data_files)
-
-    
-
