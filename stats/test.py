@@ -5,6 +5,8 @@ import sqlalchemy
 import operator
 import numpy as np
 import matplotlib.pyplot as plt
+from bs4 import BeautifulSoup
+pd.options.display.max_colwidth = 10000
 
 class DatabaseConnection:
 	def __init__(self, db_url):
@@ -92,6 +94,33 @@ class DatabaseConnection:
 		self.read_articles = read_articles
 		return self.read_articles
 
+	def word_length_corpus(self):
+		self.clicked_articles()
+		self.get_body_from_id()
+		length_dict = {}
+		for item in self.article_store:
+			soup = BeautifulSoup(self.article_store[item])
+			#Get HTML text separated by whitespace and split on line break tags
+			for sentence in soup.get_text(separator=u' ').split("<br/>"):
+				#For each in a line, retrieve alphanumeric words
+				for word in "".join( (char if char.isalnum() else " ") for char in sentence).split():                    
+					#Add 1 to word length count
+					try:
+						length_dict[len(word)] += 1
+					except KeyError:
+						length_dict[len(word)] = 1
+		self.corpus_lengths = length_dict
+		return self.corpus_lengths
+
+	def get_body_from_id(self):
+		article_frame = self.dataframe['article']
+		article_store = {}
+		for item in self.read_articles:
+			body_text = article_frame[article_frame.id == item]['body'].values[0]
+			article_store[item] = body_text
+		self.article_store = article_store
+
+
 	def clicked_categories(self):
 		"""Computes the counts of read articles per category
 
@@ -112,25 +141,26 @@ class DatabaseConnection:
 		self.read_categories = read_categories
 		return self.read_categories
 
+	def bar_plot(self, xticks, scores, ylabel, title):
+		N = len(scores)
+		ind = np.arange(N)
+		width = 0.35
+		p1 = plt.bar(ind, scores, width, color='r')
+		plt.ylabel(ylabel)
+		plt.title(title)
+		plt.xticks(ind+width/2., tuple(xticks), rotation=30)
+		plt.show()
+
 	def plot_word_lengths(self):
 		"""Plots the word length counts
 		"""
 		self.word_length_counts_clicked()
-		#Plot bar chart
 		xticks = []
 		scores = []
 		for item in self.length_counts:
 			xticks.append(item)
 			scores.append(self.length_counts[item])
-		N = len(scores)
-		ind = np.arange(N)
-		width = 0.35
-		p1 = plt.bar(ind, scores, width, color='r')
-		plt.ylabel('Aantal keer geklikt')
-		plt.title('Hoe vaak geklikt per woordlengte')
-		plt.xticks(ind+width/2., tuple(xticks), rotation=30)
-		#plt.yticks(np.arange(0,81,10))
-		plt.show()
+		self.bar_plot(xticks, scores, 'Aantal keer geklikt', 'Hoe vaak geklikt per woordlengte')
 
 	def plot_clicked_categories(self):
 		"""Plots the read article counts per category in a bar chart
@@ -148,15 +178,8 @@ class DatabaseConnection:
 		for item in self.read_categories:
 			xticks.append(self.category_titles[item])
 			scores.append(self.read_categories[item])
-		N = len(scores)
-		ind = np.arange(N)
-		width = 0.35
-		p1 = plt.bar(ind, scores, width, color='r')
-		plt.ylabel('Aantal gelezen artikelen')
-		plt.title('Hoeveelheid gelezen artikelen per categorie')
-		plt.xticks(ind+width/2., tuple(xticks), rotation=30)
-		#plt.yticks(np.arange(0,81,10))
-		plt.show()
+		self.bar_plot(xticks, scores, 'Aantal gelezen artikelen', 'Hoeveelheid gelezen artikelen per categorie')
+
 
 	def plot_categories(self):
 		"""Plots the word clicks per category in a bar chart
@@ -176,15 +199,7 @@ class DatabaseConnection:
 		for item in self.category_clicks:
 			xticks.append(self.category_titles[item])
 			scores.append(self.category_clicks[item])
-		N = len(scores)
-		ind = np.arange(N)
-		width = 0.35
-		p1 = plt.bar(ind, scores, width, color='r')
-		plt.ylabel('Aantal geklikte woorden')
-		plt.title('Hoeveelheid geklikte woorden per categorie')
-		plt.xticks(ind+width/2., tuple(xticks), rotation=30)
-		#plt.yticks(np.arange(0,81,10))
-		plt.show()	
+		self.bar_plot(xticks, scores, 'Aantal geklikte woorden', 'Hoeveelheid geklikte woorden per categorie')
 
 	def id_to_category(self, id_set):
 		"""Finds the title of each category id in id_set
@@ -205,7 +220,10 @@ class DatabaseConnection:
 
 if __name__ == "__main__":
 	db_con = DatabaseConnection('postgresql://elise@localhost:5432/read_more')
-	db_con.plot_word_lengths()
-	#print sorted(db_con.clicked_articles().items(), key=operator.itemgetter(1), reverse=True)
+	#db_con.plot_word_lengths()
+	#db_con.plot_categories()
+	#db_con.plot_clicked_categories()
+	#db_con.word_length_corpus()
+	db_con.plot_normalized_word_clicks()
 
 
