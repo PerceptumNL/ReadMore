@@ -12,7 +12,7 @@ $.widget( "readmore.carddeck", {
 		$(":readmore-"+this.options.controlwidget).bind(
 			this.options.controlwidget+"wordclick",
 			function(event, data){
-				location.hash = "#cover-"+data['word'];
+				location.hash = "#cover-"+data['uri'];
 			}
 		)
 		$(window).hashchange(function(){
@@ -20,8 +20,8 @@ $.widget( "readmore.carddeck", {
 				_self.close(_self.options.cover);
 			}else{
 				hash_parts = location.hash.split("-");
-				if(hash_parts[0] == '#cover'){
-					_self.load(hash_parts[1])
+				if(hash_parts.shift() == "#cover"){
+					_self.load(hash_parts.join("-"))
 				}
 			}
 		});
@@ -55,7 +55,7 @@ $.widget( "readmore.carddeck", {
         });
 		return decks;
 	},
-    load: function(word){
+    load: function(uri){
         var _self = this;
 		if(this.options.cover){
 			if($(this.options.cover).hasClass('open')){
@@ -64,7 +64,7 @@ $.widget( "readmore.carddeck", {
 				$(this.options.cover).addClass('open');
 			}
 		}
-		this.carddeck = new CardDeck(this.element, this.decks(word));
+		this.carddeck = new RDFCardDeck(this.element, uri);
 	},
     close: function(cover){
 		if(cover){

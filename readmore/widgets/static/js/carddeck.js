@@ -50,7 +50,6 @@ function DashboardCardDeck(container, decks, _self){
 		return $("<div class='element-item'>");
 	}
 }
-
 function Card(container, order, title, _self){
 	_self = (_self == undefined ? this : _self);
 
@@ -172,3 +171,70 @@ function DashboardTotalCard(container, data, _self){
 	})
 }
 
+function ImageCard(container, data){
+	var _parent = new Card(container, 100, data['title']);
+	container.addClass("image_card");
+	var content = _parent.create_content_container();
+	content.append($("<img style='width:100%;'>").attr('src', data['url']));
+}
+
+function RDFCardDeck(container, uri, _self){
+	_self = (_self == undefined ? this : _self);
+
+	var factories = [new RDFImageCardFactory(_self)];
+
+	_self.create_empty_card = function(){
+		return $("<div class='element-item col-lg-4 col-md-6 col-xs-12'>");
+	}
+
+	_self.load_card = function(card, data){
+		var template = _self.create_empty_card();
+		card(template, data);
+		$(container).isotope('insert', template);
+		$(container).isotope('updateSortData', template);
+	}
+
+	_self._load = function(triples){
+		var subject;
+		for(object in triples){
+			for(relation in triples[object]){
+				for(var i = 0; i < triples[object][relation].length; i++){
+					subject = triples[object][relation][i];
+					for(var f=0; f < factories.length; f++){
+						factories[f].feed(object, relation, subject);
+					}
+				}
+			}
+		}
+	}
+
+	_self.close = function(){
+		elems = $(container).isotope('getItemElements');
+		$(container).isotope('remove', elems);
+	}
+
+	$.ajax({
+		'url': uri,
+		'dataType': 'json',
+		'success': _self._load});
+}
+
+function RDFCardFactory(deck, _self){
+	_self = (_self == undefined ? this : _self);
+	_self.feed = function(object, relation, subject){}
+}
+
+function RDFImageCardFactory(deck, _self){
+	_self = (_self == undefined ? this : _self);
+	$.extend(_self, new RDFCardFactory(deck, _self));
+
+	_self.feed = function(object, relation, subject){
+		if(relation == "http://xmlns.com/foaf/0.1/depiction" &&
+				subject['type'] == "uri"){
+			deck.load_card(ImageCard, {
+				'title': 'Image',
+				'url': subject['value']
+			});
+		}
+	}
+}

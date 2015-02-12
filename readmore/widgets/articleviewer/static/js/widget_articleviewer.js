@@ -49,7 +49,7 @@ $.widget( "readmore.articleviewer", {
 			}
 		}
 		// Replace each word
-		$(textnodes).each(function(){
+		/*$(textnodes).each(function(){
 			// Create string containing new HTML
 			content = this.textContent.replace(
 				/([^\s.,;:'\"`~!@#\$%\^&*()_\+\-=\[\]\{\}\\\|\?\/<>]+)/g,
@@ -58,9 +58,9 @@ $.widget( "readmore.articleviewer", {
 			$("<span>"+content+"</span>").insertBefore(this)
 			// Remove old textnode
 			$(this).remove()
-		})
+		})*/
 		// Add onclick events on each word
-		$(".word").click(function(e){
+		$("[about]").click(function(e){
 			//Remove selected link feedback, if any
 			$('.neutral').children().unwrap();
 			//Remove linked image, if any
@@ -70,7 +70,7 @@ $.widget( "readmore.articleviewer", {
 			//Add #selected to current clicked word
 			this.setAttribute('id', 'selected');
 			// Trigger wordclick event, providing the word that was clicked on.
-			_self._trigger("wordclick", e, {"word": $(this).text()})
+			_self._trigger("wordclick", e, {"uri": $(this).attr('about')})
 		})
 
 		$(".wikiBlueLink").click(function(e){
