@@ -124,7 +124,13 @@ class RSSCategory(Category):
         recursive -- Search for articles recursively (default False)
         max_num -- Maximum number of articles (default 100)
         """
-        return super(RSSCategory, self).get_articles(recursive, max_num)
+        articles = super(RSSCategory, self).get_articles(recursive, 'Inf')
+        articles = sorted(articles, key=lambda a: a.publication_date,
+                reverse=True)
+        if max_num == 'Inf':
+            return articles
+        else:
+            return articles[:max_num]
 
     def update_feed(self):
         """Retrieve new articles from the RSS feed in this category."""
