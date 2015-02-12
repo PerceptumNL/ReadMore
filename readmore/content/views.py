@@ -110,11 +110,12 @@ def category(request, identifier, source='local'):
     # Fetch any subcategories and articles contained in the category.
     articles = []
     for article in category.get_articles():
-        articles.append({
-            'url': article.get_absolute_url(),
+        d = {'url': article.get_absolute_url(),
             'title': article.title,
             'category-color': category.color,
-            'image': article.image if article.image else category.image})
+            'publication_date': str(article.publication_date),
+            'image': article.image if article.image else category.image}
+        articles.append(d)
     subcategories = [{'url': c.get_absolute_url(), 'title': c.title,
         'image': c.image} for c in category.get_subcategories()]
     # Return JSON list of topics with their properties
