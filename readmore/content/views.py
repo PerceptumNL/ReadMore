@@ -173,6 +173,16 @@ def article(request, identifier, source='local'):
             if rand_article.image:
                 recommendations.append(rand_article)
 
+        """
+        *****TODO:*****
+        - Get user group
+        - Get other users in group
+        - Get ArticleHistoryItem objects related to users
+        - Sort by day
+        - Sort on most popular (most event counts)
+        """
+
+
         # For all categories this article belongs to
         for category in categories:
             # If the category was stored in the database
