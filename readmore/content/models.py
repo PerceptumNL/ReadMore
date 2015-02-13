@@ -9,7 +9,7 @@ import lxml
 import random
 import urllib
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import mktime
 import feedparser
 from bs4 import BeautifulSoup
@@ -90,7 +90,15 @@ class Category(PolymorphicModel):
         Keyword arguments:
         num -- The number of random articles to return (default 5)
         """
-        article_list = self.get_articles()
+        #article_list = self.get_articles()
+        
+        """
+            Only return articles from last week
+        """
+        now = datetime.now() - timedelta(days=3)
+        article_list = RSSArticle.objects.filter(categories__in=[self], publication_date__gte=now)
+        article_list = list(article_list)
+        
         if read_by_user is not None:
             article_list = [article for article in article_list if article.pk not in read_by_user]
         random.shuffle(article_list)
@@ -124,7 +132,13 @@ class RSSCategory(Category):
         recursive -- Search for articles recursively (default False)
         max_num -- Maximum number of articles (default 100)
         """
-        return super(RSSCategory, self).get_articles(recursive, max_num)
+        articles = super(RSSCategory, self).get_articles(recursive, 'Inf')
+        articles = sorted(articles, key=lambda a: a.publication_date,
+                reverse=True)
+        if max_num == 'Inf':
+            return articles
+        else:
+            return articles[:max_num]
 
     def update_feed(self):
         """Retrieve new articles from the RSS feed in this category."""
