@@ -181,7 +181,7 @@ def article(request, identifier, source='local'):
         popular_articles = []
         for group in user_group:
             #Get 4 popular articles for every group
-            popular_articles += group.get_popular_articles(4, user_profile)
+            popular_articles += group.get_popular_articles(4, user_profile, read_articles)
 
         if article in popular_articles:
             #Remove current article
