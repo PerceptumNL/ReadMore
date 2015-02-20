@@ -159,7 +159,7 @@ def article(request, identifier, source='local'):
         read_articles = ArticleHistoryItem.objects.filter(user=request.user)
         read_articles = list(set([history.article.pk for history in read_articles] + [article.pk]))
         for category in categories:
-            random_articles += category.get_random_articles(3, read_articles)
+            random_articles += category.get_random_articles(4, read_articles)
 
         # Ensure the current article is not suggested again
         if article in random_articles:
@@ -173,15 +173,26 @@ def article(request, identifier, source='local'):
             if rand_article.image:
                 recommendations.append(rand_article)
 
-        """
-        *****TODO:*****
-        - Get user group
-        - Get other users in group
-        - Get ArticleHistoryItem objects related to users
-        - Sort by day
-        - Sort on most popular (most event counts)
-        """
+        # Get groups that current user is member of
+        user_group = request.user.userprofile.groups.all()
+        # Get user profile of current user
+        user_profile = UserProfile.objects.filter(user=request.user)
 
+        popular_articles = []
+        for group in user_group:
+            #Get 4 popular articles for every group
+            popular_articles += group.get_popular_articles(4, user_profile)
+
+        if article in popular_articles:
+            #Remove current article
+            popular_articles.remove(article)
+
+        #Remove duplicates
+        popular_articles = list(set(popular_articles))
+        #Shuffle list
+        random.shuffle(popular_articles)
+        #Limit list to 4 articles
+        popular_articles = popular_articles[:4]
 
         # For all categories this article belongs to
         for category in categories:
@@ -197,6 +208,7 @@ def article(request, identifier, source='local'):
                 {
                 "article": article, 
                 "random_articles": recommendations,
+                "popular_articles": popular_articles,
                 "rating_given": len(rating_items)>0,
                 "difficulty_given": len(difficulty_items)>0,
                 })
