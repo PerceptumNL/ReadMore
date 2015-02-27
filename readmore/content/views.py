@@ -181,6 +181,11 @@ def article(request, identifier, source='local'):
         # Get user profile of current user
         user_profile = UserProfile.objects.filter(user=request.user)
 
+        article.df_update()
+        tf_idf = article.tf_idf()
+
+        related_articles = article.get_related_articles(tf_idf, 10, 4)
+
         popular_articles = []
         for group in user_group:
             #Get 4 popular articles for every group
@@ -212,6 +217,7 @@ def article(request, identifier, source='local'):
                 "article": article, 
                 "random_articles": recommendations,
                 "popular_articles": popular_articles,
+                "related_articles": related_articles,
                 "rating_given": len(rating_items)>0,
                 "difficulty_given": len(difficulty_items)>0,
                 })

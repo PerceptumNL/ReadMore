@@ -36,6 +36,10 @@ class ArticleAdmin(PolymorphicParentModelAdmin):
     search_fields = ['title',]
     list_display = ('title', 'main_category', 'publication_date',)
     list_filter = ('categories',)
+    def df_counts(self, request, queryset):
+        for item in queryset:
+            item.df_update()
+    actions = [df_counts]
     def main_category(self, obj):
         return obj.categories.first()
     def publication_date(self, obj):
@@ -43,6 +47,7 @@ class ArticleAdmin(PolymorphicParentModelAdmin):
             return obj.publication_date
         else:
             return " "
+
     
     
     

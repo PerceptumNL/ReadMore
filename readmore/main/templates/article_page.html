@@ -43,6 +43,20 @@
 		<article id="article"></article>
 		<div id="imageHolder"></div>
 	</section>
+    {% if related_articles %}
+    <div id="recommendations">
+        <h4 style="text-align: center">Vergelijkbare artikelen</h4>
+
+        <div id="randomarticles">
+            {% for rel_article in related_articles %}{% if rel_article.image %}
+                <div class="articleTile" style="background-image: url('{{rel_article.image}}');">
+                    <a href="{% url 'article' rel_article.pk %}"></a>
+                    <div class="articleTitle"><p>{{ rel_article }}</p></div>
+                </div>
+            {% endif %}{% endfor %}
+        </div>
+    </div>
+    {% endif %}
     {% if popular_articles %}
     <div id="recommendations">
         <h4 style="text-align: center">Populaire artikelen</h4>
