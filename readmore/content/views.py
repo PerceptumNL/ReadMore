@@ -113,8 +113,11 @@ def category(request, identifier, source='local'):
         d = {'url': article.get_absolute_url(),
             'title': article.title,
             'category-color': category.color,
-            'publication_date': str(article.publication_date),
             'image': article.image if article.image else category.image}
+        if isinstance(article, RSSArticle):
+            d.update({
+                'publication_date': str(article.publication_date)
+            })
         articles.append(d)
     subcategories = [{'url': c.get_absolute_url(), 'title': c.title,
         'image': c.image} for c in category.get_subcategories()]
