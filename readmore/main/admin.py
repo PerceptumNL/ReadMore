@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from polymorphic.admin import PolymorphicParentModelAdmin, \
-        PolymorphicChildModelAdmin
+from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin, PolymorphicChildModelFilter
+
 from models import *
 
 class UserProfileInline(admin.StackedInline):
@@ -42,18 +42,21 @@ class ArticleHistoryItemAdmin(PolymorphicChildModelAdmin):
     list_display = ('user', 'article', 'date')
 
 
-class ArticleRatingItemAdmin(admin.ModelAdmin):
+class ArticleRatingItemAdmin(PolymorphicChildModelAdmin):
     base_model = ArticleRatingItem
     list_display = ('user', 'rating', 'article', 'date')
 
 
-class ArticleDifficultyItemAdmin(admin.ModelAdmin):
+class ArticleDifficultyItemAdmin(PolymorphicChildModelAdmin):
     base_model = ArticleDifficultyItem
     list_display = ('user', 'rating', 'article', 'date')
 
 
 class EventAdmin(PolymorphicParentModelAdmin):
     base_model = Event
+    list_display = ('user', 'get_type', 'get_article', 'get_value', 'date')
+    
+    list_filter = (PolymorphicChildModelFilter,)
     child_models = (
         (ArticleHistoryItem, ArticleHistoryItemAdmin),
         (WordHistoryItem, WordHistoryItemAdmin),
@@ -61,6 +64,32 @@ class EventAdmin(PolymorphicParentModelAdmin):
         (ArticleDifficultyItem, ArticleDifficultyItemAdmin)
     )
 
+    def get_type(self, obj):
+        crt_class = type(obj.get_real_instance()).__name__
+        if crt_class=='ArticleHistoryItem':
+            return "Read"
+        elif crt_class=='WordHistoryItem':
+            return "Clicked word"
+        elif crt_class=='ArticleRatingItem':
+            return "Rated Article"
+        elif crt_class=='ArticleDifficultyItem':
+            return "Rated Difficulty"
+        else:
+            return crt_class
+    def get_article(self, obj):
+        return str(obj.get_real_instance().article)
+    get_article.short_description = 'Article'
+    def get_value(self, obj):
+        crt_class = type(obj.get_real_instance()).__name__
+        if crt_class=='WordHistoryItem':
+            return obj.get_real_instance().word
+        elif crt_class=='ArticleRatingItem':
+            return obj.get_real_instance().rating
+        elif crt_class=='ArticleDifficultyItem':
+            return obj.get_real_instance().rating
+        else:
+            return ""
+    get_value.short_description = 'Value'
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
