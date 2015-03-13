@@ -113,6 +113,111 @@ class Category(PolymorphicModel):
         """
         return reverse('category', args=(self.pk,))
 
+        def get_unique_words(self):
+        """ Get the unique words in an article.
+
+        Returns:
+            word_list -- a list of unique words in this article
+        """
+        soup = BeautifulSoup(self.body)
+        keys = {}
+        for sentence in soup.get_text(separator=u' ').split("<br/>"):
+            #For each in a line, retrieve alphanumeric words
+            for word in "".join( (char if char.isalnum() else " ") for char in sentence).split():
+                keys[word.lower()] = 1
+        word_list = keys.keys()
+        return word_list
+
+    def get_term_count(self):
+        """ Get the counts per word in the article
+
+        Returns:
+            word_count -- dictionary of counts per word in the article
+        """
+        soup = BeautifulSoup(self.body)
+        word_count = {}
+        for sentence in soup.get_text(separator=u' ').split("<br/>"):
+            for word in "".join( (char if char.isalnum() else " ") for char in sentence).split():
+                try:
+                    word_count[word.lower()] += 1
+                except KeyError:
+                    word_count[word.lower()] = 1
+        return word_count
+
+    def df_update(self):
+        """ Updates the document frequency count of each term in the document.
+        Also checks if this document has been processed before (in which case, 
+            nothing happens). If not, it adds 1 to all terms in the document, and it
+            creates a "DocumentProcessed" item.
+        """
+        document_processed = DocumentProcessed.objects.filter(article_id=self.pk)
+        if document_processed.count() == 0:
+            print "updating.."
+           
+            word_list = self.get_unique_words()
+            for term in word_list:
+                word_statistic = WordStatistic.objects.filter(word=term)
+                if word_statistic.count() == 0:
+                    new_stat = WordStatistic(word=term, document_frequency=1)
+                    new_stat.save()
+                else:
+                    word_statistic[0].increment_df()
+            new_processed = DocumentProcessed(article_id=self.pk, processed=True)
+            new_processed.save()        
+        else:
+            print "This document has already been processed"
+
+    def tf_idf(self):
+        """ Gets the TF-IDF values for every term in the article
+
+        Returns: 
+            tf-idf -- dictionary of tf-idf values per term in the article
+        """
+        word_list = self.get_unique_words()
+        word_count = self.get_term_count()
+        number_documents = DocumentProcessed.objects.count()
+        tf_idf = {}
+        for term in word_list:
+            df = WordStatistic.objects.filter(word=term.lower())[0].get_df()
+            idf = number_documents /  float(1 + df)
+            tf_idf[term.lower()] = idf * word_count[term.lower()]
+        return tf_idf
+
+    def get_related_articles(self, tf_idf, top, number_articles):
+        """ Gets a list of articles related to the current article, based
+        on the most frequently returned articles for the most important words
+        in the article (based on tf-idf score)
+
+        Args:
+            tf_idf -- a dictionary of tf-idf values per term
+            top -- the number of words used to get new articles
+            number_articles -- the number of articles to be returned
+        """
+        sorted_tf_idf = sorted(tf_idf.items(), key=operator.itemgetter(1), reverse=True)
+        count = 0
+        article_list = []
+        for term, value in sorted_tf_idf:
+            count += 1
+            if count > top:
+                break
+            q = Article.objects.filter(Q(body__icontains=term))
+            article_list.append(q)
+        article_histogram = {}
+        for query_set in article_list:
+            for article in query_set:
+                try:
+                    article_histogram[article.pk] += 1
+                except KeyError:
+                    article_histogram[article.pk] = 1
+        sorted_histogram = sorted(article_histogram.items(), key=operator.itemgetter(1), reverse=True)
+        count = 0
+        return_list = [x[0] for x in sorted_histogram[:number_articles+1]]
+        return_articles = list(Article.objects.filter(pk__in=return_list))
+        for article in return_articles:
+            if article.pk == self.pk:
+                return_articles.remove(article)
+        return return_articles
+
 
 class RSSCategory(Category):
     """Model for RSS-based categories."""
