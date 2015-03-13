@@ -44,7 +44,6 @@ $.widget( "readmore.carddeck", {
 					}
 				});
 	},
-	},
 	decks: function(word){
 		decks = []
 		for(var i = 0; i < this.options.carddecks.length ; i++){
