@@ -113,7 +113,7 @@ class Category(PolymorphicModel):
         """
         return reverse('category', args=(self.pk,))
 
-        def get_unique_words(self):
+    def get_unique_words(self):
         """ Get the unique words in an article.
 
         Returns:
