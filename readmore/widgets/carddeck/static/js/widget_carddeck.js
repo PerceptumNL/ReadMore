@@ -39,7 +39,7 @@ $.widget( "readmore.carddeck", {
 		$(document).keyup(
 				function(e){
 					if(e.which == 27) {
-						window.history.back();
+						location.hash = "";
 						return false;
 					}
 				});
