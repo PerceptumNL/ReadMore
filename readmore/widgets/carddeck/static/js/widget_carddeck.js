@@ -35,6 +35,15 @@ $.widget( "readmore.carddeck", {
 					window.history.back();
 					return false;
 				});
+		//Close card window upon pressing escape
+		$(document).keyup(
+				function(e){
+					if(e.which == 27) {
+						location.hash="";
+						return false;
+					}
+				});
+	},
 	},
 	decks: function(word){
 		decks = []
