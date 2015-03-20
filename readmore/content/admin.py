@@ -38,13 +38,18 @@ class ArticleAdmin(PolymorphicParentModelAdmin):
     list_filter = ('categories',)
 
     def df_counts(self, request, queryset):
+        """
+        Count the occurences of words in the selected
+        article set
+        """
         count = 0
         for item in queryset:
             count += 1
             item.df_update()
             if count %10==0:
                 print "Processed", count, "articles"
-        actions = [df_counts]
+    actions = [df_counts]
+    df_counts.short_description = "Update DF counts"
     
     def main_category(self, obj):
         return obj.categories.first()
