@@ -1,10 +1,12 @@
 Django==1.6.5
 South==1.0
+argparse==1.2.1
 beautifulsoup4==4.3.2
 dj-database-url==0.3.0
 dj-static==0.0.6
 django-allauth==0.18.0
 django-database-files==0.1
+django-longerusernameandemail==0.5.6
 django-polymorphic==0.5.6
 django-summernote==0.5.14
 django-toolbelt==0.0.1
