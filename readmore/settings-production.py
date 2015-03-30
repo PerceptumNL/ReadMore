@@ -65,6 +65,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.windowslive',
     'allauth.socialaccount.providers.google',
     'south',
+    'longerusernameandemail',
 )
 
 MIDDLEWARE_CLASSES = (
