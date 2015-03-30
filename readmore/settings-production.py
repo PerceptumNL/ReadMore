@@ -119,6 +119,8 @@ SOCIALACCOUNT_PROVIDERS = \
         { 'SCOPE': ['profile', 'email'],
           'AUTH_PARAMS': { 'access_type': 'online' } }}
 
+REQUIRE_UNIQUE_EMAIL = False
+
 # Template Context
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
