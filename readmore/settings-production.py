@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'longerusernameandemail',
     'django_summernote',
     'readmore.main',
     'readmore.widgets',
@@ -65,7 +66,6 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.windowslive',
     'allauth.socialaccount.providers.google',
     'south',
-    'longerusernameandemail',
 )
 
 MIDDLEWARE_CLASSES = (
