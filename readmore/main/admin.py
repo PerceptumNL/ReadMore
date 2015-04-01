@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin, PolymorphicChildModelFilter
+from longerusernameandemail.forms import UserCreationForm, UserChangeForm
 
 from models import *
 
@@ -13,6 +14,14 @@ class CustomUserAdmin(UserAdmin):
     save_on_top = True
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'last_login')
     inlines = [UserProfileInline]
+    add_fieldsets = (
+        ( None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'password1', 'password2')}
+        ),
+    )
+    add_form = UserCreationForm
+    form = UserChangeForm
 
 
 class CounterBadgeInline(admin.StackedInline):
