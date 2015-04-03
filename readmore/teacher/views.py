@@ -15,7 +15,7 @@ def dashboard(request):
         user_list = User.objects.all()
     else:
         user_list = User.objects.filter(userprofile__groups__leader=request.user)
-    if user_list.count():
+    if len(Group.objects.filter(leader=request.user)):
         return render(request, 'teacher/dashboard.html', {
             'users': user_list,
         })

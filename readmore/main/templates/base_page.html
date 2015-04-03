@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load is_teacher %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -25,6 +26,11 @@
                     <div class="content">
                         <div id="buttons">
                             {% block menu %}{% endblock %}
+                            {% if request.user.is_authenticated %}
+                              {% if user|is_teacher %}
+                                <a href="/teacher/"><button type="submit">Leraar</button></a>
+                              {% endif %}
+                            {% endif %}
                         </div>
 						<a href="/">
 							<img src="{%static 'img/layout/logo_test.png'%}" >
