@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
-    url(r'^$', 'readmore.teacher.views.dashboard', name='dashboard'),
+    url(r'^$', 'readmore.teacher.views.overview', name='overview'),
+    url(r'^dashboard$', 'readmore.teacher.views.dashboard', name='dashboard'),
     url(r'^woordkaarten$', 'readmore.teacher.views.word_cards', name='word_cards'),
     url(r'^add_word$', 'readmore.teacher.views.add_word', name='add_word'),
     url(r'^remove_word$', 'readmore.teacher.views.remove_word', name='remove_word'),

@@ -10,6 +10,13 @@ import json
 
 # Create your views here.
 @login_required
+def overview(request):
+    if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
+        return render(request, 'teacher/overview.html',)
+    else:
+        return HttpResponseRedirect("/")
+
+@login_required
 def dashboard(request):
     if request.user.is_superuser:
         user_list = User.objects.all()

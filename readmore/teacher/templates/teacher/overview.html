@@ -4,7 +4,7 @@
 
 <head>
 
-  <title>Leraar Dashboard</title>
+  <title>Leraar Overzicht</title>
 
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
@@ -86,43 +86,34 @@
 
 <core-header-panel  mode="waterfall " flex>
 	<core-toolbar class="medium-tall azure-teal core-narrow">
-	    <paper-icon-button icon="arrow-back" onclick="location.href='/teacher';"></paper-icon-button>
-	    <div flex>Dashboard</div>
-
-		<paper-tabs class="bottom fit" selected="0">
-			<paper-tab>Overzicht</paper-tab>
-			<paper-tab>Leerlingen</paper-tab>
-			<paper-tab>Artikelen</paper-tab>
-			<paper-tab>Woorden</paper-tab>
-		</paper-tabs>
+	    <paper-icon-button icon="arrow-back" onclick="location.href='/';"></paper-icon-button>
+	    <div flex>Overzicht</div>
 	</core-toolbar>
     <div class="container" fullbleed> 
 		<core-pages id="first" selected="0" fullbleed vertical layout center>
-		    <div id="overzicht" class="page">
-		        <card-deck id="overview"></card-deck>
+		    <div id="overzicht" class="content">
+		        <paper-shadow>
+                  <a href="/teacher/dashboard" style="color: black">
+                    <paper-button role="button">
+                      Dashboard <paper-icon-button icon="arrow-forward" role="button" aria-label="arrow-forward"></paper-icon-button>
+                    </paper-button>
+                  </a>
+                </paper-shadow>
+                <paper-shadow>
+                  <a href="/teacher/woordkaarten" style="color: black">
+                    <paper-button role="button">
+                      Woordkaarten <paper-icon-button icon="arrow-forward" role="button" aria-label="arrow-forward"></paper-icon-button>
+                    </paper-button>
+                  </a>
+                </paper-shadow>
+                <paper-shadow>
+                  <a href="/teacher/manage_users" style="color: black">
+                    <paper-button role="button">
+                      Beheer groepen <paper-icon-button icon="arrow-forward" role="button" aria-label="arrow-forward"></paper-icon-button>
+                    </paper-button>
+                  </a>
+                </paper-shadow>
 		    </div>
-		    <div id="leerlingen" class="page">
-                {% verbatim %}
-		        <template is="auto-binding">
-                <paper-dropdown-menu label="Leerlingen">
-                    <paper-dropdown class="dropdown">
-                        <core-menu selected="0" selectedItem="{{selectedUser}}">
-                        <template repeat="{{user in users}}">
-                            <paper-item id={{user.id}}>{{user.label}}</paper-item>
-                        </template>
-                        </core-menu>
-                    </paper-dropdown>
-                </paper-dropdown-menu>
-	             <card-deck id="students" user="{{selectedUser.id}}" if="{{selectedUser.id}}"></card-deck>
-                </template>
-                {% endverbatim %}
-		    </div>
-		    <div id="artikelen" class="page">
-	             <card-deck id="articles"></card-deck>
-		    </div>
-		    <div id="woorden" class="page">
-	             <card-deck id="words"></card-deck>
-	        </div>
 		</core-pages>
 	</div>
 </core-header-panel>
@@ -143,44 +134,6 @@
             ga('send', 'pageview');
     </script>
     
-    <script>
-    $(function(){
-        var cards = [];
-        // Load current course
-        $( document ).ready( function() { 
-            $.getJSON( "/teacher/carddeck/overview/", function( data ) {
-                document.querySelector('#overview').cards = data;
-            });
-            $.getJSON( "/teacher/carddeck/user/", function( data ) {
-                document.querySelector('#students').cards = data;
-            });
-            $.getJSON( "/teacher/carddeck/article/", function( data ) {
-                document.querySelector('#articles').cards = data;
-            });
-            $.getJSON( "/teacher/carddeck/word/", function( data ) {
-                document.querySelector('#words').cards = data;
-            });
-        });
-
-        
-
-    });
-</script>
-<script>
-    var tabs = document.querySelector('paper-tabs');
-    var pages = document.querySelector('core-pages');
-    tabs.addEventListener('core-select', function() {
-        pages.selected = tabs.selected;        
-    });
-</script>
- <script>
-    $(function(){
-        scope = document.querySelector('template[is=auto-binding]');
-        $.getJSON( "/teacher/lists/userlist/", function( data ) {
-                scope.users = data ;
-            });
-    });
-  </script>
 </body>
 
 </html>
