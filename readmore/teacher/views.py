@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from readmore.main.models import Group
+from readmore.main.models import Group, UserProfile
 from readmore.widgets.customcard.models import CustomCard
 from django.utils.translation import ugettext as _
 import json
@@ -13,6 +13,45 @@ import json
 def overview(request):
     if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
         return render(request, 'teacher/overview.html',)
+    else:
+        return HttpResponseRedirect("/")
+
+@login_required
+def add_user(request):
+    group_list = Group.objects.filter(leader=request.user)
+    if request.user.is_superuser or len(group_list):
+        if(request.method=="POST"):
+            username = request.POST.get('username', None)
+            email = request.POST.get('email', None)
+            password1 = request.POST.get('password')
+            password2 = request.POST.get('password_confirmation')
+            group = request.POST.get('group')
+            if not password1==password2:
+                message = "Wachtwoorden komen niet overeen, gebruiker is niet aangemaakt."
+            else:
+                new_user = User.objects.create_user(username=username, email=email, password=password1)
+                new_user.save()
+                new_profile = UserProfile(user=new_user)
+                new_profile.save()
+                group_choice = Group.objects.get_or_create(title=group, leader=request.user)
+                group_choice[0].save()
+                new_profile.groups.add(group_choice[0].pk)
+                new_profile.save()
+                message = "Nieuwe gebruiker '" + str(username) + "' aangemaakt."
+        return render(request, 'teacher/manage_users.html', {
+            'message':message + str(group),
+            'groups':group_list,
+            })
+
+@login_required
+def manage_users(request):
+    group_list = Group.objects.filter(leader=request.user)
+    if request.user.is_superuser or len(group_list):
+
+        return render(request, 'teacher/manage_users.html',
+            {
+            'groups': group_list,
+            })
     else:
         return HttpResponseRedirect("/")
 
