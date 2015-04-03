@@ -37,7 +37,7 @@ class ArticleAdmin(PolymorphicParentModelAdmin):
     list_display = ('title', 'main_category', 'publication_date',)
     list_filter = ('categories',)
 
-    def df_counts(self, request, queryset):
+    def tf_idf_counts(self, request, queryset):
         """
         Count the occurences of words in the selected
         article set
@@ -45,11 +45,11 @@ class ArticleAdmin(PolymorphicParentModelAdmin):
         count = 0
         for item in queryset:
             count += 1
-            item.df_update()
+            item.tf_idf_update()
             if count %10==0:
                 print "Processed", count, "articles"
-    actions = [df_counts]
-    df_counts.short_description = "Update DF counts"
+    actions = [tf_idf_counts]
+    df_counts.short_description = "Update TF-IDF counts"
     
     def main_category(self, obj):
         return obj.categories.first()

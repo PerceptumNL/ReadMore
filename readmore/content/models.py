@@ -115,18 +115,32 @@ class Category(PolymorphicModel):
         """
         return reverse('category', args=(self.pk,))
 
+class DocumentCount(models.Model):
+    document_id = models.IntegerField()
+    count = models.IntegerField()
 
 class WordStatistic(models.Model):
     """ Model for word statistics, for now only DF
     """
     word = models.CharField(max_length=255)
     document_frequency = models.IntegerField()
+    document_count = models.ForeignKey('DocumentCount', blank=True, null=True)
+
     def increment_df(self):
         self.document_frequency += 1
         self.save()
 
     def get_df(self):
         return self.document_frequency
+
+    def add_document_count(self, document_count):
+        print self.document_count
+        self.document_count = document_count
+        self.save()
+
+    def get_document_count(self, document_id):
+        return self.document_count.filter(document_id=document_id)
+
 
 class DocumentProcessed(models.Model):
     """ Flag for processed documents wrt DF
@@ -483,24 +497,34 @@ class Article(PolymorphicModel):
                     word_count[word.lower()] = 1
         return word_count
 
-    def df_update(self):
+    def tf_idf_update(self):
         """ Updates the document frequency count of each term in the document.
         Also checks if this document has been processed before (in which case, 
             nothing happens). If not, it adds 1 to all terms in the document, and it
             creates a "DocumentProcessed" item.
         """
+        #Skip this document it has been processed to save time
         document_processed = DocumentProcessed.objects.filter(article_id=self.pk)
         if document_processed.count() == 0:
+
             print "updating.."
-           
             word_list = self.get_unique_words()
+            #Get term counts to store
+            word_count = self.get_term_count()
+            print "words:", word_count
+            #Go through dictionary of word counts (also unique words)
+            for word, count in word_count:
+                print word, count
             for term in word_list:
                 word_statistic = WordStatistic.objects.filter(word=term)
+                document_count = DocumentCount(document_id = self.pk, count = word_count[term])
                 if word_statistic.count() == 0:
-                    new_stat = WordStatistic(word=term, document_frequency=1)
+                    new_stat = WordStatistic(word=term, document_frequency=1, document_count=document_count)
                     new_stat.save()
                 else:
                     word_statistic[0].increment_df()
+                    word_statistic[0].add_document_count(document_count)
+                    word_statistic[0].save()
             new_processed = DocumentProcessed(article_id=self.pk, processed=True)
             new_processed.save()        
         else:
@@ -518,11 +542,15 @@ class Article(PolymorphicModel):
         tf_idf = {}
         for term in word_list:
             try:
-                df = WordStatistic.objects.filter(word=term.lower())[0].get_df()
+                word_stat = WordStatistic.objects.filter(word=term.lower())
+                df = word_stat[0].get_df()
+                count = word_count[term]
+                word_count_obj = DocumentCount(document_id=self.pk, count=count)
+                word_stat[0].add_document_count(word_count_obj)
             except IndexError:
                 df = 1
             idf = number_documents /  float(1 + df)
-            tf_idf[term.lower()] = idf * word_count[term.lower()]
+            tf_idf[term.lower()] = idf * count
         return tf_idf
 
     def get_related_articles(self, tf_idf, top, number_articles):
@@ -538,7 +566,6 @@ class Article(PolymorphicModel):
         sorted_tf_idf = sorted(tf_idf.items(), key=operator.itemgetter(1), reverse=True)
         count = 0
         article_list = []
-        print sorted_tf_idf
         for term, value in sorted_tf_idf:
             count += 1
             if count > top:
