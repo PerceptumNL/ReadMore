@@ -93,7 +93,16 @@
     <div class="container" fullbleed> 
 		<core-pages id="first" selected="0" fullbleed vertical layout center>
 		    <div id="overzicht" class="content">
-                <form id="newWord" method="POST" action="/teacher/add_user">
+            {% for group in groups %}
+                <h2>{{group.title}}</h2>
+                <paper-shadow><paper-button class="colored student-show" id="{{group.pk}}-button"><core-icon icon="expand-more"></core-icon>Toon studenten</paper-button></paper-shadow>
+                <div id="{{group.pk}}-students"}} style="display:none">
+                {% for user in group.users.all %}
+                    <a href=""><paper-item>{{ user }}</paper-item></a>
+                {% endfor %}
+                </div>
+                <paper-shadow><paper-button class="colored form-show" id="{{group.pk}}-button"><core-icon icon="add"></core-icon>Voeg student toe</paper-button></paper-shadow>
+                <form id="{{group.pk}}-form" method="POST" action="/teacher/add_user" style="display:none">
                     {% csrf_token %}
                     <input type="hidden" name="redirect" value="/teacher/manage_users" />
                     <paper-input-decorator  label="gebruikersnaam" floatingLabel>
@@ -115,13 +124,18 @@
                         </paper-autogrow-textarea>
                     </paper-input-decorator>
                     <paper-input-decorator>
-                        <textarea name="group"></textarea>
+                        <select id="groupName" name="group">
+                            {% for group in groups %}
+                                <option value="{{group.pk}}">{{group.title}}</option>
+                            {% endfor %}
+                        </select>
                     </paper-input-decorator>
                     <button class="primaryAction" type="submit" is="paper-button">
                         <core-icon icon="add"></core-icon>
                         Voeg gebruiker toe
                     </button>
                 </form>
+                {% endfor %}
                 <paper-item>
                     {{ message }}
                 </paper-item>                
@@ -136,6 +150,7 @@
 	<script src="{% static 'js/widget_dashboard.js' %}"></script>
 	<script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
     <script src="{% static 'js/filteringIsotope.js' %}"></script>
+    <script src="{% static 'js/teacher_functions.js' %}"></script>
     
     <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
