@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from readmore.main.models import Group, UserProfile
 from readmore.widgets.customcard.models import CustomCard
 from django.utils.translation import ugettext as _
+import helpers
 import json
 
 # Create your views here.
@@ -19,24 +20,24 @@ def overview(request):
 @login_required
 def add_user(request):
     group_list = Group.objects.filter(leader=request.user)
+    message = ""
     if request.user.is_superuser or len(group_list):
         if(request.method=="POST"):
             username = request.POST.get('username', None)
             email = request.POST.get('email', None)
-            password1 = request.POST.get('password', None)
-            password2 = request.POST.get('password_confirmation', None)
             group = request.POST.get('group', None)
-            if not password1==password2:
-                message = "Wachtwoorden komen niet overeen, gebruiker is niet aangemaakt."
-            else:
-                new_user = User.objects.create_user(username=username, email=email, password=password1)
+            if len(User.objects.filter(username=username)) == 0:
+                password = helpers.generate_password()
+                new_user = User.objects.create_user(username=username, email=email, password=password)
                 new_user.save()
                 new_profile = UserProfile(user=new_user)
                 new_profile.save()
                 group_choice = Group.objects.get(pk=group)
                 new_profile.groups.add(group)
                 new_profile.save()
-                message = "Nieuwe gebruiker '" + str(username) + "' aangemaakt, in groep " + str(group_choice.title) + " van instituut " + str(group_choice.institute)
+                message = "Nieuwe gebruiker '" + str(username) + "' aangemaakt met wachtwoord " + str(password) + ", in groep " + str(group_choice.title) + " van instituut " + str(group_choice.institute)
+            else:
+                message = "Gebruiker '" + str(username) + "' bestaat al, gebruik alstublieft een andere naam."
         return render(request, 'teacher/manage_users.html', {
             'message':message,
             'groups':group_list,

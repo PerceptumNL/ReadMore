@@ -98,14 +98,14 @@
                 <paper-shadow><paper-button class="colored student-show" id="{{group.pk}}-button"><core-icon icon="expand-more"></core-icon>Toon studenten</paper-button></paper-shadow>
                 <div id="{{group.pk}}-students"}} style="display:none">
                 {% for user in group.users.all %}
-                    <a href=""><paper-item>{{ user }}</paper-item></a>
+                    <paper-item>{{ user }}</paper-item>
                 {% endfor %}
                 </div>
                 <paper-shadow><paper-button class="colored form-show" id="{{group.pk}}-button"><core-icon icon="add"></core-icon>Voeg student toe</paper-button></paper-shadow>
                 <form id="{{group.pk}}-form" method="POST" action="/teacher/add_user" style="display:none">
                     {% csrf_token %}
                     <input type="hidden" name="redirect" value="/teacher/manage_users" />
-                    <paper-input-decorator  label="gebruikersnaam" floatingLabel>
+                    <paper-input-decorator label="gebruikersnaam" floatingLabel>
                         <textarea name="username"></textarea>
                     </paper-input-decorator><br>
                     <paper-input-decorator label="e-mail" floatingLabel>
@@ -113,23 +113,7 @@
                             <textarea name="email"></textarea>
                         </paper-autogrow-textarea>
                     </paper-input-decorator>
-                    <paper-input-decorator label="wachtwoord" floatingLabel>
-                        <paper-autogrow-textarea>
-                            <textarea name="password"></textarea>
-                        </paper-autogrow-textarea>
-                    </paper-input-decorator>
-                    <paper-input-decorator label="bevestig wachtwoord" floatingLabel>
-                        <paper-autogrow-textarea>
-                            <textarea name="password_confirmation"></textarea>
-                        </paper-autogrow-textarea>
-                    </paper-input-decorator>
-                    <paper-input-decorator>
-                        <select id="groupName" name="group">
-                            {% for group in groups %}
-                                <option value="{{group.pk}}">{{group.title}}</option>
-                            {% endfor %}
-                        </select>
-                    </paper-input-decorator>
+                    <input type="hidden" name="group" value="{{group.pk}}"/>
                     <button class="primaryAction" type="submit" is="paper-button">
                         <core-icon icon="add"></core-icon>
                         Voeg gebruiker toe
