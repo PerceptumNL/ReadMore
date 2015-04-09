@@ -15,6 +15,15 @@ def generate_password():
 	"zachte",
 	"snelle",
 	"brave",
+	"stoere",
+	"moderne",
+	"maffe",
+	"norse",
+	"luie",
+	"heuse",
+	"dikke",
+	"dunne",
+	"keurige"
 	]
 	noun_list = [
 	"draak",
@@ -31,8 +40,21 @@ def generate_password():
 	"tijger",
 	"mier",
 	"zebra",
-	"beer"
+	"beer",
+	"koala",
+	"pad",
+	"leeuw",
+	"wolf",
+	"vosjes"
 	]
 	adjective = random.choice(adjective_list)
+	adjective2 = random.choice(adjective_list)
 	noun = random.choice(noun_list)
-	return adjective+noun
+	noun2 = random.choice(noun_list)
+	passwords = [
+	    noun+noun2, 
+	    adjective+noun, 
+	    adjective+noun+noun2, 
+	    adjective+noun+adjective2+noun2
+	    ]
+	return random.choice(passwords)

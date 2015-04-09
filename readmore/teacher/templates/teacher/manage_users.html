@@ -86,7 +86,7 @@
 <body fullbleed vertical layout unresolved>
 
 <core-header-panel  mode="waterfall " flex>
-	<core-toolbar class="medium-tall azure-teal core-narrow">
+	<core-toolbar class="azure-teal core-narrow">
 	    <paper-icon-button icon="arrow-back" onclick="location.href='/teacher';"></paper-icon-button>
 	    <div flex>Overzicht</div>
 	</core-toolbar>
@@ -109,9 +109,7 @@
                         <textarea name="username"></textarea>
                     </paper-input-decorator><br>
                     <paper-input-decorator label="e-mail" floatingLabel>
-                        <paper-autogrow-textarea>
                             <textarea name="email"></textarea>
-                        </paper-autogrow-textarea>
                     </paper-input-decorator>
                     <input type="hidden" name="group" value="{{group.pk}}"/>
                     <button class="primaryAction" type="submit" is="paper-button">
