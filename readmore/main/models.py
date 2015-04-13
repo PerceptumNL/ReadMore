@@ -28,7 +28,6 @@ class UserProfile(models.Model):
     def __str__(self):
         return unicode(self).encode('utf-8')
 
-
 class Institute(models.Model):
     title = models.CharField(max_length=255)
     site_id = models.ForeignKey(Site)
