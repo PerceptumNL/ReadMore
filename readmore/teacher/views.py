@@ -3,19 +3,65 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from readmore.main.models import Group
+from readmore.main.models import Group, UserProfile
 from readmore.widgets.customcard.models import CustomCard
 from django.utils.translation import ugettext as _
+import helpers
 import json
 
 # Create your views here.
+@login_required
+def overview(request):
+    if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
+        return render(request, 'teacher/overview.html',)
+    else:
+        return HttpResponseRedirect("/")
+
+@login_required
+def add_user(request):
+    group_list = Group.objects.filter(leader=request.user)
+    message = ""
+    if request.user.is_superuser or len(group_list):
+        if(request.method=="POST"):
+            username = request.POST.get('username', None)
+            email = request.POST.get('email', None)
+            group = request.POST.get('group', None)
+            if len(User.objects.filter(username=username)) == 0:
+                password = helpers.generate_password()
+                new_user = User.objects.create_user(username=username, email=email, password=password)
+                new_user.save()
+                new_profile = UserProfile(user=new_user)
+                new_profile.save()
+                group_choice = Group.objects.get(pk=group)
+                new_profile.groups.add(group)
+                new_profile.save()
+                message = "Nieuwe gebruiker '" + str(username) + "' aangemaakt met wachtwoord " + str(password) + ", in groep " + str(group_choice.title) + " van instituut " + str(group_choice.institute)
+            else:
+                message = "Gebruiker '" + str(username) + "' bestaat al, gebruik alstublieft een andere naam."
+        return render(request, 'teacher/manage_users.html', {
+            'message':message,
+            'groups':group_list,
+            })
+
+@login_required
+def manage_users(request):
+    group_list = Group.objects.filter(leader=request.user)
+    if request.user.is_superuser or len(group_list):
+
+        return render(request, 'teacher/manage_users.html',
+            {
+            'groups': group_list,
+            })
+    else:
+        return HttpResponseRedirect("/")
+
 @login_required
 def dashboard(request):
     if request.user.is_superuser:
         user_list = User.objects.all()
     else:
         user_list = User.objects.filter(userprofile__groups__leader=request.user)
-    if user_list.count():
+    if len(Group.objects.filter(leader=request.user)):
         return render(request, 'teacher/dashboard.html', {
             'users': user_list,
         })
