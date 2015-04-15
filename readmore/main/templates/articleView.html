@@ -46,6 +46,14 @@
             </div>
         </div>
         <div id="recommendations" style="border-bottom:1px solid #666; padding: 0 0 12px;">
+        <h4 style="color:white; text-align:center">Populair bij je vrienden</h4>
+            <ul>
+                {% for randomarticle in popular_articles %}
+                    <li> <a href="{% url 'article' randomarticle.pk %}"><p style="color:#22ADC2;">{{ randomarticle }}</p></a>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id="recommendations" style="border-bottom:1px solid #666; padding: 0 0 12px;">
         <h4 style="color:white; text-align:center">Vergelijkbare artikelen</h4>
             <ul>
                 {% for randomarticle in random_articles %}

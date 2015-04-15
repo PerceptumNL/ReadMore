@@ -15,10 +15,14 @@ from polymorphic import PolymorphicModel
 import allauth.app_settings
 from allauth.socialaccount import providers
 
+from collections import Counter
+import operator
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True)
     badges = models.ManyToManyField('Badge', blank=True, related_name='users')
     groups = models.ManyToManyField('Group', blank=True, related_name='users')
+    #study_groups = models.ManyToManyField('Group', blank=True, related_name='users')
     institute = models.ForeignKey('Institute', blank=True, null=True,
             related_name='users')
 
@@ -65,6 +69,48 @@ class Group(models.Model):
 
     def __str__(self):
         return unicode(self).encode('utf-8')
+
+    def get_popular_articles(self, number, user_profile, read_articles):
+        """Return a number of popular articles in this group.
+
+        Keyword Arguments:
+            number -- the number of articles to be returned
+            user_profile -- the user to be excluded from 
+            the user set
+
+        Returns:
+            popular_articles -- a list of length number 
+            containing the most popular articles in 
+            this group
+        """
+        # Get all other users in this group
+        users = list(self.users.all())
+        # Remove current user from list
+        users.remove(user_profile[0])
+        #Get article events belonging to these users, sorted by most recent
+        article_histories = ArticleHistoryItem.objects.filter(user__in=users).order_by('-id')[:100]
+
+        #Get list of article objects
+        article_list = [a_h.article for a_h in article_histories]
+        
+        for article in article_list:
+            if article.pk in read_articles:
+                article_list.remove(article)
+
+        #Count article appearances for later sorting
+        article_counts = dict(Counter(article_list))
+
+        count = 0
+        popular_articles = []
+        #Get most read articles
+        for art in sorted(article_counts.items(), key=operator.itemgetter(1), reverse=True):
+            #If this article has an image, save it
+            if art[0].image:
+                popular_articles.append(art[0])
+                count += 1
+            if count == number:
+                break
+        return popular_articles
 
 
 class Event(PolymorphicModel):
