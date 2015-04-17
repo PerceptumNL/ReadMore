@@ -74,6 +74,13 @@ def reset_password(request, user_pk):
             })
 
 @login_required
+def add_group(request):
+    group_list = Group.objects.filter(leader=request.user)
+    if request.user.is_superuser or len(group_list):
+        if(request.method=="POST"):
+            print "hoi"
+
+@login_required
 def manage_users(request):
     group_list = Group.objects.filter(leader=request.user)
     if request.user.is_superuser or len(group_list):

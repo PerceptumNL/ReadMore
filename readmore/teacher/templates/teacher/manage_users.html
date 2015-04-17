@@ -92,7 +92,8 @@
 	</core-toolbar>
     <div class="container" fullbleed> 
 		<core-pages id="first" selected="0" fullbleed vertical layout center>
-		    <div id="overzicht" class="content">
+		    <div horizontal layout id="overzicht" class="content">
+            <div flex>
             {% for group in groups %}
                 <h2>{{group.title}}</h2>
                 <paper-shadow><paper-button class="colored student-show" id="{{group.pk}}-button"><core-icon icon="expand-more"></core-icon>Toon studenten</paper-button></paper-shadow>
@@ -120,7 +121,27 @@
                 {% endfor %}
                 <paper-item>
                     {{ message }}
-                </paper-item>                
+                </paper-item>
+            </div>
+            <div> 
+                <paper-button class="group-form-show"><paper-icon-button icon="add"></paper-icon-button>Nieuwe groep</paper-button>
+
+                <form id="group-form" method="POST" action="/teacher/add_group" style="display:none">
+                    {% csrf_token %}
+                    <input type="hidden" name="redirect" value="/teacher/manage_users" />
+                    <paper-input-decorator label="gebruikersnaam" floatingLabel>
+                        <textarea name="username"></textarea>
+                    </paper-input-decorator><br>
+                    <paper-input-decorator label="e-mail" floatingLabel>
+                            <textarea name="email"></textarea>
+                    </paper-input-decorator>
+                    <input type="hidden" name="group" value="{{group.pk}}"/>
+                    <button class="primaryAction" type="submit" is="paper-button">
+                        <core-icon icon="add"></core-icon>
+                        Voeg gebruiker toe
+                    </button>
+                </form>
+            </div>
 		    </div>
 
 		</core-pages>
