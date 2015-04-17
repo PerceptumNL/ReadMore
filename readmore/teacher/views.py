@@ -8,8 +8,15 @@ from readmore.widgets.customcard.models import CustomCard
 from django.utils.translation import ugettext as _
 import helpers
 import json
-
+from django.core.mail import send_mail
 # Create your views here.
+
+
+def mailtest(request, subject, body, recipient):
+   print "EMAIL SENT"
+   return HttpResponse(
+        send_mail(subject, body, "info@leestmeer.nl",
+                   recipient))
 @login_required
 def overview(request):
     if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
@@ -40,6 +47,23 @@ def add_user(request):
                 message = "Gebruiker '" + str(username) + "' bestaat al, gebruik alstublieft een andere naam."
         return render(request, 'teacher/manage_users.html', {
             'message':message,
+            'groups':group_list,
+            })
+
+@login_required
+def reset_password(request, user_pk):
+    group_list = Group.objects.filter(leader=request.user)
+    if request.user.is_superuser or len(group_list):
+        user_object = UserProfile.objects.get(pk=user_pk).user
+        new_pw = helpers.generate_password()
+        user_object.set_password(new_pw)
+        user_object.save()
+        subject = "Nieuw wachtwoord voor LeesMeer"
+        body = "<div>Beste " + str(user_object.username) + ",</div> <div>Je wachtwoord is veranderd naar '" + str(new_pw) + "'.</div> <div>Veel leesplezier!</div> <div>Het LeesMeer team.</div>"
+        recipient = ["koster.elise@gmail.com"]
+        mailtest(request, subject, body, recipient)
+        return render(request, 'teacher/manage_users.html', {
+            'message':"",
             'groups':group_list,
             })
 

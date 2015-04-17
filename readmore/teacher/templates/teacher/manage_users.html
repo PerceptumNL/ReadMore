@@ -98,7 +98,7 @@
                 <paper-shadow><paper-button class="colored student-show" id="{{group.pk}}-button"><core-icon icon="expand-more"></core-icon>Toon studenten</paper-button></paper-shadow>
                 <div id="{{group.pk}}-students"}} style="display:none">
                 {% for user in group.users.all %}
-                    <paper-item>{{ user }}</paper-item>
+                    <div horizontal layout center><div flex>{{ user }}</div><a href="{% url 'reset_password' user.pk %}"><div><paper-button><paper-icon-button icon="lock-open"></paper-icon-button>Nieuw Wachtwoord</paper-button></div></a></div>
                 {% endfor %}
                 </div>
                 <paper-shadow><paper-button class="colored form-show" id="{{group.pk}}-button"><core-icon icon="add"></core-icon>Voeg student toe</paper-button></paper-shadow>
