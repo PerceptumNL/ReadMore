@@ -58,12 +58,18 @@ def reset_password(request, user_pk):
         new_pw = helpers.generate_password()
         user_object.set_password(new_pw)
         user_object.save()
-        subject = "Nieuw wachtwoord voor LeesMeer"
-        body = "<div>Beste " + str(user_object.username) + ",</div> <div>Je wachtwoord is veranderd naar '" + str(new_pw) + "'.</div> <div>Veel leesplezier!</div> <div>Het LeesMeer team.</div>"
-        recipient = ["koster.elise@gmail.com"]
-        mailtest(request, subject, body, recipient)
+        if user_object.email:
+            recipient = user_object.email
+            subject = "Nieuw wachtwoord voor LeesMeer"
+            body = "Beste " + str(user_object.username) + ",\nJe wachtwoord is veranderd naar '" + str(new_pw) + "'.\nVeel leesplezier!\nHet LeestMeer team."
+        else:
+            subject = "Nieuw wachtwoord voor LeesMeer-leerling"
+            body = "Beste " + str(request.user.username) + ",\nHet wachtwoord van leerling " + str(user_object.username) +  " is veranderd naar '" + str(new_pw) + "'.\nVeel leesplezier!\nHet LeestMeer team."
+            recipient = request.user.email
+        message = "Wachtwoord voor " + str(user_object.username) + " is veranderd en naar " + str(recipient) + " gestuurd."
+        mailtest(request, subject, body, [recipient])
         return render(request, 'teacher/manage_users.html', {
-            'message':"",
+            'message':message,
             'groups':group_list,
             })
 
