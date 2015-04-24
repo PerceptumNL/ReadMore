@@ -124,10 +124,18 @@ def generate_password():
 	adjective2 = random.choice(adjective_list)
 	noun = random.choice(noun_list)
 	noun2 = random.choice(noun_list)
-	passwords = [
-	    noun+noun2, 
-	    adjective+noun, 
-	    adjective+noun+noun2, 
-	    adjective+noun+adjective2+noun2
+	concat_all = adjective+noun+adjective2+noun2
+	if len(concat_all) > 18:
+		passwords = [
+	    	noun+noun2, 
+	    	adjective+noun, 
+	    	adjective+noun+noun2, 
+	    ]
+	else:
+		passwords = [
+	    	noun+noun2, 
+	    	adjective+noun, 
+	    	adjective+noun+noun2, 
+	    	concat_all
 	    ]
 	return random.choice(passwords)
