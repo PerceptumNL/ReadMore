@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from readmore.main.models import Group, UserProfile
+from readmore.main.models import Group, UserProfile, Institute
 from readmore.widgets.customcard.models import CustomCard
 from django.utils.translation import ugettext as _
 import helpers
@@ -45,9 +45,14 @@ def add_user(request):
                 message = "Nieuwe gebruiker '" + str(username) + "' aangemaakt met wachtwoord " + str(password) + ", in groep " + str(group_choice.title) + " van instituut " + str(group_choice.institute)
             else:
                 message = "Gebruiker '" + str(username) + "' bestaat al, gebruik alstublieft een andere naam."
+            group_pks = []
+            for group in group_list:
+                group_pks.append(group.pk)
+            institute_list = Institute.objects.filter(groups__in=group_pks)
         return render(request, 'teacher/manage_users.html', {
             'message':message,
             'groups':group_list,
+            'institutes':institute_list,
             })
 
 @login_required
@@ -68,9 +73,14 @@ def reset_password(request, user_pk):
             recipient = request.user.email
         message = "Wachtwoord voor " + str(user_object.username) + " is veranderd en naar " + str(recipient) + " gestuurd."
         mailtest(request, subject, body, [recipient])
+        group_pks = []
+        for group in group_list:
+            group_pks.append(group.pk)
+        institute_list = Institute.objects.filter(groups__in=group_list)
         return render(request, 'teacher/manage_users.html', {
             'message':message,
             'groups':group_list,
+            'institutes':institute_list,
             })
 
 @login_required
@@ -78,16 +88,29 @@ def add_group(request):
     group_list = Group.objects.filter(leader=request.user)
     if request.user.is_superuser or len(group_list):
         if(request.method=="POST"):
-            print "hoi"
+            group_pks = []
+            for group in group_list:
+                group_pks.append(group.pk)
+            institute_list = Institute.objects.filter(groups__in=group_list)
+            return render(request, 'teacher/manage_users.html', {
+                'groups': group_list,
+                'institutes':institute_list,
+                })
+    else:
+        return HttpResponseRedirect("/")
 
 @login_required
 def manage_users(request):
     group_list = Group.objects.filter(leader=request.user)
     if request.user.is_superuser or len(group_list):
-
+        group_pks = []
+        for group in group_list:
+            group_pks.append(group.pk)
+        institute_list = Institute.objects.filter(groups__in=group_list)
         return render(request, 'teacher/manage_users.html',
             {
             'groups': group_list,
+            'institutes':institute_list,
             })
     else:
         return HttpResponseRedirect("/")

@@ -58,7 +58,7 @@ class Institute(models.Model):
 class Group(models.Model):
     title = models.CharField(max_length=255)
     leader = models.ForeignKey(User, null=True, blank=True)
-    institute = models.ForeignKey('Institute', null=True, blank=True)
+    institute = models.ForeignKey('Institute', null=True, blank=True, related_name='groups')
 
     def __unicode__(self):
         return u'Group of %s' % (self.leader,)

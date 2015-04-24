@@ -10,4 +10,8 @@ $(document).ready(function(){
 	$(".group-form-show").click(function(){
 		$("#group-form").slideToggle();
 	});
+	$(".group-tab").click(function(){
+		current_id = $(this).attr('id').split("-")[0];
+		$("#"+current_id+"-content").slideToggle();
+	})
 });

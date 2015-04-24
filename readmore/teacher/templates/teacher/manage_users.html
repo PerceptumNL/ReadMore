@@ -90,60 +90,79 @@
 	    <paper-icon-button icon="arrow-back" onclick="location.href='/teacher';"></paper-icon-button>
 	    <div flex>Overzicht</div>
 	</core-toolbar>
-    <div class="container" fullbleed> 
-		<core-pages id="first" selected="0" fullbleed vertical layout center>
-		    <div horizontal layout id="overzicht" class="content">
-            <div flex>
-            {% for group in groups %}
-                <h2>{{group.title}}</h2>
-                <paper-shadow><paper-button class="colored student-show" id="{{group.pk}}-button"><core-icon icon="expand-more"></core-icon>Toon studenten</paper-button></paper-shadow>
-                <div id="{{group.pk}}-students"}} style="display:none">
-                {% for user in group.users.all %}
-                    <div horizontal layout center><div flex>{{ user }}</div><a href="{% url 'reset_password' user.pk %}"><div><paper-button><paper-icon-button icon="lock-open"></paper-icon-button>Nieuw Wachtwoord</paper-button></div></a></div>
+        <div class="container" fullbleed> 
+            <core-pages id="first" selected="0" fullbleed vertical layout center>
+            <paper-tabs selected="0" class="transparent-teal" role="tablist" horizontal="" center="" layout="">
+                {% for institute in institutes %}
+                    {% for group in groups %}
+                        {% if group in institute.groups.all %}
+                            <paper-tab role="tab" inline="" flex="" center-center="" horizontal="" layout="" class="group-tab" id="{{group.pk}}-tab">{{group.title}}</paper-tab>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
-                </div>
-                <paper-shadow><paper-button class="colored form-show" id="{{group.pk}}-button"><core-icon icon="add"></core-icon>Voeg student toe</paper-button></paper-shadow>
-                <form id="{{group.pk}}-form" method="POST" action="/teacher/add_user" style="display:none">
-                    {% csrf_token %}
-                    <input type="hidden" name="redirect" value="/teacher/manage_users" />
-                    <paper-input-decorator label="gebruikersnaam" floatingLabel>
-                        <textarea name="username"></textarea>
-                    </paper-input-decorator><br>
-                    <paper-input-decorator label="e-mail" floatingLabel>
-                            <textarea name="email"></textarea>
-                    </paper-input-decorator>
-                    <input type="hidden" name="group" value="{{group.pk}}"/>
-                    <button class="primaryAction" type="submit" is="paper-button">
-                        <core-icon icon="add"></core-icon>
-                        Voeg gebruiker toe
-                    </button>
-                </form>
+            </paper-tabs>
+            <div>hoi!</div>
+        </div>
+        <div class="container" fullbleed>
+            <div vertical layout>
+                {% for institute in institutes %}
+                    {% for group in groups %}
+                        {% if group in institute.groups.all %}
+                            <div style="display:none" id="{{group.pk}}-content">
+                                <paper-shadow><paper-item><h2></h2></paper-shadow>
+                                <paper-button class="colored student-show" id="{{group.pk}}-button"><core-icon icon="expand-more"></core-icon>Toon studenten</paper-button>
+                                <div id="{{group.pk}}-students"}} style="display:none">
+                                {% for user in group.users.all %}
+                                    <div horizontal layout center><div flex>{{ user }}</div><a href="{% url 'reset_password' user.pk %}"><div><paper-button><paper-icon-button icon="lock-open"></paper-icon-button>Nieuw Wachtwoord</paper-button></div></a></div>
+                                {% endfor %}
+                                </div>
+                                <paper-shadow><paper-button class="colored form-show" id="{{group.pk}}-button"><core-icon icon="expand-more"></core-icon>Voeg student toe</paper-button></paper-shadow>
+                                <form id="{{group.pk}}-form" method="POST" action="/teacher/add_user" style="display:none">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="redirect" value="/teacher/manage_users" />
+                                    <paper-input-decorator label="gebruikersnaam" floatingLabel>
+                                        <textarea name="username"></textarea>
+                                    </paper-input-decorator><br>
+                                    <paper-input-decorator label="e-mail" floatingLabel>
+                                            <textarea name="email"></textarea>
+                                    </paper-input-decorator>
+                                    <input type="hidden" name="group" value="{{group.pk}}"/>
+                                    <button class="primaryAction" type="submit" is="paper-button">
+                                        <core-icon icon="add"></core-icon>
+                                        Voeg gebruiker toe
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
-                <paper-item>
+            </div>
+        </div>
+ 
+
+                    
+                <!--<paper-item>
                     {{ message }}
                 </paper-item>
-            </div>
-            <div> 
-                <paper-button class="group-form-show"><paper-icon-button icon="add"></paper-icon-button>Nieuwe groep</paper-button>
 
+                <paper-shadow><paper-button class="group-form-show"><paper-icon-button icon="expand-more"></paper-icon-button>Nieuwe groep</paper-button></paper-shadow>
+                
                 <form id="group-form" method="POST" action="/teacher/add_group" style="display:none">
                     {% csrf_token %}
                     <input type="hidden" name="redirect" value="/teacher/manage_users" />
-                    <paper-input-decorator label="gebruikersnaam" floatingLabel>
-                        <textarea name="username"></textarea>
+                    <paper-input-decorator label="groepnaam" floatingLabel>
+                        <textarea name="Naam groep"></textarea>
                     </paper-input-decorator><br>
-                    <paper-input-decorator label="e-mail" floatingLabel>
-                            <textarea name="email"></textarea>
+                    <paper-input-decorator label="instituut" floatingLabel>
+                            <textarea name="Naam instituut"></textarea>
                     </paper-input-decorator>
-                    <input type="hidden" name="group" value="{{group.pk}}"/>
+
                     <button class="primaryAction" type="submit" is="paper-button">
                         <core-icon icon="add"></core-icon>
-                        Voeg gebruiker toe
+                        Voeg groep toe
                     </button>
                 </form>
-            </div>
-		    </div>
-
+            </div>-->
 		</core-pages>
 	</div>
 </core-header-panel>
