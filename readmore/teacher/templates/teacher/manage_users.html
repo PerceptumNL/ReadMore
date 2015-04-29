@@ -113,7 +113,7 @@
                                 <paper-button class="colored student-show" id="{{group.pk}}-button"><core-icon icon="expand-more"></core-icon>Toon studenten</paper-button>
                                 <div id="{{group.pk}}-students"}} style="display:none">
                                 {% for user in group.users.all %}
-                                    <div horizontal layout center><div flex>{{ user }}</div><a href="{% url 'reset_password' user.pk %}"><div><paper-button><paper-icon-button icon="lock-open"></paper-icon-button>Nieuw Wachtwoord</paper-button></div></a></div>
+                                    <div style="margin:10px" horizontal layout center><div flex>{{ user }}</div><a href="{% url 'reset_password' user.pk %}"><div><paper-button><paper-icon-button icon="lock-open"></paper-icon-button>Nieuw Wachtwoord</paper-button></div></a></div>
                                 {% endfor %}
                                 </div>
                                 <paper-shadow><paper-button class="colored form-show" id="{{group.pk}}-button"><core-icon icon="expand-more"></core-icon>Voeg student toe</paper-button></paper-shadow>
@@ -121,10 +121,10 @@
                                     {% csrf_token %}
                                     <input type="hidden" name="redirect" value="/teacher/manage_users" />
                                     <paper-input-decorator label="gebruikersnaam" floatingLabel>
-                                        <textarea name="username"></textarea>
+                                        <textarea style="margin:10px" name="username"></textarea>
                                     </paper-input-decorator><br>
                                     <paper-input-decorator label="e-mail" floatingLabel>
-                                            <textarea name="email"></textarea>
+                                            <textarea style="margin:10px" name="email"></textarea>
                                     </paper-input-decorator>
                                     <input type="hidden" name="group" value="{{group.pk}}"/>
                                     <button class="primaryAction" type="submit" is="paper-button">
