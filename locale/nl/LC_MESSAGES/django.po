@@ -195,7 +195,7 @@ msgstr "Log In"
 #: readmore/main/templates/account/login.html:20
 #: readmore/main/templates/account/login.html:32
 msgid "Sign In"
-msgstr "Schrijf je in"
+msgstr "Log In"
 
 #: readmore/main/templates/account/login.html:31
 msgid "Forgot Password?"
