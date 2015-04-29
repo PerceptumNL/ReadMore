@@ -102,8 +102,10 @@
         <div class="container" fullbleed>
             <div vertical layout>
                 <paper-shadow>
+                    {% if groups|length == 0 %}
+                        <paper-item>Er zijn geen groepen om weer te geven. </paper-item>
+                    {% endif %}
                     {% for group in groups %}
-                        
                             {% if forloop.first %}
                                 <div  id="{{group.pk}}-content">
                             {% else %}
