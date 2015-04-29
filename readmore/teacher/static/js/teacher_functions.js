@@ -12,6 +12,6 @@ $(document).ready(function(){
 	});
 	$(".group-tab").click(function(){
 		current_id = $(this).attr('id').split("-")[0];
-		$("#"+current_id+"-content").slideToggle();
+		$("#"+current_id+"-content").show().siblings().hide();
 	})
 });

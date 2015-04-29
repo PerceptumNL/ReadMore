@@ -78,6 +78,7 @@
             margin: 50px auto 128px;
         }
     }  
+
 </style>
 
 
@@ -93,23 +94,22 @@
         <div class="container" fullbleed> 
             <core-pages id="first" selected="0" fullbleed vertical layout center>
             <paper-tabs selected="0" class="transparent-teal" role="tablist" horizontal="" center="" layout="">
-                {% for institute in institutes %}
                     {% for group in groups %}
-                        {% if group in institute.groups.all %}
-                            <paper-tab role="tab" inline="" flex="" center-center="" horizontal="" layout="" class="group-tab" id="{{group.pk}}-tab">{{group.title}}</paper-tab>
-                        {% endif %}
-                    {% endfor %}
+                            <paper-tab role="tab" inline="" flex="" center-center="" horizontal="" layout="" class="group-tab" id="{{group.pk}}-tab"> {{group.title}}</paper-tab>
                 {% endfor %}
             </paper-tabs>
-            <div>hoi!</div>
         </div>
         <div class="container" fullbleed>
             <div vertical layout>
-                {% for institute in institutes %}
+                <paper-shadow>
                     {% for group in groups %}
-                        {% if group in institute.groups.all %}
-                            <div style="display:none" id="{{group.pk}}-content">
-                                <paper-shadow><paper-item><h2></h2></paper-shadow>
+                        
+                            {% if forloop.first %}
+                                <div  id="{{group.pk}}-content">
+                            {% else %}
+                                <div style="display:none" id="{{group.pk}}-content">
+                            {% endif %}
+                                <paper-shadow><paper-item><h2>{{group.title}}</h2></paper-shadow>
                                 <paper-button class="colored student-show" id="{{group.pk}}-button"><core-icon icon="expand-more"></core-icon>Toon studenten</paper-button>
                                 <div id="{{group.pk}}-students"}} style="display:none">
                                 {% for user in group.users.all %}
@@ -133,9 +133,34 @@
                                     </button>
                                 </form>
                             </div>
-                        {% endif %}
-                    {% endfor %}
+                    
                 {% endfor %}
+            </paper-shadow>
+            </div>
+            <paper-item>
+                    {{ message }}
+                </paper-item>
+
+                <paper-shadow><paper-button class="group-form-show"><paper-icon-button icon="expand-more"></paper-icon-button>Nieuwe groep</paper-button></paper-shadow>
+                
+                <form id="group-form" method="POST" action="/teacher/add_group" style="display:none">
+                    {% csrf_token %}
+                    <input type="hidden" name="redirect" value="/teacher/manage_users" />
+                    <paper-input-decorator label="Groepnaam" floatingLabel>
+                        <textarea name="Groepnaam"></textarea>
+                    </paper-input-decorator>
+                    <paper-input-decorator>
+                        <select name="Institute">
+                            {% for institute in institutes %}
+                                <option value="{{ institute.pk }}"> {{institute.title}}</option>
+                            {% endfor %}
+                        </select>
+                    </paper-input-decorator>
+                    <button class="primaryAction" type="submit" is="paper-button">
+                        <core-icon icon="add"></core-icon>
+                        Voeg groep toe
+                    </button>
+                </form>
             </div>
         </div>
  

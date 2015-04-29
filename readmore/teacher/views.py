@@ -49,11 +49,14 @@ def add_user(request):
             for group in group_list:
                 group_pks.append(group.pk)
             institute_list = Institute.objects.filter(groups__in=group_pks)
+
         return render(request, 'teacher/manage_users.html', {
             'message':message,
             'groups':group_list,
             'institutes':institute_list,
             })
+    else:
+        return HttpResponseRedirect("/")
 
 @login_required
 def reset_password(request, user_pk):
@@ -76,12 +79,15 @@ def reset_password(request, user_pk):
         group_pks = []
         for group in group_list:
             group_pks.append(group.pk)
-        institute_list = Institute.objects.filter(groups__in=group_list)
+        institute_list = list(set(Institute.objects.filter(groups__in=group_list)))
         return render(request, 'teacher/manage_users.html', {
             'message':message,
             'groups':group_list,
             'institutes':institute_list,
             })
+    else:
+        return HttpResponseRedirect("/")
+
 
 @login_required
 def add_group(request):
@@ -91,7 +97,13 @@ def add_group(request):
             group_pks = []
             for group in group_list:
                 group_pks.append(group.pk)
-            institute_list = Institute.objects.filter(groups__in=group_list)
+            group_title = request.POST.get('Groepnaam', None)
+            institute_pk = request.POST.get('Institute', None)
+            institute = Institute.objects.get(pk=institute_pk)
+            new_group = Group(title=group_title, leader=request.user, institute=institute)
+            new_group.save()
+            group_list = Group.objects.filter(leader=request.user)
+            institute_list = list(set(Institute.objects.filter(groups__in=group_list)))
             return render(request, 'teacher/manage_users.html', {
                 'groups': group_list,
                 'institutes':institute_list,
@@ -106,7 +118,7 @@ def manage_users(request):
         group_pks = []
         for group in group_list:
             group_pks.append(group.pk)
-        institute_list = Institute.objects.filter(groups__in=group_list)
+        institute_list = list(set(Institute.objects.filter(groups__in=group_list)))
         return render(request, 'teacher/manage_users.html',
             {
             'groups': group_list,
