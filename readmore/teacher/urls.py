@@ -19,6 +19,13 @@ urlpatterns = patterns('',
     url(r'^lists/userlist/?$',
         'readmore.teacher.views.retrieve_students',
         name='retrieve_students'),
+        
+    url(r'^overview$', 'readmore.teacher.views.dashboard_test', name='dashboard_test'),
+    url(r'^group/(?P<group_id>\w+)$', 'readmore.teacher.views.dashboard_group', name='dashboard_group'),
+    url(r'^group/(?P<group_id>\w+)/(?P<student_id>\w+)$', 'readmore.teacher.views.dashboard_student', name='dashboard_student'),
+    
+    url(r'^api/group/(?P<group_id>\w+)$', 'readmore.teacher.views.api_group', name='api_group'),
+        
 )
 
 

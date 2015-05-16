@@ -1,0 +1,100 @@
+{% extends "base_page.html" %}
+{% load staticfiles %}
+
+{% block extraCSS %}
+    <!--<link href="{% static 'css/mainStyle.css' %}" rel="stylesheet">-->
+    <link href="{% static 'css/article_style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/typography.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base_page.css' %}" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard_main.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>  
+{% endblock %}
+
+{% block backdrop %}
+
+{% endblock %}
+
+{% block menu %}
+    <a href="/"><button type="submit">Terug</button></a>
+    <form method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        {% if redirect_field_value %}
+            <input type="hidden" name="{{redirect_field_name}}" value="{{redirect_field_value}}"/>
+        {% endif %}
+        <button type="submit">Log out</button>
+    </form>
+{% endblock %}
+
+{% block body %}
+
+<div id="mainContent">
+
+<h1>Groepen</h1>
+
+{% for group in groups %}
+    <div class="group-block" id="group_{{group.pk}}" pk="{{group.pk}}">
+        <div class="group-info-block wide link-to-detail link-div">
+            <a href="{% url 'dashboard_group' group.pk %}"></a>
+            <div class="button">
+                <h5> <i class="fa fa-wrench"></i> Beheer groep </h5>
+            </div>
+            <h2>{{group.title}}</h2>
+            <p><span id="groupsize_{{group.pk}}">0</span> leerlingen</p>
+            <p id="names_{{group.pk}}"></p>
+        </div>
+
+        <div class="group-info-block">
+            <h3>Gelezen</h3>
+            <ul>
+                <li>Deze week: <span id="read_week_{{group.pk}}"></span>
+                <li>Deze maand: <span id="read_month_{{group.pk}}"></span>
+                <li>Totaal: <span id="read_total_{{group.pk}}"></span>
+            </ul>
+        </div>
+        <div class="group-info-block">
+            <h3>Woorden</h3>
+            <ul>
+                <li>Deze week: <span id="word_week_{{group.pk}}"></span>
+                <li>Deze maand: <span id="word_month_{{group.pk}}"></span>
+                <li>Totaal: <span id="word_total_{{group.pk}}"></span>
+            </ul>
+        </div>
+        <div class="group-info-block activity-block">
+            <h3 class="floating">Activiteit</h3>
+            <img id="group_activity_{{group.pk}}" src="{% static 'img/engagement-01.png'%}">
+            <div class="cover">
+                <h1><sup id="activity_{{group.pk}}">1</sup>&frasl;<sub>5</sub></h1>
+            </div>
+        </div>
+        <div class="group-info-block wide" id="articles_{{group.pk}}">
+            <h3>Top 10 meest gelezen artikelen deze week</h3>
+
+        </div>
+    </div>
+{% endfor %}
+
+</div>
+
+
+{% endblock body %}
+
+{% block overlay %}
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
+{% block extraScripts %}
+	<!-- jquery mobile for hashchange event -->
+    <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
+    <script src="{% static 'js/teacher_main.js' %}"></script>
+    <script>
+
+	</script>
+{% endblock extraScripts %}

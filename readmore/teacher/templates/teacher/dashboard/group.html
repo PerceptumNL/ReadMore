@@ -1,0 +1,87 @@
+{% extends "base_page.html" %}
+{% load staticfiles %}
+
+{% block extraCSS %}
+    <!--<link href="{% static 'css/mainStyle.css' %}" rel="stylesheet">-->
+    <link href="{% static 'css/article_style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/typography.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base_page.css' %}" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard_main.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>  
+{% endblock %}
+
+{% block backdrop %}
+
+{% endblock %}
+
+{% block menu %}
+    <a href="/teacher/overview"><button type="submit">Terug</button></a>
+    <form method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        {% if redirect_field_value %}
+            <input type="hidden" name="{{redirect_field_name}}" value="{{redirect_field_value}}"/>
+        {% endif %}
+        <button type="submit">Log out</button>
+    </form>
+{% endblock %}
+
+{% block body %}
+
+<div id="mainContent">
+    <div class="group-block" id="group_info">
+        <h1>{{group.title}}</h1>
+        <div class="group-info-block wide">
+        <h4> Samenvatting van deze week</h4>
+            
+        </div>
+    </div>
+    <div class="group-block" id="group_{{group_id}}">
+        <h4>Leerlingen</h4>
+        {% for student in students %}
+            <div class="group-info-block link-div">
+                <a href="{% url 'dashboard_student' group.pk student.pk %}"></a>
+                <h5 class="floating">{{student}} </i></h5>
+                <img src="{% static 'img/engagement-03.png'%}">
+                <div class="button">
+                    <h5> <i class="fa fa-search"></i> </h5>
+                </div>
+                <div class="last-read">
+                    <h6 class="floating" style="bottom:0"> 6 artikelen gelezen deze week </h6>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+     <div class="group-block" id="invite">
+        <h4>Maak nieuwe leerling aan</h4>
+        </form>
+            <input type="text" placeholder="naam"> </input>
+            <input type="email" placeholder="email@email.nl"></input>
+            <input type="submit" value="Maak nieuwe leerling aan"></input>
+        </form>
+        
+     </div>
+</div>
+
+
+{% endblock body %}
+
+{% block overlay %}
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
+{% block extraScripts %}
+	<!-- jquery mobile for hashchange event -->
+    <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
+
+    <script>
+
+	</script>
+{% endblock extraScripts %}

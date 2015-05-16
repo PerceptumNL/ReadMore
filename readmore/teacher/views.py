@@ -3,11 +3,125 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from readmore.main.models import Group, UserProfile
+from readmore.main.models import *
+from readmore.content.models import *
 from readmore.widgets.customcard.models import CustomCard
 from django.utils.translation import ugettext as _
+from datetime import datetime, timedelta
+import math
 import helpers
 import json
+
+@login_required
+def dashboard_test(request):
+    if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
+        groups = Group.objects.all()
+        articles = RSSArticle.objects.filter(publication_date__gte=datetime.now()-timedelta(days=7))
+        return render(request, 'teacher/dashboard/main.html', {
+        "groups": groups,        
+    })
+    else:
+        return HttpResponseRedirect("/")
+        
+def dashboard_group(request, group_id=None):
+    if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
+        group = Group.objects.get(pk=group_id)
+        students = User.objects.filter(userprofile__groups__pk__in=group_id)
+
+        return render(request, 'teacher/dashboard/group.html', {
+            "group": group,
+            "students": students,
+    })
+    else:
+        return HttpResponseRedirect("/")
+        
+def dashboard_student(request, group_id=None, student_id=None):
+    if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
+        student = User.objects.get(pk=student_id)
+        group = Group.objects.get(pk=group_id)
+        return render(request, 'teacher/dashboard/student.html', {
+            "group": group,
+            "student": student,
+    })
+    else:
+        return HttpResponseRedirect("/")
+
+@login_required
+def api_group(request, group_id=None):
+    students = User.objects.filter(userprofile__groups__pk__in=group_id)
+    student_count = len(students)
+    article_read = "N/A"
+    article_word = "N/A"
+    engagement = "N/A"
+    articles = []
+    
+    if student_count > 0:
+        article_read = api_get_history_totals(ArticleHistoryItem.objects, group_id)
+        article_word = api_get_history_totals(WordHistoryItem.objects, group_id)
+        engagement = math.floor(min(4, 2*(article_read["week"]/(student_count*2.0)))+1)
+        
+        article_his = ArticleHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
+        article_his = filter_on_period(article_his, 'week')
+        article_pks = article_his.values_list('article__pk', flat=True)
+        from collections import Counter
+        article_pks = sorted(article_pks, key=Counter(article_pks).get, reverse=True)
+        seen = set()
+        article_pks_f = [x for x in article_pks if x not in seen and not seen.add(x)]
+        freqs = Counter(article_pks)
+        for pk in article_pks_f:
+            article = Article.objects.get(pk=pk)
+            articles.append( {
+                'title': article.title,
+                'image': article.image,
+                'pk': article.pk,
+                'url': reverse('article', kwargs={'identifier': article.pk}),
+                'freq': freqs[pk]
+                })
+        articles = articles[:10]
+        
+    return HttpResponse(json.dumps({
+        "student_count": student_count,
+        "article_read": article_read,
+        "article_word": article_word,
+        "engagement": engagement,
+        "articles": articles,
+    }), content_type='application/json')
+
+def filter_on_period(objects, period):
+    if period == 'month':
+        date = datetime.now(pytz.utc)
+        return objects.filter(date__month=date.month)
+    elif period == 'week':
+        date = datetime.now(pytz.utc)
+        date -= timedelta(hours=date.hour)
+        date -= timedelta(minutes=date.minute)
+        date -= timedelta(seconds=date.second)
+        date -= timedelta(microseconds=date.microsecond)
+        start_week = date - timedelta(date.weekday())
+        end_week = start_week + timedelta(7)
+        return objects.filter(date__range=[start_week, end_week])
+    else:
+        return objects
+
+def api_get_history_totals(history, group_id):
+    history = history.filter(user__userprofile__groups__in=group_id)
+    total_all = filter_on_period(history, 'total').count()
+    total_month = filter_on_period(history, 'month').count()
+    total_week = filter_on_period(history, 'week').count()
+    return {
+            'week': total_week,
+            'month': total_month,
+            'total': total_all
+        }
+
+def api_group_read(request, group_id=None):
+    pass
+def api_group_words(request, group_id=None):
+    pass
+def api_group_engaged(request, group_id=None):
+    pass
+def api_group_mostread(request, group_id=None):
+    pass
 
 # Create your views here.
 @login_required
