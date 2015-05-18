@@ -8,6 +8,7 @@ from readmore.content.models import *
 from readmore.widgets.customcard.models import CustomCard
 from django.utils.translation import ugettext as _
 from datetime import datetime, timedelta
+from collections import Counter
 import math
 import helpers
 import json
@@ -58,12 +59,14 @@ def api_group(request, group_id=None):
     if student_count > 0:
         article_read = api_get_history_totals(ArticleHistoryItem.objects, group_id)
         article_word = api_get_history_totals(WordHistoryItem.objects, group_id)
-        engagement = math.floor(min(4, 2*(article_read["week"]/(student_count*2.0)))+1)
-        
+
+        art_per_stud = article_read["week"]/float(student_count)
+        engagement_norm = art_per_stud/2.0
+        engagement = int(min(5, math.floor(engagement_norm*4+1)))
+
         article_his = ArticleHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
         article_his = filter_on_period(article_his, 'week')
         article_pks = article_his.values_list('article__pk', flat=True)
-        from collections import Counter
         article_pks = sorted(article_pks, key=Counter(article_pks).get, reverse=True)
         seen = set()
         article_pks_f = [x for x in article_pks if x not in seen and not seen.add(x)]
@@ -78,13 +81,18 @@ def api_group(request, group_id=None):
                 'freq': freqs[pk]
                 })
         articles = articles[:10]
-        
+
+        word_his = WordHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
+        word_his = filter_on_period(word_his, 'week')
+        words = list(set(word_his.values_list('word', flat=True)))
+
     return HttpResponse(json.dumps({
         "student_count": student_count,
         "article_read": article_read,
         "article_word": article_word,
         "engagement": engagement,
         "articles": articles,
+        "words": sorted(words),
     }), content_type='application/json')
 
 def filter_on_period(objects, period):

@@ -48,6 +48,23 @@
     position:absolute;
     width:inherit;
 }
+.word-block{
+    float: left;
+    width: auto;
+    height:32px;
+    position: relative;
+    padding: 0 8px;
+    margin:  8px;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    border-bottom:  2px solid #90D9F9;
+}
+.word-block:after {
+    content:'';
+    display:block;
+    clear: both;
+}
 
 .article-block{
     width: inherit;
