@@ -175,8 +175,17 @@ input[type=submit]:hover{
         margin: 8px 0px;
         width:100%;
     }
+    .article-block{
+        height: 64px;
+    }
     .article-title h6{
         margin: 0px 4px;
         padding:0px;
+    }
+    .button{
+        margin:4px;
+    }
+    .contentbody{
+        padding: 32px 0 64px;
     }
 }
