@@ -417,7 +417,7 @@ class SevenDaysCategory(Category):
                            "field-type-text-with-summary field-label-hidden")
         _css_class_media = re.compile("media-element")
         # Ensure the locale is set to nl_NL for 7day-formatted dates
-        old_locale = locale.getlocale()[0]
+        old_locale = locale.getlocale()
         locale.setlocale(locale.LC_ALL, "nl_NL.utf8")
         # Import each article
         for identifier in links:
@@ -460,8 +460,7 @@ class SevenDaysCategory(Category):
             article.categories.add(self)
             article.save()
         # Restore locale
-        if old_locale is not None:
-            locale.setlocale(locale.LC_ALL, old_locale)
+        locale.setlocale(locale.LC_ALL, old_locale)
         super(SevenDaysCategory, self).save()
 
     def save(self, *args, **kwargs):
