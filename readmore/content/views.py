@@ -19,6 +19,8 @@ article_read = django.dispatch.Signal(
 def update_feeds(request):
     for category in RSSCategory.objects.all():
         category.update_feed()
+    for category in SevenDaysCategory.objects.all():
+        category.update_feed()
     return HttpResponse()
 
 @login_required
