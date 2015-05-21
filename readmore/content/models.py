@@ -460,7 +460,8 @@ class SevenDaysCategory(Category):
             article.categories.add(self)
             article.save()
         # Restore locale
-        locale.setlocale(locale.LC_ALL, old_locale)
+        if old_locale is not None:
+            locale.setlocale(locale.LC_ALL, old_locale)
         super(SevenDaysCategory, self).save()
 
     def save(self, *args, **kwargs):
