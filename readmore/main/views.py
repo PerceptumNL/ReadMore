@@ -92,7 +92,7 @@ def profile(request, user_id):
     except User.DoesNotExist:
         return HttpResponseRedirect("/")
     # Retrieve badges
-    badges = Badge.objects.filter(userprofile=user)
+    badges = user.userprofile.badges.all()
     if not badges:
         badges = []
     badges = [badge.current_image(user) for badge in badges]
