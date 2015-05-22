@@ -97,7 +97,10 @@ class Category(PolymorphicModel):
             Only return articles from last week
         """
         now = datetime.now() - timedelta(days=3)
-        article_list = RSSArticle.objects.filter(categories__in=[self], publication_date__gte=now)
+        if isinstance(self, RSSCategory):
+            article_list = RSSArticle.objects.filter(categories__in=[self], publication_date__gte=now)
+        elif isinstance(self, SevenDaysCategory):
+            article_list = SevenDaysArticle.objects.filter(categories__in=[self], publication_date__gte=now)
         article_list = list(article_list)
         
         if read_by_user is not None:
