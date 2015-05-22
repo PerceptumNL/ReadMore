@@ -436,11 +436,14 @@ class SevenDaysCategory(Category):
                 main_image=None
             else:
                 main_image = image_field.find('img')['src']
-            title = soup.find('div', class_=_css_class_title).text
-            published_field = soup.find('div', class_=_css_class_published)
-            published = datetime.strptime(published_field.text, "%d %B %Y")
-            published = timezone.make_aware(published, timezone.utc)
-            body = soup.find('div', class_=_css_class_body)
+            try:
+                title = soup.find('div', class_=_css_class_title).text
+                published_field = soup.find('div', class_=_css_class_published)
+                published = datetime.strptime(published_field.text, "%d %B %Y")
+                published = timezone.make_aware(published, timezone.utc)
+                body = soup.find('div', class_=_css_class_body)
+            except Exception:
+                continue
             # Remove youtube content
             for media in body.find_all('div', class_=_css_class_media):
                 media.decompose()
