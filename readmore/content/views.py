@@ -11,6 +11,7 @@ from readmore.content.models import *
 from readmore.main.models import *
 import django.dispatch
 import datetime
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
 article_read = django.dispatch.Signal(
@@ -68,10 +69,10 @@ def query(request):
         querylist = [Q(body__icontains=query) for query in normalize_query(query_string)]
         querylist += [Q(title__icontains=query) for query in normalize_query(query_string)]
         matching = Article.objects.filter(reduce(operator.or_, querylist))
+        default = timezone.make_aware(datetime.datetime.now(), timezone.utc)
         matching = sorted(matching, key=(
             lambda x: x.publication_date if
-                isinstance(x, RSSArticle) else datetime.datetime.now()),
-                reverse=True)
+                isinstance(x, RSSArticle) else default), reverse=True)
         for article in matching:
             articles.append({
                 'url': article.get_absolute_url(),
