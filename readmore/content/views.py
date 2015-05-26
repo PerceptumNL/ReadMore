@@ -72,7 +72,8 @@ def query(request):
         default = timezone.make_aware(datetime.datetime.now(), timezone.utc)
         matching = sorted(matching, key=(
             lambda x: x.publication_date if
-                isinstance(x, RSSArticle) else default), reverse=True)
+                isinstance(x, RSSArticle) or isinstance(x, SevenDaysArticle)
+                else default), reverse=True)
         for article in matching:
             articles.append({
                 'url': article.get_absolute_url(),
