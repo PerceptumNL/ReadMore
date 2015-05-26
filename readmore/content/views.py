@@ -70,7 +70,8 @@ def query(request):
         matching = Article.objects.filter(reduce(operator.or_, querylist))
         matching = sorted(matching, key=(
             lambda x: x.publication_date if
-                isinstance(x, RSSArticle) else datetime.now()), reverse=True)
+                isinstance(x, RSSArticle) else datetime.datetime.now()),
+                reverse=True)
         for article in matching:
             articles.append({
                 'url': article.get_absolute_url(),
