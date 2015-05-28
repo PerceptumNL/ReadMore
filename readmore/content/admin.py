@@ -22,6 +22,7 @@ class CategoryAdmin(PolymorphicParentModelAdmin):
         (RSSCategory, RSSCategoryAdmin),
         (WikiCategory, WikiCategoryAdmin),
         (SevenDaysCategory, SevenDaysCategoryAdmin),
+        (KidsWeekCategory, SevenDaysCategoryAdmin),
         (Category, RegularCategoryAdmin)
     )
 
