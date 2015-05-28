@@ -31,6 +31,7 @@ class Category(PolymorphicModel):
         related_name='children')
     title = models.CharField(max_length=255)
     color = models.CharField(max_length=50, default='#f3f3f3', blank=True)
+    order = models.IntegerField(default=0)
 
     # Link to a remotely hosted image.
     image = models.CharField(max_length=255, null=True, blank=True)
