@@ -519,8 +519,8 @@ class KidsWeekCategory(Category):
         # Ensure the locale is set to nl_NL for 7day-formatted dates
         old_locale = locale.getlocale()
         locale.setlocale(locale.LC_ALL, "nl_NL.utf8")
-        # Import each article
-        for identifier in links:
+        # Import the most recent ten articles
+        for identifier in links[0:20]:
             # If this article is already added, skip.
             if SevenDaysArticle.objects.filter(identifier=identifier).exists():
                 continue
