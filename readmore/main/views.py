@@ -47,7 +47,7 @@ def history(request):
 def article_overview(request):
     """Return response containing overview of categories and articles."""
     # Only show top categories on the index page
-    categories = Category.objects.filter(parent=None)
+    categories = Category.objects.filter(parent=None).order_by('order')
     articles = []
     for category in categories:
         articles += category.get_articles()
