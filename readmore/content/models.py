@@ -100,7 +100,7 @@ class Category(PolymorphicModel):
         now = datetime.now() - timedelta(days=3)
         if isinstance(self, RSSCategory):
             article_list = RSSArticle.objects.filter(categories__in=[self], publication_date__gte=now)
-        elif isinstance(self, SevenDaysCategory):
+        elif isinstance(self, SevenDaysCategory) or isinstance(self, KidsWeekCategory):
             article_list = SevenDaysArticle.objects.filter(categories__in=[self], publication_date__gte=now)
         article_list = list(article_list)
         
@@ -384,7 +384,7 @@ class SevenDaysCategory(Category):
     feed = models.URLField()
 
     def get_articles(self, recursive=False, max_num=100):
-        """Return the list of articles in this catergory.
+        """Return the list of articles in this category.
         Use this method to retrieve articles as it can be overriden by
         subclasses to give the expected result for each type of category.
 
@@ -472,6 +472,109 @@ class SevenDaysCategory(Category):
 
     def save(self, *args, **kwargs):
         super(SevenDaysCategory, self).save(*args, **kwargs)
+        self.update_feed()
+
+class KidsWeekCategory(Category):
+    """Model for KidsWeek-based categories."""
+    feed = models.URLField()
+
+    def get_articles(self, recursive=False, max_num=100):
+        """Return the list of articles in this category.
+        Use this method to retrieve articles as it can be overriden by
+        subclasses to give the expected result for each type of category.
+
+        This function can search for all articles in all subcategories
+        recursively, in a breadth-first search. This operation can however be
+        rather costly.
+
+        Keyword arguments:
+        recursive -- Search for articles recursively (default False)
+        max_num -- Maximum number of articles (default 100)
+        """
+        articles = super(KidsWeekCategory, self).get_articles(recursive, 'Inf')
+        articles = sorted(articles, key=lambda a: a.publication_date,
+                reverse=True)
+        if max_num == 'Inf':
+            return articles
+        else:
+            return articles[:max_num]
+
+
+    def update_feed(self):
+        """Retrieve new articles from the Kidsweek feed in this category."""
+        # CSS class values for information types
+        _css_class_article = r'article-4'
+        _css_select_published = ".main_publish span"
+        _css_class_image = r'preview_image'
+        _css_class_intro = r'main_intro'
+        _css_class_body = r'main_text'
+        _css_class_media = re.compile("media-element")
+        # Retrieve the Kidsweek index feed
+        index_feed = BeautifulSoup(urllib.urlopen(self.feed).read())
+        # Find links to articles
+        articles = filter(
+                lambda x: x.find(class_=r'article_label').text != "Filmpje",
+                index_feed.find_all(class_=r'article-4'))
+        links = map(lambda x: x.find('a')['href'], articles)
+        # Ensure the locale is set to nl_NL for 7day-formatted dates
+        old_locale = locale.getlocale()
+        locale.setlocale(locale.LC_ALL, "nl_NL.utf8")
+        # Import the most recent ten articles
+        for identifier in links[0:20]:
+            # If this article is already added, skip.
+            if SevenDaysArticle.objects.filter(identifier=identifier).exists():
+                continue
+            # Parse article HTML
+            soup = BeautifulSoup(urllib.urlopen(identifier))
+            # Extract information
+            image_field = soup.find('div', class_=_css_class_image)
+            if image_field is None:
+                main_image=None
+            else:
+                main_image = "http://www.kidsweek.nl%s" % (
+                        image_field.find('img')['src'],)
+            try:
+                title = soup.find('title').text
+                published_field = soup.select(_css_select_published)[0]
+                published = datetime.strptime(published_field.text,
+                    "Geplaatst op %A %d %B %Y")
+                published = timezone.make_aware(published, timezone.utc)
+                intro = soup.find('div', class_=_css_class_intro)
+                body = soup.find('div', class_=_css_class_body)
+            except Exception:
+                continue
+            # Remove iframes
+            for iframe in body.find_all('iframe'):
+                iframe.decompose()
+            # Remove existing images in the body
+            for image in body.find_all('img'):
+                image.decompose()
+            # Remove existing links in the body
+            for link in body.find_all('a'):
+                if link.string:
+                    link.replace_with(link.string)
+                else:
+                    link.decompose()
+            # Remove empty paragraphs
+            for p in body.find_all('p'):
+                if p.text.replace("&nbsp;","").strip() == "":
+                    p.decompose()
+            intro = unicode(intro).encode('ascii',  "xmlcharrefreplace")
+            body = unicode(body).encode('ascii',  "xmlcharrefreplace")
+            article = SevenDaysArticle.objects.create(
+                    identifier=identifier,
+                    title=title,
+                    body=intro+body,
+                    image=main_image,
+                    publication_date=published)
+            article.categories.add(self)
+            article.save()
+        # Restore locale
+        locale.setlocale(locale.LC_ALL, old_locale)
+        super(KidsWeekCategory, self).save()
+
+    def save(self, *args, **kwargs):
+        super(KidsWeekCategory, self).save(*args, **kwargs)
         self.update_feed()
 
 class Article(PolymorphicModel):
