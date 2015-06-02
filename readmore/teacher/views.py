@@ -51,10 +51,11 @@ def dashboard_student(request, group_id=None, student_id=None):
 def api_group(request, group_id=None):
     students = User.objects.filter(userprofile__groups__pk__in=group_id)
     student_count = len(students)
-    article_read = "N/A"
-    article_word = "N/A"
-    engagement = "N/A"
+    article_read = {"week": 0, "month": 0, "total": 0}
+    article_word = {"week": 0, "month": 0, "total": 0}
+    engagement = 0
     articles = []
+    words = []
     
     if student_count > 0:
         article_read = api_get_history_totals(ArticleHistoryItem.objects, group_id)
@@ -62,7 +63,7 @@ def api_group(request, group_id=None):
 
         art_per_stud = article_read["week"]/float(student_count)
         engagement_norm = art_per_stud/2.0
-        engagement = int(min(5, math.floor(engagement_norm*4+1)))
+        engagement = int(min(5, math.floor(engagement_norm*5)))
 
         article_his = ArticleHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
         article_his = filter_on_period(article_his, 'week')

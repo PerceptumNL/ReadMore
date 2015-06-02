@@ -47,6 +47,13 @@
             <p id="names_{{group.pk}}"></p>
         </div>
 
+        <div class="group-info-block activity-block">
+            <h3 class="floating">Activiteit</h3>
+            <img id="group_activity_{{group.pk}}" src="{% static 'img/engagement-00.png'%}">
+            <div class="cover">
+                <h1><sup id="activity_{{group.pk}}">1</sup>&frasl;<sub>5</sub></h1>
+            </div>
+        </div>
         <div class="group-info-block">
             <h3>Gelezen</h3>
             <ul>
@@ -63,13 +70,7 @@
                 <li>Totaal: <span id="word_total_{{group.pk}}"></span>
             </ul>
         </div>
-        <div class="group-info-block activity-block">
-            <h3 class="floating">Activiteit</h3>
-            <img id="group_activity_{{group.pk}}" src="{% static 'img/engagement-01.png'%}">
-            <div class="cover">
-                <h1><sup id="activity_{{group.pk}}">1</sup>&frasl;<sub>5</sub></h1>
-            </div>
-        </div>
+
         <div class="group-info-block wide" id="articles_{{group.pk}}">
             <h3>Top 10 meest gelezen artikelen deze week</h3>
 
@@ -80,6 +81,14 @@
         </div>
     </div>
 {% endfor %}
+
+<div class="group-block" id="newgroup" pk="{{group.pk}}">
+        <h3>Maak een nieuwe groep aan</h3>
+        <form class="form">
+            <input type="text" placeholder="naam van groep"></input>
+            <input type="submit" value="Maak nieuwe groep"></input>
+        </form>
+</div>
 
 </div>
 

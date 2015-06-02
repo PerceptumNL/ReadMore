@@ -155,14 +155,26 @@
     opacity: 0.95;
 }
 
+.form{
+    margin: 8px;
+    border-right: thin solid #39BAF4;
+}
 input{
     border: none;
     border-bottom: thin solid #39BAF4;
     width:100%;
     margin: 16px 0;
     display:block;
+    transition: border-bottom .3s ease-in-out;
+    -moz-transition: border-bottom .3s ease-in-out;
+    -webkit-transition: border-bottom .3s ease-in-out;
+}
+input:focus{
+    border-bottom: thick solid #39BAF4;
 }
 input[type=submit]{
+    font-family: 'Arial';
+    padding: 8px 0;
     background: #39BAF4;
     color:#FFF;
 }
