@@ -7,7 +7,7 @@
     <link href="{% static 'css/typography.css' %}" rel="stylesheet">
     <link href="{% static 'css/base_page.css' %}" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">-->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>  
 {% endblock %}
@@ -47,6 +47,13 @@
 		</div>
 		{% endif %}
 		<div id="imageHolder"></div>
+		<div class='row'>
+			<a class="btn btn-large btn-primary col-md-8 col-md-offset-2 col-sm-offset-1 col-sm-10 col-xs-12"
+				href="{% url 'article_overview' %}"
+				style='color: #fff'>
+				Terug naar categorie-overzicht
+			</a>
+	</div>
 	</section>
 	{% if random_articles %}
     <div id="recommendations">
