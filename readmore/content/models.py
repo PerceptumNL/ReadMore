@@ -102,6 +102,8 @@ class Category(PolymorphicModel):
             article_list = RSSArticle.objects.filter(categories__in=[self], publication_date__gte=now)
         elif isinstance(self, SevenDaysCategory) or isinstance(self, KidsWeekCategory):
             article_list = SevenDaysArticle.objects.filter(categories__in=[self], publication_date__gte=now)
+        else:
+            article_list = self.articles.all()
         article_list = list(article_list)
         
         if read_by_user is not None:
