@@ -7,6 +7,9 @@ from polymorphic.admin import PolymorphicParentModelAdmin, \
 class RSSCategoryAdmin(PolymorphicChildModelAdmin):
     base_model = RSSCategory
 
+class SevenDaysCategoryAdmin(PolymorphicChildModelAdmin):
+    base_model = SevenDaysCategory
+
 class WikiCategoryAdmin(PolymorphicChildModelAdmin):
     base_model = WikiCategory
 
@@ -18,6 +21,8 @@ class CategoryAdmin(PolymorphicParentModelAdmin):
     child_models = (
         (RSSCategory, RSSCategoryAdmin),
         (WikiCategory, WikiCategoryAdmin),
+        (SevenDaysCategory, SevenDaysCategoryAdmin),
+        (KidsWeekCategory, SevenDaysCategoryAdmin),
         (Category, RegularCategoryAdmin)
     )
 
@@ -52,6 +57,9 @@ class ArticleAdmin(PolymorphicParentModelAdmin):
         (Article, RegularArticleAdmin)
     )
 
+class ContentSourceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'link', 'logo')
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Article, ArticleAdmin)
-
+admin.site.register(ContentSource, ContentSourceAdmin)
