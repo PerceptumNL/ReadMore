@@ -17,6 +17,15 @@ from bs4 import BeautifulSoup
 
 MWAPI = MediaWikiAPI()
 
+class ContentSource(models.Model):
+    name = models.CharField(max_length=255)
+    link = models.URLField(max_length=255)
+    logo = models.CharField(max_length=255, blank=True)
+
+    def __unicode__(self):
+        return u"%s <%s>" % (self.name, self.link)
+
+
 class Category(PolymorphicModel):
     """Basic DB model for categories.
 
@@ -35,6 +44,9 @@ class Category(PolymorphicModel):
 
     # Link to a remotely hosted image.
     image = models.CharField(max_length=255, null=True, blank=True)
+
+    # Link to the content source
+    source = models.ForeignKey(ContentSource, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Categories"
@@ -179,8 +191,13 @@ class RSSCategory(Category):
                     else:
                         continue
                     parse_body = BeautifulSoup(body)
+                    main_image = None
                     # Remove existing images in the body
                     for image in parse_body.find_all('img'):
+                        # Keep the first image we find, in case it is the only
+                        # one available in the feed.
+                        if main_image is None:
+                            main_image = image['src']
                         image.decompose()
                     # Remove existing links in the body
                     for link in parse_body.find_all('a'):
@@ -192,19 +209,19 @@ class RSSCategory(Category):
                     if 'links' in entry:
                         images = filter(lambda x: re_image.match(x['type']),
                                 entry['links'])
-                        main_image = images.pop(0)['href'] if images else None
-                        for image in images:
-                            body += '<img src="%s" />' % (image['href'],)
-                    else:
-                        main_images = None
-                        images = []
+                        if images:
+                            main_image = images.pop(0)['href']
+                            for image in images:
+                                body += '<img src="%s" />' % (image['href'],)
+
                     article, created = RSSArticle.objects.get_or_create(
                             identifier=entry['id'],
                             defaults={
                                 'title': entry['title'],
                                 'body': body,
                                 'image': main_image,
-                                'publication_date': published
+                                'publication_date': published,
+                                'source': self.source
                             })
                     article.categories.add(self)
                     article.save()
@@ -465,6 +482,7 @@ class SevenDaysCategory(Category):
                     title=title,
                     body=body,
                     image=main_image,
+                    source=self.source,
                     publication_date=published)
             article.categories.add(self)
             article.save()
@@ -568,6 +586,7 @@ class KidsWeekCategory(Category):
                     title=title,
                     body=intro+body,
                     image=main_image,
+                    source=self.source,
                     publication_date=published)
             article.categories.add(self)
             article.save()
@@ -590,6 +609,9 @@ class Article(PolymorphicModel):
     title = models.CharField(max_length=255)
     body = models.TextField(null=True, blank=True)
     image = models.URLField(null=True, blank=True)
+
+    # Link to the content source
+    source = models.ForeignKey(ContentSource, null=True, blank=True)
 
     def __repr__(self):
         return 'Article(%s)' % (self.title,)

@@ -57,6 +57,9 @@ class ArticleAdmin(PolymorphicParentModelAdmin):
         (Article, RegularArticleAdmin)
     )
 
+class ContentSourceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'link', 'logo')
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Article, ArticleAdmin)
-
+admin.site.register(ContentSource, ContentSourceAdmin)
