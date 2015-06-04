@@ -47,6 +47,7 @@ def dashboard_student(request, group_id=None, student_id=None):
     else:
         return HttpResponseRedirect("/")
 
+
 @login_required
 def api_group(request, group_id=None):
     students = User.objects.filter(userprofile__groups__pk__in=group_id)
@@ -96,6 +97,41 @@ def api_group(request, group_id=None):
         "words": sorted(words),
     }), content_type='application/json')
 
+@login_required
+def api_student(request, student_id=None):
+    student = User.objects.filter(userprofile__pk__in=student_id)
+    
+    engagement = 0
+    article_read = {"week": 0, "month": 0, "total": 0}
+    favorite_category = ""
+    article_suggestion = ""
+    
+    article_read = api_get_history_student(ArticleHistoryItem.objects, student_id)
+
+    """ A temporary definition of engagement. Conferred with David and the ideal
+    definition would be based on the "actually" read article count related to the
+    estimated capacity of the student, e.g. not punish students for being slower
+    than the rest of the group. Additionally a good measure would be any
+    interaction with the platform, such as ratings, word clicks, etc."""
+    engagement = int(min(5, article_read["week"]))
+    
+    return HttpResponse(json.dumps({
+        "engagement": engagement,
+        "article_read": article_read,
+    }), content_type='application/json')
+    
+def api_get_history_student(history, student_id):
+    history = history.filter(user__pk=student_id)
+    total_all = filter_on_period(history, 'total').count()
+    total_month = filter_on_period(history, 'month').count()
+    total_week = filter_on_period(history, 'week').count()
+    return {
+            'week': total_week,
+            'month': total_month,
+            'total': total_all
+        }
+    
+    
 def filter_on_period(objects, period):
     if period == 'month':
         date = datetime.now(pytz.utc)

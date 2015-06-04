@@ -36,7 +36,7 @@
 <h1>Groepen</h1>
 
 {% for group in groups %}
-    <div class="group-block" id="group_{{group.pk}}" pk="{{group.pk}}">
+    <div class="group-block info-block" id="group_{{group.pk}}" pk="{{group.pk}}">
         <div class="group-info-block wide link-to-detail link-div">
             <a href="{% url 'dashboard_group' group.pk %}"></a>
             <div class="button">

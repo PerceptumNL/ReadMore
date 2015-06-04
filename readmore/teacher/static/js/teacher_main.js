@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $(".group-block").each(function(){
+    $(".group-block.info-block").each(function(){
        initialize_group($(this).attr('pk'));
     });
 });

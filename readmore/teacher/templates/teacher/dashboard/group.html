@@ -9,6 +9,7 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'css/dashboard_main.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard_group.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href='http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>  
@@ -39,18 +40,26 @@
             
         </div>
     </div>
-    <div class="group-block" id="group_{{group_id}}">
+    <div class="group-block" id="group_{{group.pk}}" pk="{{group.pk}}">
         <h4>Leerlingen</h4>
         {% for student in students %}
-            <div class="group-info-block link-div">
+            <div class="student-block link-div" pk="{{student.pk}}">
                 <a href="{% url 'dashboard_student' group.pk student.pk %}"></a>
                 <h5 class="floating">{{student}} </i></h5>
                 <img src="{% static 'img/engagement-03.png'%}">
-                <div class="button">
+                <div class="button">    
                     <h5> <i class="fa fa-search"></i> </h5>
                 </div>
                 <div class="last-read">
-                    <h6 class="floating" style="bottom:0"> 6 artikelen gelezen deze week </h6>
+                    <div class="floating" style="bottom:0">
+                        <h6> Engagement: <span id="activity_{{student.pk}}"></span></h6>
+                        <h6> Gelezen
+                        <ul>
+                            <li>Deze week: <span id="read_week_{{student.pk}}"></span>
+                            <li>Deze maand: <span id="read_month_{{student.pk}}"></span>
+                            <li>Totaal: <span id="read_total_{{student.pk}}"></span>
+                        </ul><h6>
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -80,8 +89,9 @@
 {% block extraScripts %}
 	<!-- jquery mobile for hashchange event -->
     <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
+    <script src="{% static 'js/teacher_group.js' %}"></script>
 
     <script>
-
+    
 	</script>
 {% endblock extraScripts %}
