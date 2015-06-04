@@ -41,6 +41,11 @@
     {% endif %}
 	<section id="mainArticle">
 		<article id="article"></article>
+		{% if article.source %}
+		<div style='text-align: right;'>
+			<a href="{{ article.source.link }}" style='color: gray'>bron: {{ article.source.name }}</a>
+		</div>
+		{% endif %}
 		<div id="imageHolder"></div>
 	</section>
 	{% if random_articles %}
