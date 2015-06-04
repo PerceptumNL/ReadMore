@@ -179,8 +179,13 @@ class RSSCategory(Category):
                     else:
                         continue
                     parse_body = BeautifulSoup(body)
+                    main_image = None
                     # Remove existing images in the body
                     for image in parse_body.find_all('img'):
+                        # Keep the first image we find, in case it is the only
+                        # one available in the feed.
+                        if main_image is None:
+                            main_image = image['src']
                         image.decompose()
                     # Remove existing links in the body
                     for link in parse_body.find_all('a'):
@@ -192,12 +197,11 @@ class RSSCategory(Category):
                     if 'links' in entry:
                         images = filter(lambda x: re_image.match(x['type']),
                                 entry['links'])
-                        main_image = images.pop(0)['href'] if images else None
-                        for image in images:
-                            body += '<img src="%s" />' % (image['href'],)
-                    else:
-                        main_images = None
-                        images = []
+                        if images:
+                            main_image = images.pop(0)['href']
+                            for image in images:
+                                body += '<img src="%s" />' % (image['href'],)
+
                     article, created = RSSArticle.objects.get_or_create(
                             identifier=entry['id'],
                             defaults={
