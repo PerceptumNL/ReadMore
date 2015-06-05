@@ -477,13 +477,14 @@ class SevenDaysCategory(Category):
                 else:
                     link.decompose()
             body = unicode(body).encode('ascii',  "xmlcharrefreplace")
-            article = SevenDaysArticle.objects.create(
+            article, created = SevenDaysArticle.objects.get_or_create(
                     identifier=identifier,
-                    title=title,
-                    body=body,
-                    image=main_image,
-                    source=self.source,
-                    publication_date=published)
+                    defaults={
+                        "title":title,
+                        "body":body,
+                        "image":main_image,
+                        "source":self.source,
+                        "publication_date":published})
             article.categories.add(self)
             article.save()
         # Restore locale
@@ -518,7 +519,6 @@ class KidsWeekCategory(Category):
             return articles
         else:
             return articles[:max_num]
-
 
     def update_feed(self):
         """Retrieve new articles from the Kidsweek feed in this category."""
@@ -587,13 +587,14 @@ class KidsWeekCategory(Category):
                     p.decompose()
             intro = unicode(intro).encode('ascii',  "xmlcharrefreplace")
             body = unicode(body).encode('ascii',  "xmlcharrefreplace")
-            article = SevenDaysArticle.objects.create(
+            article, created = SevenDaysArticle.objects.get_or_create(
                     identifier=identifier,
-                    title=title,
-                    body=intro+body,
-                    image=main_image,
-                    source=self.source,
-                    publication_date=published)
+                    defaults={
+                        "title":title,
+                        "body":intro+body,
+                        "image":main_image,
+                        "source":self.source,
+                        "publication_date":published})
             article.categories.add(self)
             article.save()
         # Restore locale
