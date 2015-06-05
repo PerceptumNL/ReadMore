@@ -569,6 +569,12 @@ class KidsWeekCategory(Category):
             # Remove existing images in the body
             for image in body.find_all('img'):
                 image.decompose()
+            # Remove existing links in the intro
+            for link in intro.find_all('a'):
+                if link.string:
+                    link.replace_with(link.string)
+                else:
+                    link.decompose()
             # Remove existing links in the body
             for link in body.find_all('a'):
                 if link.string:
