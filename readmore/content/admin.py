@@ -29,6 +29,9 @@ class CategoryAdmin(PolymorphicParentModelAdmin):
 class RSSArticleAdmin(PolymorphicChildModelAdmin):
     base_model = RSSArticle
 
+class SevenDaysArticleAdmin(PolymorphicChildModelAdmin):
+    base_model = SevenDaysArticle
+
 class WikiArticleAdmin(PolymorphicChildModelAdmin):
     base_model = WikiArticle
 
@@ -53,6 +56,7 @@ class ArticleAdmin(PolymorphicParentModelAdmin):
     
     child_models = (
         (RSSArticle, RSSArticleAdmin),
+        (SevenDaysArticle, SevenDaysArticleAdmin),
         (WikiArticle, WikiArticleAdmin),
         (Article, RegularArticleAdmin)
     )
