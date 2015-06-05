@@ -46,23 +46,25 @@
             <div class="student-block link-div" pk="{{student.pk}}">
                 <a href="{% url 'dashboard_student' group.pk student.pk %}"></a>
                 <h5 class="floating">{{student}} </i></h5>
-                <img src="{% static 'img/engagement-03.png'%}">
-                <div class="button">    
+                <img id="student_activity_{{student.pk}}" src="{% static 'img/engagement-00.png'%}">
+                <div class="button">
                     <h5> <i class="fa fa-search"></i> </h5>
                 </div>
                 <div class="last-read">
-                    <div class="floating" style="bottom:0">
-                        <h6> Engagement: <span id="activity_{{student.pk}}"></span></h6>
-                        <h6> Gelezen
-                        <ul>
-                            <li>Deze week: <span id="read_week_{{student.pk}}"></span>
-                            <li>Deze maand: <span id="read_month_{{student.pk}}"></span>
-                            <li>Totaal: <span id="read_total_{{student.pk}}"></span>
-                        </ul><h6>
-                    </div>
+                    <h6 class="floating" style="bottom:0">
+                        <span id="read_week_{{student.pk}}"></span> artikelen gelezen deze week
+                    </h6>
                 </div>
             </div>
         {% endfor %}
+    </div>
+    <div class="group-block category-block" id="categories_{{group.pk}}" pk="{{group.pk}}">
+        <h4>Populairste categorieën deze week</h4>
+        <h5><ul>
+            <li><span id="category_rank_1"></span>
+            <li><span id="category_rank_2"></span>
+            <li><span id="category_rank_3"></span>
+        </ul></h5>
     </div>
      <div class="group-block" id="invite">
         <h4>Maak nieuwe leerling aan</h4>

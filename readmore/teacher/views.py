@@ -9,6 +9,7 @@ from readmore.widgets.customcard.models import CustomCard
 from django.utils.translation import ugettext as _
 from datetime import datetime, timedelta
 from collections import Counter
+from django.db.models import Count
 import math
 import helpers
 import json
@@ -87,6 +88,9 @@ def api_group(request, group_id=None):
         word_his = WordHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
         word_his = filter_on_period(word_his, 'week')
         words = list(set(word_his.values_list('word', flat=True)))
+        
+        counts = group_category_counts(ArticleHistoryItem.objects, group_id)
+        categories = sorted(counts, key=counts.get)[:3]
 
     return HttpResponse(json.dumps({
         "student_count": student_count,
@@ -95,18 +99,19 @@ def api_group(request, group_id=None):
         "engagement": engagement,
         "articles": articles,
         "words": sorted(words),
+        "categories": categories,
     }), content_type='application/json')
 
 @login_required
 def api_student(request, student_id=None):
-    student = User.objects.filter(userprofile__pk__in=student_id)
+    student = User.objects.filter(userprofile__pk=student_id)
     
     engagement = 0
     article_read = {"week": 0, "month": 0, "total": 0}
     favorite_category = ""
     article_suggestion = ""
     
-    article_read = api_get_history_student(ArticleHistoryItem.objects, student_id)
+    article_read = student_article_count(ArticleHistoryItem.objects, student_id)
 
     """ A temporary definition of engagement. Conferred with David and the ideal
     definition would be based on the "actually" read article count related to the
@@ -116,21 +121,29 @@ def api_student(request, student_id=None):
     engagement = int(min(5, article_read["week"]))
     
     return HttpResponse(json.dumps({
-        "engagement": engagement,
         "article_read": article_read,
+        "engagement": engagement,
     }), content_type='application/json')
     
-def api_get_history_student(history, student_id):
+def student_article_count(history, student_id):
     history = history.filter(user__pk=student_id)
     total_all = filter_on_period(history, 'total').count()
     total_month = filter_on_period(history, 'month').count()
     total_week = filter_on_period(history, 'week').count()
     return {
-            'week': total_week,
-            'month': total_month,
-            'total': total_all
-        }
-    
+        'week': total_week,
+        'month': total_month,
+        'total': total_all
+    }
+
+def group_category_counts(history, group_id):
+    history = history.filter(user__userprofile__groups=group_id)
+    counts = {}
+    for category in Category.objects.all():
+        category_articles = history.filter(article__categories=category)
+        counts[category.title] = len(category_articles)
+
+    return counts
     
 def filter_on_period(objects, period):
     if period == 'month':
