@@ -29,9 +29,6 @@ class CategoryAdmin(PolymorphicParentModelAdmin):
 class RSSArticleAdmin(PolymorphicChildModelAdmin):
     base_model = RSSArticle
 
-class SevenDaysArticleAdmin(PolymorphicChildModelAdmin):
-    base_model = SevenDaysArticle
-
 class WikiArticleAdmin(PolymorphicChildModelAdmin):
     base_model = WikiArticle
 
@@ -44,25 +41,26 @@ class ArticleAdmin(PolymorphicParentModelAdmin):
     search_fields = ['title',]
     list_display = ('title', 'main_category', 'publication_date',)
     list_filter = ('categories',)
+
+    child_models = (
+        (RSSArticle, RSSArticleAdmin),
+        (WikiArticle, WikiArticleAdmin),
+        (Article, RegularArticleAdmin)
+    )
+
     def main_category(self, obj):
         return obj.categories.first()
+
     def publication_date(self, obj):
         if(isinstance(obj, RSSArticle)):
             return obj.publication_date
         else:
             return " "
-    
-    
-    
-    child_models = (
-        (RSSArticle, RSSArticleAdmin),
-        (SevenDaysArticle, SevenDaysArticleAdmin),
-        (WikiArticle, WikiArticleAdmin),
-        (Article, RegularArticleAdmin)
-    )
+
 
 class ContentSourceAdmin(admin.ModelAdmin):
     list_display = ('name', 'link', 'logo')
+
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Article, ArticleAdmin)

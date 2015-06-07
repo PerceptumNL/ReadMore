@@ -398,30 +398,11 @@ class WikiCategory(Category):
                 self.identifier_type)
 
 
-class SevenDaysCategory(Category):
+class SevenDaysCategory(RSSCategory):
     """Model for 7days-based categories."""
-    feed = models.URLField()
 
-    def get_articles(self, recursive=False, max_num=100):
-        """Return the list of articles in this category.
-        Use this method to retrieve articles as it can be overriden by
-        subclasses to give the expected result for each type of category.
-
-        This function can search for all articles in all subcategories
-        recursively, in a breadth-first search. This operation can however be
-        rather costly.
-
-        Keyword arguments:
-        recursive -- Search for articles recursively (default False)
-        max_num -- Maximum number of articles (default 100)
-        """
-        articles = super(SevenDaysCategory, self).get_articles(recursive, 'Inf')
-        articles = sorted(articles, key=lambda a: a.publication_date,
-                reverse=True)
-        if max_num == 'Inf':
-            return articles
-        else:
-            return articles[:max_num]
+    class Meta:
+        proxy = True
 
     def update_feed(self):
         """Retrieve new articles from the SevenDays feed in this category."""
@@ -443,13 +424,13 @@ class SevenDaysCategory(Category):
         old_locale = locale.getlocale()
         locale.setlocale(locale.LC_ALL, "nl_NL.utf8")
         # Import each article
-        for identifier in links:
+        for link in links:
+            identifier = "http://www.sevendays.nl/%s" % ( link,)
             # If this article is already added, skip.
-            if SevenDaysArticle.objects.filter(identifier=identifier).exists():
+            if RSSArticle.objects.filter(identifier=identifier).exists():
                 continue
             # Parse article HTML
-            soup = BeautifulSoup(urllib.urlopen("http://www.sevendays.nl/%s" % (
-                identifier,)))
+            soup = BeautifulSoup(urllib.urlopen(identifier))
             # Extract information
             image_field = soup.find('div', class_=_css_class_image)
             if image_field is None:
@@ -477,7 +458,7 @@ class SevenDaysCategory(Category):
                 else:
                     link.decompose()
             body = unicode(body).encode('ascii',  "xmlcharrefreplace")
-            article, created = SevenDaysArticle.objects.get_or_create(
+            article, created = RSSArticle.objects.get_or_create(
                     identifier=identifier,
                     defaults={
                         "title":title,
@@ -485,40 +466,23 @@ class SevenDaysCategory(Category):
                         "image":main_image,
                         "source":self.source,
                         "publication_date":published})
-            article.categories.add(self)
-            article.save()
+            if created:
+                article.categories.add(self)
+                article.save()
         # Restore locale
         locale.setlocale(locale.LC_ALL, old_locale)
-        super(SevenDaysCategory, self).save()
+        self.last_update = datetime.now(timezone.utc)
+        super(RSSCategory, self).save()
 
     def save(self, *args, **kwargs):
-        super(SevenDaysCategory, self).save(*args, **kwargs)
+        super(RSSCategory, self).save(*args, **kwargs)
         self.update_feed()
 
-class KidsWeekCategory(Category):
+class KidsWeekCategory(RSSCategory):
     """Model for KidsWeek-based categories."""
-    feed = models.URLField()
 
-    def get_articles(self, recursive=False, max_num=100):
-        """Return the list of articles in this category.
-        Use this method to retrieve articles as it can be overriden by
-        subclasses to give the expected result for each type of category.
-
-        This function can search for all articles in all subcategories
-        recursively, in a breadth-first search. This operation can however be
-        rather costly.
-
-        Keyword arguments:
-        recursive -- Search for articles recursively (default False)
-        max_num -- Maximum number of articles (default 100)
-        """
-        articles = super(KidsWeekCategory, self).get_articles(recursive, 'Inf')
-        articles = sorted(articles, key=lambda a: a.publication_date,
-                reverse=True)
-        if max_num == 'Inf':
-            return articles
-        else:
-            return articles[:max_num]
+    class Meta:
+        proxy = True
 
     def update_feed(self):
         """Retrieve new articles from the Kidsweek feed in this category."""
@@ -529,6 +493,8 @@ class KidsWeekCategory(Category):
         _css_class_intro = r'main_intro'
         _css_class_body = r'main_text'
         _css_class_media = re.compile("media-element")
+        # Pre-compile regex to extract clean identifier
+        re_identifier = re.compile(".+(/artikel/.+)$")
         # Retrieve the Kidsweek index feed
         index_feed = BeautifulSoup(urllib.urlopen(self.feed).read())
         # Find links to articles
@@ -540,12 +506,20 @@ class KidsWeekCategory(Category):
         old_locale = locale.getlocale()
         locale.setlocale(locale.LC_ALL, "nl_NL.utf8")
         # Import the most recent ten articles
-        for identifier in links[0:20]:
+        for link in links[0:20]:
+            identifier_match = re.match(re_identifier, link)
+            if identifier_match is None:
+                # Odd, identifier doesn't match expected format. Ignore.
+                continue
+            else:
+                identifier = "http://www.kidsweek.nl%s" % (
+                        identifier_match.group(1),)
+
             # If this article is already added, skip.
-            if SevenDaysArticle.objects.filter(identifier=identifier).exists():
+            if RSSArticle.objects.filter(identifier=identifier).exists():
                 continue
             # Parse article HTML
-            soup = BeautifulSoup(urllib.urlopen(identifier))
+            soup = BeautifulSoup(urllib.urlopen(link))
             # Extract information
             image_field = soup.find('div', class_=_css_class_image)
             if image_field is None:
@@ -587,7 +561,7 @@ class KidsWeekCategory(Category):
                     p.decompose()
             intro = unicode(intro).encode('ascii',  "xmlcharrefreplace")
             body = unicode(body).encode('ascii',  "xmlcharrefreplace")
-            article, created = SevenDaysArticle.objects.get_or_create(
+            article, created = RSSArticle.objects.get_or_create(
                     identifier=identifier,
                     defaults={
                         "title":title,
@@ -595,14 +569,16 @@ class KidsWeekCategory(Category):
                         "image":main_image,
                         "source":self.source,
                         "publication_date":published})
-            article.categories.add(self)
-            article.save()
+            if created:
+                article.categories.add(self)
+                article.save()
         # Restore locale
         locale.setlocale(locale.LC_ALL, old_locale)
-        super(KidsWeekCategory, self).save()
+        self.last_update = datetime.now(timezone.utc)
+        super(RSSCategory, self).save()
 
     def save(self, *args, **kwargs):
-        super(KidsWeekCategory, self).save(*args, **kwargs)
+        super(RSSCategory, self).save(*args, **kwargs)
         self.update_feed()
 
 class Article(PolymorphicModel):
@@ -661,12 +637,6 @@ class Article(PolymorphicModel):
 
 
 class RSSArticle(Article):
-    """Model for RSS-based articles."""
-    publication_date = models.DateTimeField()
-    identifier = models.URLField(max_length=255)
-
-
-class SevenDaysArticle(Article):
     """Model for RSS-based articles."""
     publication_date = models.DateTimeField()
     identifier = models.URLField(max_length=255)
