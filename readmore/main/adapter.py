@@ -1,4 +1,5 @@
 from django.conf import settings
+from readmore.main.models import Group
 from allauth.account.adapter import DefaultAccountAdapter
 from django.http import HttpResponse, HttpResponseNotFound, \
         HttpResponseServerError, HttpResponseRedirect
@@ -15,5 +16,11 @@ class ReadMoreAccountAdapter(DefaultAccountAdapter):
                 request, user, form, commit)
         group_code = form.cleaned_data
         if group_code:
-            pass
+            try:
+                group = Group.objects.get(code=group_code)
+            except Group.DoesNotExist:
+                pass
+            else:
+                user.profile.groups.add(group)
+                user.profile.save()
         return user
