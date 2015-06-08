@@ -1,5 +1,5 @@
 from django.conf import settings
-from readmore.main.models import Group
+from readmore.main.models import Group, TeacherCode, UserProfile
 from allauth.account.adapter import DefaultAccountAdapter
 from django.http import HttpResponse, HttpResponseNotFound, \
         HttpResponseServerError, HttpResponseRedirect
@@ -14,13 +14,20 @@ class ReadMoreAccountAdapter(DefaultAccountAdapter):
     def save_user(self, request, user, form, commit=True):
         user = super(ReadMoreAccountAdapter, self).save_user(
                 request, user, form, commit)
-        group_code = form.cleaned_data
+        # Generate a UserProfile for the new user
+        profile = UserProfile.objects.create(user=user)
+        group_code = form.cleaned_data['group_code']
         if group_code:
-            try:
-                group = Group.objects.get(code=group_code)
-            except Group.DoesNotExist:
-                pass
+            # Check if the code is a teacher code
+            if TeacherCode.objects.filter(code=group_code).exists():
+                group = Group.objects.create(title="Group of %s" % (user,),
+                        leader=user)
             else:
-                user.profile.groups.add(group)
-                user.profile.save()
+                try:
+                    group = Group.objects.get(code=group_code)
+                except Group.DoesNotExist:
+                    pass
+                else:
+                    profile.groups.add(group)
+                    profile.save()
         return user

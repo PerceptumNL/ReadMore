@@ -88,9 +88,17 @@ class Group(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.code:
+            if not self.pk:
+                super(Group, self).save(*args, **kwargs)
             self.code = self.generate_new_code()
-        return super(Group, self).save(*args, **kwargs)
+        super(Group, self).save()
 
+
+class TeacherCode(models.Model):
+    code = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return unicode(self.code)
 
 class Event(PolymorphicModel):
     user = models.ForeignKey(User)
