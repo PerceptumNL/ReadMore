@@ -16,15 +16,15 @@ class ReadMoreAccountAdapter(DefaultAccountAdapter):
                 request, user, form, commit)
         # Generate a UserProfile for the new user
         profile = UserProfile.objects.create(user=user)
-        group_code = form.cleaned_data['group_code']
-        if group_code:
+        code = form.cleaned_data['code']
+        if code:
             # Check if the code is a teacher code
-            if TeacherCode.objects.filter(code=group_code).exists():
+            if TeacherCode.objects.filter(code=code).exists():
                 group = Group.objects.create(title="Group of %s" % (user,),
                         leader=user)
             else:
                 try:
-                    group = Group.objects.get(code=group_code)
+                    group = Group.objects.get(code=code)
                 except Group.DoesNotExist:
                     pass
                 else:
