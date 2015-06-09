@@ -24,7 +24,7 @@ urlpatterns = patterns('',
     url(r'^group/(?P<group_id>\w+)$', 'readmore.teacher.views.dashboard_group', name='dashboard_group'),
     url(r'^group/(?P<group_id>\w+)/(?P<student_id>\w+)$', 'readmore.teacher.views.dashboard_student', name='dashboard_student'),
     
-    url(r'^group/api/student/(?P<student_id>\w+)$', 'readmore.teacher.views.api_student', name='api_student'),
+    url(r'^api/student/(?P<student_id>\w+)$', 'readmore.teacher.views.api_student', name='api_student'),
     
     url(r'^api/group/(?P<group_id>\w+)$', 'readmore.teacher.views.api_group', name='api_group'),
         

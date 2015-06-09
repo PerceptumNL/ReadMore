@@ -32,11 +32,18 @@
 {% block body %}
 
 <div id="mainContent">
-    <div class="group-block" id="group_info">
-        <h1>{{student}}</h1>
+    <h1>{{student}}</h1>
+    <div class="student-block" id="click_info" pk="{{student.pk}}">
         <div class="group-info-block wide">
-        <h4> Samenvatting van deze week</h4>
-            
+            <h3> Samenvatting van deze week</h3>
+            <h4> Aangeklikte woorden </h5>
+            <h6>
+                <span id="clicked_words"></span>
+            </h6>
+            <h4> Gelezen artikelen </h5>
+            <h6>
+                <span id="articles_read"></span>
+            </h6>
         </div>
     </div>
     <div class="group-block" id="group_{{group_id}}">
@@ -61,6 +68,7 @@
 {% block extraScripts %}
 	<!-- jquery mobile for hashchange event -->
     <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
+    <script src="{% static 'js/teacher_student.js' %}"></script>
 
     <script>
 

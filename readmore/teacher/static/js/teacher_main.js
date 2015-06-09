@@ -5,7 +5,7 @@ $(document).ready(function(){
 });
 
 function initialize_group(group_id){
-    $.get( "api/group/"+group_id, function( data ) {
+    $.get( "api/group/"+group_id+"?filter=1", function( data ) {
         $( "#groupsize_"+group_id ).html( data.student_count );
         $( "#read_week_"+group_id ).html( data.article_read.week );
         $( "#read_month_"+group_id ).html( data.article_read.month );
