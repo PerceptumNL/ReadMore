@@ -64,11 +64,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-)
 )
 
 LANGUAGE_CODE = 'nl'
@@ -102,6 +100,7 @@ SOCIALACCOUNT_AUTO_SIGNUP = 'True'
 ACCOUNT_EMAIL_VERIFICATION = 'False'
 AUTH_PROFILE_MODULE = 'main.UserProfile'
 SIGNUP_ENABLED = True
+ACCOUNT_FORMS = {'signup': 'readmore.main.forms.ReadMoreSignupForm'}
 ACCOUNT_ADAPTER = "readmore.main.adapter.ReadMoreAccountAdapter"
 
 SOCIALACCOUNT_PROVIDERS = \
