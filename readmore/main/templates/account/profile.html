@@ -7,7 +7,16 @@
 
 {% block extraCSS %}
     <link href="{% static 'css/profile_style.css' %}" rel="stylesheet">
-
+    <link href="{% static 'css/article_style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/typography.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base_page.css' %}" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard_main.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard_group.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 {% endblock %}
 
 {% block menu %}
@@ -21,22 +30,78 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="leading">{% trans "Welkom bij Lees Meer" %}, {{request.user}}!</h1>
-    <p> 
-        Op Lees Meer ga je teksten lezen over de onderwerpen die jij zelf 
-        leuk vindt. In de teksten kan je op lastige woorden klikken om meer 
-        informatie te krijgen over dat woord.
-    </p>
-    <a href="/"><button class="nav">Ga naar de artikelen</button></a>
-    
-    <ul>
-        {% for history_item in history %}
-            <li> <a href="{% url 'article' history_item.pk %}">{{history_item}}</a>
-        {% endfor %}
-    <ul>
-    
+<div id="mainContent">
+    <div class="group-block">
+		<h1 class="leading">{% trans "Welkom bij LeestMeer" %}, {{request.user}}!</h1>
+		<p>
+			Op LeestMeer ga je teksten lezen over de onderwerpen die jij zelf
+			leuk vindt. In de teksten kan je op lastige woorden klikken om meer
+			informatie te krijgen over dat woord.
+		</p>
+	</div>
+
+    <div class="group-block">
+        <div class="group-info-block wide">
+            <h3>Laatste artikelen gelezen door klasgenoten</h3>
+			<ul>
+				<li>..</li>
+				<li>..</li>
+			</ul>
+			<a href="/"><button class="nav">Ga naar de artikelen</button></a>
+		</div>
+	</div>
+    <div class="group-block">
+        <div class="group-info-block wide">
+            <h3>Laatste artikelen gelezen door jou</h3>
+			<ul>
+				{% for history_item in history %}
+					<li> <a href="{% url 'article' history_item.pk %}">{{history_item}}</a>
+				{% endfor %}
+			</ul>
+			<a href="/"><button class="nav">Ga naar de artikelen</button></a>
+		</div>
+	</div>
+	{% if not request.user.userprofile.groups.count %}
+    <div class="group-block">
+        <div class="group-info-block wide">
+            <h3>Aanmelden bij een groep</h3>
+			<form class="form " id='signup_group_form'
+				style='margin-left: 20px; font-size: 20px;'>
+				{% csrf_token %}
+				<div class='form-group' style='font-size: 20px'>
+					<input name='code' class='form-control' type='text'
+					placeholder='Vul hier de groep code in'></input>
+				</div>
+				<input class="form-control" style='padding: 0 20px;' type="submit" value="Meld je aan"></input>
+			</form>
+		</div>
+	</div>
+	{% endif %}
+</div>
 {% endblock %}
 
 {% block footer %}
 
 {% endblock %}
+
+{% block extraScripts %}
+    <script>
+		$(function(){
+			$("#signup_group_form").submit(function(event){
+				if(this.code.value != ""){
+					data = $(this).serialize()
+					$.post("{% url 'api_group' %}",	data)
+					 .done(function(data, textStatus, jqXHR){
+							$("#signup_group_form").html(
+								"<h5>Je bent aan de groep toegevoegd.</h5>")})
+					 .fail(function(data, textStatus, jqXHR){
+						if(jqXHR.status == 404)
+							alert("Deze code is onbekend bij ons")})
+				} else {
+					alert("Je moet eerst een groep code invullen.");
+				}
+				event.preventDefault();
+			})
+		});
+	</script>
+{% endblock extraScripts %}

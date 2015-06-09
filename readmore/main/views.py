@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 from django.db.models import Avg, Count
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, \
+        HttpResponseBadRequest, HttpResponseForbidden
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -136,6 +137,21 @@ def filter_on_period(objects, period):
         return objects.filter(date__range=[start_week, end_week])
     else:
         return objects
+
+@login_required
+def api_group(request):
+    if request.method == "POST":
+        if request.user.userprofile.groups.count() > 0:
+            return HttpResponseForbidden()
+        code = request.POST.get('code', '')
+        if not code:
+            return HttpResponseBadRequest()
+        group = get_object_or_404(Group, code=code)
+        request.user.userprofile.groups.add(group)
+        request.user.userprofile.save()
+        return HttpResponse()
+    else:
+        return HttpResponse(status=405)
 
 @login_required
 def api_get_history_totals(request, history, user_id=None):
