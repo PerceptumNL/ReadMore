@@ -10,6 +10,7 @@ from django.utils.translation import ugettext as _
 from datetime import datetime, timedelta
 from collections import Counter
 from django.db.models import Count
+from django.core.exceptions import ObjectDoesNotExist
 import math
 import helpers
 import json
@@ -51,82 +52,124 @@ def dashboard_student(request, group_id=None, student_id=None):
 
 @login_required
 def api_group(request, group_id=None):
-    students = User.objects.filter(userprofile__groups__pk__in=group_id)
-    student_count = len(students)
-    article_read = {"week": 0, "month": 0, "total": 0}
-    article_word = {"week": 0, "month": 0, "total": 0}
-    engagement = 0
-    articles = []
-    words = []
+    """API for group statistics.
+    Request args:
+        filter: Determines what statistics are included
+            0 = all
+            1 = student count, article read, article word, engagement, articles, words
+            2 = top 3 categories"""
+    filter = int(request.GET.get('filter',0))
+    result_dict = {}
     
-    if student_count > 0:
-        article_read = api_get_history_totals(ArticleHistoryItem.objects, group_id)
-        article_word = api_get_history_totals(WordHistoryItem.objects, group_id)
-
-        art_per_stud = article_read["week"]/float(student_count)
-        engagement_norm = art_per_stud/2.0
-        engagement = int(min(5, math.floor(engagement_norm*5)))
-
-        article_his = ArticleHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
-        article_his = filter_on_period(article_his, 'week')
-        article_pks = article_his.values_list('article__pk', flat=True)
-        article_pks = sorted(article_pks, key=Counter(article_pks).get, reverse=True)
-        seen = set()
-        article_pks_f = [x for x in article_pks if x not in seen and not seen.add(x)]
-        freqs = Counter(article_pks)
-        for pk in article_pks_f:
-            article = Article.objects.get(pk=pk)
-            articles.append( {
-                'title': article.title,
-                'image': article.image,
-                'pk': article.pk,
-                'url': reverse('article', kwargs={'identifier': article.pk}),
-                'freq': freqs[pk]
-                })
-        articles = articles[:10]
-
-        word_his = WordHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
-        word_his = filter_on_period(word_his, 'week')
-        words = list(set(word_his.values_list('word', flat=True)))
+    if filter < 2:
+        students = User.objects.filter(userprofile__groups__pk__in=group_id)
+        student_count = len(students)
+        if student_count > 0:
+            article_read = {"week": 0, "month": 0, "total": 0}
+            article_word = {"week": 0, "month": 0, "total": 0}
+            engagement = 0
+            articles = []
+            words = []
         
-        counts = group_category_counts(ArticleHistoryItem.objects, group_id)
-        categories = sorted(counts, key=counts.get)[:3]
+            article_read = api_get_history_totals(ArticleHistoryItem.objects, group_id)
+            article_word = api_get_history_totals(WordHistoryItem.objects, group_id)
 
-    return HttpResponse(json.dumps({
-        "student_count": student_count,
-        "article_read": article_read,
-        "article_word": article_word,
-        "engagement": engagement,
-        "articles": articles,
-        "words": sorted(words),
-        "categories": categories,
-    }), content_type='application/json')
+            art_per_stud = article_read["week"]/float(student_count)
+            engagement_norm = art_per_stud/2.0
+            engagement = int(min(5, math.floor(engagement_norm*5)))
+
+            article_his = ArticleHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
+            article_his = filter_on_period(article_his, 'week')
+            article_pks = article_his.values_list('article__pk', flat=True)
+            article_pks = sorted(article_pks, key=Counter(article_pks).get, reverse=True)
+            seen = set()
+            article_pks_f = [x for x in article_pks if x not in seen and not seen.add(x)]
+            freqs = Counter(article_pks)
+            for pk in article_pks_f:
+                article = Article.objects.get(pk=pk)
+                articles.append( {
+                    'title': article.title,
+                    'image': article.image,
+                    'pk': article.pk,
+                    'url': reverse('article', kwargs={'identifier': article.pk}),
+                    'freq': freqs[pk]
+                    })
+            articles = articles[:10]
+
+            word_his = WordHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
+            word_his = filter_on_period(word_his, 'week')
+            words = list(set(word_his.values_list('word', flat=True)))
+            
+            result_dict["student_count"] = student_count
+            result_dict["article_read"] = article_read
+            result_dict["article_word"] = article_word
+            result_dict["engagement"] = engagement
+            result_dict["articles"] = articles
+            result_dict["words"] = sorted(words)
+        
+    if filter in (0, 2):
+        counts = group_category_counts(group_id)
+        categories = sorted(counts, key=counts.get)[:3]
+        
+        result_dict["categories"] = categories
+    
+    return HttpResponse(json.dumps(result_dict), content_type='application/json')
 
 @login_required
 def api_student(request, student_id=None):
-    student = User.objects.filter(userprofile__pk=student_id)
+    """API for student statistics.
+    Request args:
+        filter: Determines what statistics are included
+            0 = all
+            1 = article counts, engagement
+            2 = words clicked, articles read, ratings, average read count"""
+    filter = int(request.GET.get('filter',0))
+    result_dict = {}
     
-    engagement = 0
-    article_read = {"week": 0, "month": 0, "total": 0}
-    favorite_category = ""
-    article_suggestion = ""
+    article_history = ArticleHistoryItem.objects.filter(user__pk=student_id)
+    article_counts = student_article_count(article_history)
     
-    article_read = student_article_count(ArticleHistoryItem.objects, student_id)
+    if filter < 2:
+        engagement = 0
 
-    """ A temporary definition of engagement. Conferred with David and the ideal
-    definition would be based on the "actually" read article count related to the
-    estimated capacity of the student, e.g. not punish students for being slower
-    than the rest of the group. Additionally a good measure would be any
-    interaction with the platform, such as ratings, word clicks, etc."""
-    engagement = int(min(5, article_read["week"]))
+        """ A temporary definition of engagement. Conferred with David and the ideal
+        definition would be based on the "actually" read article count related to the
+        estimated capacity of the student, e.g. not punish students for being slower
+        than the rest of the group. Additionally a good measure would be any
+        interaction with the platform, such as ratings, word clicks, etc."""
+        engagement = int(min(5, article_counts["week"]))
+        
+        result_dict["article_counts"] = article_counts
+        result_dict["engagement"] = engagement
     
-    return HttpResponse(json.dumps({
-        "article_read": article_read,
-        "engagement": engagement,
-    }), content_type='application/json')
+    if filter in (0, 2):
+        """Still learning
+        try:
+            student = User.objects.get(userprofile__pk=student_id)
+        except ObjectDoesNotExist:
+            print "Invalid student ID"
+        clicked = student.wordhistoryitem_set.all()"""
+        clicked_words = unique_strs(WordHistoryItem.objects.filter(user__pk=student_id))
+        
+        articles_read = unique_strs(article_history)
+        
+        ratings = ArticleRatingItem.objects.filter(user__pk=student_id)
+        
+        result_dict["clicked_words"] = clicked_words
+        result_dict["articles_read"] = articles_read
+        
+    return HttpResponse(json.dumps(result_dict), content_type='application/json')
+
+def group_category_counts(group_id):
+    history = ArticleHistoryItem.objects.filter(user__userprofile__groups=group_id)
+    counts = {}
+    for category in Category.objects.all():
+        category_articles = history.filter(article__categories=category)
+        counts[category.title] = len(category_articles)
+
+    return counts
     
-def student_article_count(history, student_id):
-    history = history.filter(user__pk=student_id)
+def student_article_count(history):
     total_all = filter_on_period(history, 'total').count()
     total_month = filter_on_period(history, 'month').count()
     total_week = filter_on_period(history, 'week').count()
@@ -136,14 +179,8 @@ def student_article_count(history, student_id):
         'total': total_all
     }
 
-def group_category_counts(history, group_id):
-    history = history.filter(user__userprofile__groups=group_id)
-    counts = {}
-    for category in Category.objects.all():
-        category_articles = history.filter(article__categories=category)
-        counts[category.title] = len(category_articles)
-
-    return counts
+def unique_strs(objs):
+    return list(set([unicode(obj) for obj in objs]))
     
 def filter_on_period(objects, period):
     if period == 'month':
