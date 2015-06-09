@@ -36,8 +36,21 @@
     <div class="group-block" id="group_info">
         <h1>{{group.title}}</h1>
         <div class="group-info-block wide">
-        <h4> Samenvatting van deze week</h4>
-            
+            <h4>
+                Groep code:
+                <span style='color: #333 !important; font-weight: bold;'>
+                    {{group.code}}
+                </span>
+            </h4>
+            <p style='font-style: italic;'>
+                Deze code kan gebruikt worden door uw leerlingen om zich bij uw groep
+                toe te voegen.
+            </p>
+        </div>
+    </div>
+    <div class="group-block" id="group_info">
+        <div class="group-info-block wide">
+            <h4> Samenvatting van deze week</h4>
         </div>
     </div>
     <div class="group-block" id="group_{{group.pk}}" pk="{{group.pk}}">

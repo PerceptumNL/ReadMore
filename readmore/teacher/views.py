@@ -17,7 +17,7 @@ import json
 @login_required
 def dashboard_test(request):
     if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
-        groups = Group.objects.all()
+        groups = Group.objects.filter(leader=request.user)
         articles = RSSArticle.objects.filter(publication_date__gte=datetime.now()-timedelta(days=7))
         return render(request, 'teacher/dashboard/main.html', {
         "groups": groups,        
