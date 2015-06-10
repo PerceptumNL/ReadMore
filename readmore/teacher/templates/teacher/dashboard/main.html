@@ -47,45 +47,48 @@
             <p id="names_{{group.pk}}"></p>
         </div>
 
-        <div class="group-info-block activity-block">
-            <h3 class="floating">Activiteit</h3>
-            <img id="group_activity_{{group.pk}}" src="{% static 'img/engagement-00.png'%}">
-            <div class="cover">
-                <h1><sup id="activity_{{group.pk}}">1</sup>&frasl;<sub>5</sub></h1>
-            </div>
-        </div>
-        <div class="group-info-block">
-            <h3>Gelezen</h3>
-            <ul>
-                <li>Deze week: <span id="read_week_{{group.pk}}"></span>
-                <li>Deze maand: <span id="read_month_{{group.pk}}"></span>
-                <li>Totaal: <span id="read_total_{{group.pk}}"></span>
-            </ul>
-        </div>
-        <div class="group-info-block">
-            <h3>Woorden</h3>
-            <ul>
-                <li>Deze week: <span id="word_week_{{group.pk}}"></span>
-                <li>Deze maand: <span id="word_month_{{group.pk}}"></span>
-                <li>Totaal: <span id="word_total_{{group.pk}}"></span>
-            </ul>
-        </div>
+		<div style='display: none' id="activity_stats_{{group.pk}}">
+			<div class="group-info-block activity-block">
+				<h3 class="floating">Activiteit</h3>
+				<img id="group_activity_{{group.pk}}" src="{% static 'img/engagement-00.png'%}">
+				<div class="cover">
+					<h1><sup id="activity_{{group.pk}}">1</sup>&frasl;<sub>5</sub></h1>
+				</div>
+			</div>
+			<div class="group-info-block">
+				<h3>Gelezen</h3>
+				<ul>
+					<li>Deze week: <span id="read_week_{{group.pk}}"></span>
+					<li>Deze maand: <span id="read_month_{{group.pk}}"></span>
+					<li>Totaal: <span id="read_total_{{group.pk}}"></span>
+				</ul>
+			</div>
+			<div class="group-info-block">
+				<h3>Woorden</h3>
+				<ul>
+					<li>Deze week: <span id="word_week_{{group.pk}}"></span>
+					<li>Deze maand: <span id="word_month_{{group.pk}}"></span>
+					<li>Totaal: <span id="word_total_{{group.pk}}"></span>
+				</ul>
+			</div>
 
-        <div class="group-info-block wide" id="articles_{{group.pk}}">
-            <h3>Top 10 meest gelezen artikelen deze week</h3>
+			<div class="group-info-block wide" id="articles_{{group.pk}}">
+				<h3>Top 10 meest gelezen artikelen deze week</h3>
 
-        </div>
-        <div class="group-info-block wide" id="words_{{group.pk}}">
-            <h3>Bekeken woorden van deze week</h3>
+			</div>
+			<div class="group-info-block wide" id="words_{{group.pk}}">
+				<h3>Bekeken woorden van deze week</h3>
 
-        </div>
+			</div>
+		</div>
     </div>
 {% endfor %}
 
-<div class="group-block" id="newgroup" pk="{{group.pk}}">
+<div class="group-block" id="newgroup">
         <h3>Maak een nieuwe groep aan</h3>
-        <form class="form">
-            <input type="text" placeholder="naam van groep"></input>
+        <form class="form" id="create_group_form">
+			{% csrf_token %}
+            <input name='title' type="text" placeholder="naam van groep"></input>
             <input type="submit" value="Maak nieuwe groep"></input>
         </form>
 </div>
@@ -108,6 +111,24 @@
     <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
     <script src="{% static 'js/teacher_main.js' %}"></script>
     <script>
-
+		$(function(){
+			$("#create_group_form").submit(function(event){
+				if(this.title.value != ""){
+					var title = this.title.value
+					data = $(this).serialize()
+					this.title.value = ""
+					$.post("{% url 'api_group' %}",	data)
+					 .done(function(data, textStatus, jqXHR){
+						$("#create_group_form").after(
+							"<div class='group-info-block wide'><p>"+
+							"<h5>Groep <b>"+title+"</b> is aangemaakt.</h5>" +
+							"</p><p>Klik <a href='"+data+"'>"+
+							"hier</a> om de groep te bekijken</p>")});
+				} else {
+					alert("Je moet eerst een groep naam invullen.");
+				}
+				event.preventDefault();
+			})
+		});
 	</script>
 {% endblock extraScripts %}

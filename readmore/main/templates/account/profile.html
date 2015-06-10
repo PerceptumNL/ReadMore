@@ -90,7 +90,7 @@
 			$("#signup_group_form").submit(function(event){
 				if(this.code.value != ""){
 					data = $(this).serialize()
-					$.post("{% url 'api_group' %}",	data)
+					$.post("{% url 'api_join_group' %}",	data)
 					 .done(function(data, textStatus, jqXHR){
 							$("#signup_group_form").html(
 								"<h5>Je bent aan de groep toegevoegd.</h5>")})

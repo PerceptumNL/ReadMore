@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, \
+        HttpResponseBadRequest, QueryDict
+from django.views.generic.base import View
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 from readmore.main.models import *
 from readmore.content.models import *
 from readmore.widgets.customcard.models import CustomCard
@@ -28,8 +32,8 @@ def dashboard_test(request):
         
 def dashboard_group(request, group_id=None):
     if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
-        group = Group.objects.get(pk=group_id)
-        students = User.objects.filter(userprofile__groups__pk__in=group_id)
+        group = get_object_or_404(Group, pk=group_id)
+        students = User.objects.filter(userprofile__groups__pk=group_id)
 
         return render(request, 'teacher/dashboard/group.html', {
             "group": group,
@@ -49,71 +53,101 @@ def dashboard_student(request, group_id=None, student_id=None):
     else:
         return HttpResponseRedirect("/")
 
+class GroupAPIView(View):
 
-@login_required
-def api_group(request, group_id=None):
-    """API for group statistics.
-    Request args:
-        filter: Determines what statistics are included
-            0 = all
-            1 = student count, article read, article word, engagement, articles, words
-            2 = top 3 categories"""
-    filter = int(request.GET.get('filter',0))
-    result_dict = {}
-    
-    if filter < 2:
-        students = User.objects.filter(userprofile__groups__pk__in=group_id)
-        student_count = len(students)
-        if student_count > 0:
-            article_read = {"week": 0, "month": 0, "total": 0}
-            article_word = {"week": 0, "month": 0, "total": 0}
-            engagement = 0
-            articles = []
-            words = []
-        
-            article_read = api_get_history_totals(ArticleHistoryItem.objects, group_id)
-            article_word = api_get_history_totals(WordHistoryItem.objects, group_id)
+    def post(self, request, *args, **kwargs):
+        if not Group.objects.filter(leader=request.user).exists():
+            return HttpResponse(status=403)
+        title = request.POST.get('title', None)
+        if title:
+            group = Group.objects.create(leader=request.user, title=title)
+            return HttpResponse(reverse('dashboard_group', args=(group.pk,)))
+        else:
+            return HttpResponseBadRequest()
 
-            art_per_stud = article_read["week"]/float(student_count)
-            engagement_norm = art_per_stud/2.0
-            engagement = int(min(5, math.floor(engagement_norm*5)))
+    def put(self, request, group_id):
+        group = get_object_or_404(Group, id=group_id)
+        if group.leader != request.user:
+            return HttpResponse(status=403)
 
-            article_his = ArticleHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
-            article_his = filter_on_period(article_his, 'week')
-            article_pks = article_his.values_list('article__pk', flat=True)
-            article_pks = sorted(article_pks, key=Counter(article_pks).get, reverse=True)
-            seen = set()
-            article_pks_f = [x for x in article_pks if x not in seen and not seen.add(x)]
-            freqs = Counter(article_pks)
-            for pk in article_pks_f:
-                article = Article.objects.get(pk=pk)
-                articles.append( {
-                    'title': article.title,
-                    'image': article.image,
-                    'pk': article.pk,
-                    'url': reverse('article', kwargs={'identifier': article.pk}),
-                    'freq': freqs[pk]
-                    })
-            articles = articles[:10]
+        params = QueryDict(request.read())
+        title = params.get('title', None)
+        if title:
+            group.title = title
+            group.save()
+            return HttpResponse()
+        else:
+            return HttpResponseBadRequest()
 
-            word_his = WordHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
-            word_his = filter_on_period(word_his, 'week')
-            words = list(set(word_his.values_list('word', flat=True)))
-            
-            result_dict["student_count"] = student_count
-            result_dict["article_read"] = article_read
-            result_dict["article_word"] = article_word
-            result_dict["engagement"] = engagement
-            result_dict["articles"] = articles
-            result_dict["words"] = sorted(words)
-        
-    if filter in (0, 2):
-        counts = group_category_counts(group_id)
-        categories = sorted(counts, key=counts.get)[:3]
-        
-        result_dict["categories"] = categories
-    
-    return HttpResponse(json.dumps(result_dict), content_type='application/json')
+    def get(self, request, group_id=None):
+        """API for group statistics.
+        Request args:
+            filter: Determines what statistics are included
+                0 = all
+                1 = student count, article read, article word, engagement, articles, words
+                2 = top 3 categories"""
+        filter = int(request.GET.get('filter',0))
+        result_dict = {}
+
+        if filter < 2:
+            students = User.objects.filter(userprofile__groups__pk=group_id)
+            student_count = len(students)
+            if student_count > 0:
+                article_read = {"week": 0, "month": 0, "total": 0}
+                article_word = {"week": 0, "month": 0, "total": 0}
+                engagement = 0
+                articles = []
+                words = []
+
+                article_read = api_get_history_totals(ArticleHistoryItem.objects, group_id)
+                article_word = api_get_history_totals(WordHistoryItem.objects, group_id)
+
+                art_per_stud = article_read["week"]/float(student_count)
+                engagement_norm = art_per_stud/2.0
+                engagement = int(min(5, math.floor(engagement_norm*5)))
+
+                article_his = ArticleHistoryItem.objects.filter(user__userprofile__groups=group_id)
+                article_his = filter_on_period(article_his, 'week')
+                article_pks = article_his.values_list('article__pk', flat=True)
+                article_pks = sorted(article_pks, key=Counter(article_pks).get, reverse=True)
+                seen = set()
+                article_pks_f = [x for x in article_pks if x not in seen and not seen.add(x)]
+                freqs = Counter(article_pks)
+                for pk in article_pks_f:
+                    article = Article.objects.get(pk=pk)
+                    articles.append( {
+                        'title': article.title,
+                        'image': article.image,
+                        'pk': article.pk,
+                        'url': reverse('article', kwargs={'identifier': article.pk}),
+                        'freq': freqs[pk]
+                        })
+                articles = articles[:10]
+
+                word_his = WordHistoryItem.objects.filter(user__userprofile__groups=group_id)
+                word_his = filter_on_period(word_his, 'week')
+                words = list(set(word_his.values_list('word', flat=True)))
+
+                result_dict["student_count"] = student_count
+                result_dict["article_read"] = article_read
+                result_dict["article_word"] = article_word
+                result_dict["engagement"] = engagement
+                result_dict["articles"] = articles
+                result_dict["words"] = sorted(words)
+            else:
+                result_dict["student_count"] = 0
+
+        if filter in (0, 2):
+            counts = group_category_counts(group_id)
+            categories = sorted(counts, key=counts.get)[:3]
+
+            result_dict["categories"] = categories
+
+        return HttpResponse(json.dumps(result_dict), content_type='application/json')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(GroupAPIView, self).dispatch(*args, **kwargs)
 
 @login_required
 def api_student(request, student_id=None):
