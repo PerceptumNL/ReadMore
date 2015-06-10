@@ -84,8 +84,9 @@
 
 <div class="group-block" id="newgroup" pk="{{group.pk}}">
         <h3>Maak een nieuwe groep aan</h3>
-        <form class="form">
-            <input type="text" placeholder="naam van groep"></input>
+        <form class="form" id="create_group_form">
+			{% csrf_token %}
+            <input name='title' type="text" placeholder="naam van groep"></input>
             <input type="submit" value="Maak nieuwe groep"></input>
         </form>
 </div>
@@ -108,6 +109,24 @@
     <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
     <script src="{% static 'js/teacher_main.js' %}"></script>
     <script>
-
+		$(function(){
+			$("#create_group_form").submit(function(event){
+				if(this.title.value != ""){
+					var title = this.title.value
+					data = $(this).serialize()
+					this.title.value = ""
+					$.post("{% url 'api_group' %}",	data)
+					 .done(function(data, textStatus, jqXHR){
+						$("#create_group_form").after(
+							"<div class='group-info-block wide'><p>"+
+							"<h5>Groep <b>"+title+"</b> is aangemaakt.</h5>" +
+							"</p><p>Klik <a href='"+data+"'>"+
+							"hier</a> om de groep te bekijken</p>")});
+				} else {
+					alert("Je moet eerst een groep naam invullen.");
+				}
+				event.preventDefault();
+			})
+		});
 	</script>
 {% endblock extraScripts %}
