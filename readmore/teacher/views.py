@@ -202,7 +202,8 @@ def api_student(request, student_id=None):
         rating = {}
         if len(ratings) > 0:
             rating['title'] = ratings[0].article.title
-            rating['link'] = '/content/articles/'+str(ratings[0].article.id)
+            rating['url'] = '/content/articles/'+str(ratings[0].article.id)
+            rating['image'] = ratings[0].article.image
             rating['rating'] = int(ratings[0].rating)
         
         difficulties = ArticleDifficultyItem.objects.filter(user__pk=student_id)
@@ -210,7 +211,8 @@ def api_student(request, student_id=None):
         difficulty = {}
         if len(ratings) > 0:
             difficulty['title'] = difficulties[0].article.title
-            difficulty['link'] = '/content/articles/'+str(difficulties[0].article.id)
+            difficulty['url'] = '/content/articles/'+str(difficulties[0].article.id)
+            difficulty['image'] = difficulties[0].article.image
             difficulty['rating'] = int(difficulties[0].rating)
         
         result_dict["articles_read"] = articles
