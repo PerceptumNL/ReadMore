@@ -127,7 +127,7 @@ def api_student(request, student_id=None):
     result_dict = {}
     
     article_history = ArticleHistoryItem.objects.filter(user__pk=student_id)
-    article_counts = student_article_count(article_history)
+    article_counts = last_4_weeks_count(article_history)
     
     if filter < 2:
         engagement = 0
@@ -137,26 +137,53 @@ def api_student(request, student_id=None):
         estimated capacity of the student, e.g. not punish students for being slower
         than the rest of the group. Additionally a good measure would be any
         interaction with the platform, such as ratings, word clicks, etc."""
-        engagement = int(min(5, article_counts["week"]))
+        engagement = int(min(5, article_counts[-1]))
         
-        result_dict["article_counts"] = article_counts
+        result_dict["articles_week"] = article_counts[-1]
+        print article_counts[-1]
         result_dict["engagement"] = engagement
+        print engagement
     
     if filter in (0, 2):
-        """Still learning
-        try:
-            student = User.objects.get(userprofile__pk=student_id)
-        except ObjectDoesNotExist:
-            print "Invalid student ID"
-        clicked = student.wordhistoryitem_set.all()"""
-        clicked_words = unique_strs(WordHistoryItem.objects.filter(user__pk=student_id))
         
-        articles_read = unique_strs(article_history)
+        articles = []
+        #Already sorted by date in descending order by the Event Meta class definition
+        article_pks = article_history.values_list('article__pk', flat=True)
+        seen = set()
+        article_pks_f = [x for x in article_pks if x not in seen and not seen.add(x)]
+        
+        for pk in article_pks_f[:3]:
+            article = Article.objects.get(pk=pk)
+            articles.append( {
+                'title': article.title,
+                'image': article.image,
+                'pk': article.pk,
+                'url': reverse('article', kwargs={'identifier': article.pk}),
+                })
+        
+        clicked_words = unique_strs(WordHistoryItem.objects.filter(user__pk=student_id))[:5]
         
         ratings = ArticleRatingItem.objects.filter(user__pk=student_id)
         
+        rating = {}
+        if len(ratings) > 0:
+            rating['title'] = ratings[0].article.title
+            rating['link'] = '/content/articles/'+str(ratings[0].article.id)
+            rating['rating'] = int(ratings[0].rating)
+        
+        difficulties = ArticleDifficultyItem.objects.filter(user__pk=student_id)
+        
+        difficulty = {}
+        if len(ratings) > 0:
+            difficulty['title'] = difficulties[0].article.title
+            difficulty['link'] = '/content/articles/'+str(difficulties[0].article.id)
+            difficulty['rating'] = int(difficulties[0].rating)
+        
+        result_dict["articles_read"] = articles
         result_dict["clicked_words"] = clicked_words
-        result_dict["articles_read"] = articles_read
+        result_dict["rating"] = rating
+        result_dict["difficulty"] = difficulty
+        result_dict["progress"] = article_counts
         
     return HttpResponse(json.dumps(result_dict), content_type='application/json')
 
@@ -197,6 +224,22 @@ def filter_on_period(objects, period):
         return objects.filter(date__range=[start_week, end_week])
     else:
         return objects
+        
+def last_4_weeks_count(objects):
+    date = datetime.now(pytz.utc)
+    date -= timedelta(hours=date.hour)
+    date -= timedelta(minutes=date.minute)
+    date -= timedelta(seconds=date.second)
+    date -= timedelta(microseconds=date.microsecond)
+    end_week = date - timedelta(date.weekday())
+    
+    weeks = [0]*4
+    for i in range(3,-1,-1):
+        start_week = end_week
+        end_week = start_week + timedelta(7)
+        weeks[i] = len(objects.filter(date__range=[start_week, end_week]))
+    
+    return weeks
 
 def api_get_history_totals(history, group_id):
     history = history.filter(user__userprofile__groups__in=group_id)

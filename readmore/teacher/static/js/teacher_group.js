@@ -9,7 +9,7 @@ $(document).ready(function(){
 
 function initialize_student(student_id){
     $.get( "/teacher/api/student/"+student_id+"?filter=1", function( data ) {
-        $( "#read_week_"+student_id ).html( data.article_counts.week );
+        $( "#read_week_"+student_id ).html( data.articles_week );
         $( "#student_activity_"+student_id).attr('src', '/static/img/engagement-0' +data.engagement+ '.png');
     });
 }
