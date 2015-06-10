@@ -39,6 +39,12 @@
     <div class="group-block info-block" id="group_{{group.pk}}" pk="{{group.pk}}">
         <div class="group-info-block wide link-to-detail link-div">
             <a href="{% url 'dashboard_group' group.pk %}"></a>
+			<div class="activity-block" style='height:100px; float:left'>
+				<img id="group_activity_{{group.pk}}" src="{% static 'img/engagement-00.png'%}">
+				<div class="cover">
+					<h1><sup id="activity_{{group.pk}}">1</sup>&frasl;<sub>5</sub></h1>
+				</div>
+			</div>
             <div class="button">
                 <h5> <i class="fa fa-wrench"></i> Beheer groep </h5>
             </div>

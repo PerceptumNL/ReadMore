@@ -75,7 +75,7 @@ class Group(models.Model):
     code = models.CharField(max_length=255, blank=True)
 
     def __unicode__(self):
-        return u'Group of %s' % (self.leader,)
+        return u'Group "%s" of %s' % (self.title, self.leader)
 
     def __str__(self):
         return unicode(self).encode('utf-8')
