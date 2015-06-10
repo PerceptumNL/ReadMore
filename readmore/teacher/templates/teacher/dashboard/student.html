@@ -35,15 +35,25 @@
     <h1>{{student}}</h1>
     <div class="student-block" id="click_info" pk="{{student.pk}}">
         <div class="group-info-block wide">
-            <h3> Samenvatting van deze week</h3>
-            <h4> Aangeklikte woorden </h5>
-            <h6>
-                <span id="clicked_words"></span>
-            </h6>
-            <h4> Gelezen artikelen </h5>
-            <h6>
-                <span id="articles_read"></span>
-            </h6>
+            <h2> Samenvatting van deze week</h2>
+            <div class="group-info-block wide" id="articles_read">
+                <h3> Laatste 3 gelezen artikelen </h3>
+            </div>
+            <div class="group-info-block wide" id="clicked_words">
+                <h3> Laatste 5 aangeklikte woorden </h3>
+            </div>
+            <div class="group-info-block wide" id="ratings">
+                <h3> Laatst gegeven beoordelingen </h3>
+                <div class="group-info-block wide" id="rating">
+                    <h4> Leukheid </h4>
+                </div>
+                <div class="group-info-block wide" id="difficulty">
+                    <h4> Moeilijkheid </h4>
+                </div>
+            </div>
+            <div class="group-info-block wide" id="progress_graph">
+                <h3> Vooruitgang laatste 4 weken </h3>
+            </div>
         </div>
     </div>
     <div class="group-block" id="group_{{group_id}}">
@@ -68,6 +78,7 @@
 {% block extraScripts %}
 	<!-- jquery mobile for hashchange event -->
     <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
+    <script src="{% static 'js/d3.v3.min.js' %}"></script>
     <script src="{% static 'js/teacher_student.js' %}"></script>
 
     <script>
