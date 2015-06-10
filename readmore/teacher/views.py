@@ -125,6 +125,8 @@ class GroupAPIView(View):
                 result_dict["engagement"] = engagement
                 result_dict["articles"] = articles
                 result_dict["words"] = sorted(words)
+            else:
+                result_dict["student_count"] = 0
 
         if filter in (0, 2):
             counts = group_category_counts(group_id)
