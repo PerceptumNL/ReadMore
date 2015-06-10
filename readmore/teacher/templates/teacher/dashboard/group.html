@@ -34,7 +34,7 @@
 
 <div id="mainContent">
     <div class="group-block" id="group_info">
-        <h1>{{group.title}}</h1>
+        <h1 id="group-title">{{group.title}}</h1>
         <div class="group-info-block wide">
             <h4>
                 Groep code:
@@ -90,6 +90,15 @@
         
      </div>
 -->
+	<div class="group-block" id="editgroup">
+        <h3>Hernoem de groep</h3>
+        <form class="form" id="edit_group_form">
+			{% csrf_token %}
+            <input name='title' type="text" placeholder="naam van groep"
+				value="{{group.title}}"></input>
+            <input type="submit" value="Maak nieuwe groep"></input>
+        </form>
+	</div>
 </div>
 
 
@@ -109,6 +118,27 @@
     <script src="{% static 'js/teacher_group.js' %}"></script>
 
     <script>
-    
+		$(function(){
+			$("#edit_group_form").submit(function(event){
+				if(this.title.value != ""){
+					var title = this.title.value
+					data = $(this).serialize()
+					xhr = $.ajax({
+						type: "PUT",
+						url: "{% url 'api_group' group.pk %}",
+						headers: {"X-CSRFToken": getCookie('csrftoken')},
+						data: data})
+					 .done(function(data, textStatus, jqXHR){
+						$("#group-title").text(title);
+						$("#edit_group_form").after(
+							"<div class='group-info-block wide'><p>"+
+							"<h5>Groep is hernoemt naar <b>"+title+"</b>.</h5>"
+						)});
+				} else {
+					alert("Je moet eerst een groep naam invullen.");
+				}
+				event.preventDefault();
+			})
+		});
 	</script>
 {% endblock extraScripts %}

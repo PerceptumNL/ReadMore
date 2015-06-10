@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, \
-        HttpResponseBadRequest
+        HttpResponseBadRequest, QueryDict
 from django.views.generic.base import View
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -66,9 +66,18 @@ class GroupAPIView(View):
             return HttpResponseBadRequest()
 
     def put(self, request, group_id):
-        group = get_object_or_404(Group, group_id=group_id)
+        group = get_object_or_404(Group, id=group_id)
         if group.leader != request.user:
             return HttpResponse(status=403)
+
+        params = QueryDict(request.read())
+        title = params.get('title', None)
+        if title:
+            group.title = title
+            group.save()
+            return HttpResponse()
+        else:
+            return HttpResponseBadRequest()
 
     def get(self, request, group_id=None):
         """API for group statistics.
@@ -81,7 +90,7 @@ class GroupAPIView(View):
         result_dict = {}
 
         if filter < 2:
-            students = User.objects.filter(userprofile__groups__pk__in=group_id)
+            students = User.objects.filter(userprofile__groups__pk=group_id)
             student_count = len(students)
             if student_count > 0:
                 article_read = {"week": 0, "month": 0, "total": 0}
@@ -97,7 +106,7 @@ class GroupAPIView(View):
                 engagement_norm = art_per_stud/2.0
                 engagement = int(min(5, math.floor(engagement_norm*5)))
 
-                article_his = ArticleHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
+                article_his = ArticleHistoryItem.objects.filter(user__userprofile__groups=group_id)
                 article_his = filter_on_period(article_his, 'week')
                 article_pks = article_his.values_list('article__pk', flat=True)
                 article_pks = sorted(article_pks, key=Counter(article_pks).get, reverse=True)
@@ -115,7 +124,7 @@ class GroupAPIView(View):
                         })
                 articles = articles[:10]
 
-                word_his = WordHistoryItem.objects.filter(user__userprofile__groups__in=group_id)
+                word_his = WordHistoryItem.objects.filter(user__userprofile__groups=group_id)
                 word_his = filter_on_period(word_his, 'week')
                 words = list(set(word_his.values_list('word', flat=True)))
 
