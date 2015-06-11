@@ -5,7 +5,7 @@ $(document).ready(function(){
 });
 
 function initialize_group(group_id){
-    $.get( "api/group/"+group_id+"?stats=engagement", function( data ) {
+    $.get( "teacher/api/group/"+group_id+"?stats=engagement", function( data ) {
         $( "#groupsize_"+group_id ).html( data.student_count );
 		if(data.student_count > 0){
 			$( "#group_activity_"+group_id).attr('src',
