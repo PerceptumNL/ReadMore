@@ -68,6 +68,18 @@ def login(request):
         return render(request, 'login.html',{'signup_enabled': settings.SIGNUP_ENABLED})
 
 @login_required
+def dashboard_dispatch(request):
+    groups = request.user.teaches.count()
+    if groups == 1:
+        from readmore.teacher.views import dashboard_group
+        return dashboard_group(request, request.user.teaches.get().pk)
+    elif groups > 1:
+        from readmore.teacher.views import dashboard_main
+        return dashboard_main(request)
+    else:
+        return profile_self(request)
+
+@login_required
 def profile_self(request):
     """Return response containing the profile of the current user."""
     user = request.user

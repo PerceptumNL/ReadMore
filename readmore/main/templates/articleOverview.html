@@ -6,22 +6,7 @@
     <link href="{% static 'css/articleOverview.css' %}" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 {% endblock %}
-
-{% block menu %}
-
-        <a href="/accounts/profile/"><button type="submit">Profiel</button></a>
-        <form method="post" action="{% url 'account_logout' %}">
-            {% csrf_token %}
-            {% if redirect_field_value %}
-                <input type="hidden" name="{{redirect_field_name}}" value="{{redirect_field_value}}"/>
-            {% endif %}
-            <button type="submit">Log out</button>
-        </form>
-
-{% endblock %}
-
 {% block backdrop %}
-    
 {% endblock %}
 
 {% block body %}
