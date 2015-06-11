@@ -69,7 +69,11 @@ def login(request):
 
 @login_required
 def dashboard_dispatch(request):
-    if Group.objects.filter(leader=request.user).exists():
+    groups = request.user.teaches.count()
+    if groups == 1:
+        from readmore.teacher.views import dashboard_group
+        return dashboard_group(request, request.user.teaches.get().pk)
+    elif groups > 1:
         from readmore.teacher.views import dashboard_main
         return dashboard_main(request)
     else:
