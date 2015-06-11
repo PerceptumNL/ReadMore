@@ -1,0 +1,22 @@
+.graph img{
+    position: relative;
+    height: 150px;
+}
+
+.progress-graph {
+    width: 100%;
+}
+
+.progress-graph td {
+    vertical-align: top;
+    text-align: center;
+    width: 25%;
+}
+
+.progress-graph tr td:nth-child(odd){ 
+    background: #b8d1f3;
+}
+
+.progress-graph tr td:nth-child(even){
+    background: #dae5f4;
+}

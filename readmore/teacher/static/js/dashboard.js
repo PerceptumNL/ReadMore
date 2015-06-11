@@ -67,3 +67,14 @@ function draw_activity(container, activity){
 	$(container).append($("<div class='cover'>").append(
 			"<h1><h1><sup>"+activity+"</sup>&frasl;<sub>5</sub></h1>"))
 }
+
+function draw_progress_graph(container, engagement, week){
+    var dy = 50;
+    var img = $("<img>");
+    img.attr("src", "/static/img/engagement-0"+engagement.toString()+".png");
+    img.attr("style", "margin-top:"+((5-engagement)*dy).toString()+"px;"+
+        "margin-bottom:"+(engagement*dy).toString()+"px");
+    $(container+"_images").append($("<td>").html(img));
+    var week = $("<h5>").html("Week "+week.toString());
+    $(container+"_weeks").append($("<td>").html(week));
+}
