@@ -22,13 +22,21 @@
 {% block body %}
 <div id="mainContent">
     <div class="group-block">
-		<h1 class="leading">{% trans "Welkom bij LeestMeer" %}, {{request.user}}!</h1>
+		<h1 class="leading">{% trans "Welkom bij LeestMeer" %}!</h1>
 		<p>
 			Op LeestMeer ga je teksten lezen over de onderwerpen die jij zelf
 			leuk vindt. In de teksten kan je op lastige woorden klikken om meer
 			informatie te krijgen over dat woord.
 		</p>
-		<a href="/"><button class="nav">Ga naar de artikelen</button></a>
+		<div class='row'>
+			<div class='col-xs-10 col-xs-offset-1'>
+				<a href="{% url 'overview' %}"
+					class='btn btn-block btn-primary'
+					style='color: #fff'>
+					Ga naar de artikelen
+				</a>
+			</div>
+		</div>
 	</div>
     {% if request.user.event_set.count %}
     <div class="group-block">
