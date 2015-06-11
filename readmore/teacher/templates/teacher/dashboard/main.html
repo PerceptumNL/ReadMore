@@ -41,9 +41,6 @@
             <a href="{% url 'dashboard_group' group.pk %}"></a>
 			<div class="activity-block" style='height:100px; float:left'>
 				<img id="group_activity_{{group.pk}}" src="{% static 'img/engagement-00.png'%}">
-				<div class="cover">
-					<h1><sup id="activity_{{group.pk}}">1</sup>&frasl;<sub>5</sub></h1>
-				</div>
 			</div>
             <div class="button">
                 <h5> <i class="fa fa-wrench"></i> Beheer groep </h5>
@@ -52,41 +49,6 @@
             <p><span id="groupsize_{{group.pk}}">0</span> leerlingen</p>
             <p id="names_{{group.pk}}"></p>
         </div>
-
-		<div style='display: none' id="activity_stats_{{group.pk}}">
-			<div class="group-info-block activity-block">
-				<h3 class="floating">Activiteit</h3>
-				<img id="group_activity_{{group.pk}}" src="{% static 'img/engagement-00.png'%}">
-				<div class="cover">
-					<h1><sup id="activity_{{group.pk}}">1</sup>&frasl;<sub>5</sub></h1>
-				</div>
-			</div>
-			<div class="group-info-block">
-				<h3>Gelezen</h3>
-				<ul>
-					<li>Deze week: <span id="read_week_{{group.pk}}"></span>
-					<li>Deze maand: <span id="read_month_{{group.pk}}"></span>
-					<li>Totaal: <span id="read_total_{{group.pk}}"></span>
-				</ul>
-			</div>
-			<div class="group-info-block">
-				<h3>Woorden</h3>
-				<ul>
-					<li>Deze week: <span id="word_week_{{group.pk}}"></span>
-					<li>Deze maand: <span id="word_month_{{group.pk}}"></span>
-					<li>Totaal: <span id="word_total_{{group.pk}}"></span>
-				</ul>
-			</div>
-
-			<div class="group-info-block wide" id="articles_{{group.pk}}">
-				<h3>Top 10 meest gelezen artikelen deze week</h3>
-
-			</div>
-			<div class="group-info-block wide" id="words_{{group.pk}}">
-				<h3>Bekeken woorden van deze week</h3>
-
-			</div>
-		</div>
     </div>
 {% endfor %}
 

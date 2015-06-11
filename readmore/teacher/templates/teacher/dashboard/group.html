@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block menu %}
-    <a href="/teacher/overview"><button type="submit">Terug</button></a>
+<a href="{% url 'overview' %}"><button type="submit">Terug</button></a>
     <form method="post" action="{% url 'account_logout' %}">
         {% csrf_token %}
         {% if redirect_field_value %}
@@ -36,6 +36,11 @@
     <div class="group-block" id="group_info">
         <h1 id="group-title">{{group.title}}</h1>
         <div class="group-info-block wide">
+			<h4>Aantal leerlingen:
+				<span style='color: #333 !important'>
+					{{ students|length }}
+				</span>
+			</h4>
             <h4>
                 Groep code:
                 <span style='color: #333 !important; font-weight: bold;'>
@@ -48,12 +53,28 @@
             </p>
         </div>
     </div>
+	{% if students|length %}
     <div class="group-block" id="group_info">
         <div class="group-info-block wide">
-            <h4> Samenvatting van deze week</h4>
+            <h4> Groep samenvatting van deze week</h4>
+			<div class="group-info-block" id="group_activity">
+				<h3 class="floating">Activiteit</h3>
+			</div>
+			<div class="group-info-block" id="group_categories">
+				<h3>#1 Categori&#xEB;n</h3>
+			</div>
+			<div class="group-info-block" id="group_words">
+				<h3>#1 Woorden</h3>
+			</div>
         </div>
     </div>
-    <div class="group-block" id="group_{{group.pk}}" pk="{{group.pk}}">
+    <div class="group-block" id="group_info">
+        <div class="group-info-block wide">
+            <h4> Meest gelezen artikelen van deze week</h4>
+			<div id="group_articles"></div>
+		</div>
+	</div>
+    <div class="group-block">
         <h4>Leerlingen</h4>
         {% for student in students %}
             <div class="student-block link-div" pk="{{student.pk}}">
@@ -71,25 +92,7 @@
             </div>
         {% endfor %}
     </div>
-    <div class="group-block category-block" id="categories_{{group.pk}}" pk="{{group.pk}}">
-        <h4>Populairste categorieën deze week</h4>
-        <h5><ul>
-            <li><span id="category_rank_1"></span>
-            <li><span id="category_rank_2"></span>
-            <li><span id="category_rank_3"></span>
-        </ul></h5>
-    </div>
-    <!--
-     <div class="group-block" id="invite">
-        <h4>Maak nieuwe leerling aan</h4>
-        <form class="form">
-            <input type="text" placeholder="naam"> </input>
-            <input type="email" placeholder="email@email.nl"></input>
-            <input type="submit" value="Maak nieuwe leerling aan"></input>
-        </form>
-        
-     </div>
--->
+	{% endif %}
 	<div class="group-block" id="editgroup">
         <h3>Hernoem de groep</h3>
         <form class="form" id="edit_group_form">
@@ -115,10 +118,33 @@
 {% block extraScripts %}
 	<!-- jquery mobile for hashchange event -->
     <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
     <script src="{% static 'js/teacher_group.js' %}"></script>
 
     <script>
 		$(function(){
+			{% if students|length %}
+			// Load group details
+			$.get("{% url 'api_group' group.pk %}", function( data ) {
+				draw_activity("#group_activity", data.engagement);
+				draw_category_list("#group_categories", data.categories);
+				draw_word_list("#group_words", data.words)
+				draw_article_list("#group_articles", data.articles);
+			});
+			// Load students
+			var student_api_endpoint = "{% url 'api_student' 'sid' %}";
+			student_api_endpoint += "?stats=engagement,article_count"
+			var sid;
+			$(".student-block").each(function(){
+				sid = $(this).attr('pk');
+				$.get(student_api_endpoint.replace("sid", sid), function(data){
+					$( "#read_week_"+sid ).html( data.article_count );
+					$( "#student_activity_"+sid).attr('src',
+							'/static/img/engagement-0' +data.engagement+ '.png');
+				});
+			});
+			{% endif %}
+			// Load group edit form
 			$("#edit_group_form").submit(function(event){
 				if(this.title.value != ""){
 					var title = this.title.value

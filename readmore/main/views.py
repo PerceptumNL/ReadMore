@@ -79,11 +79,11 @@ def profile_self(request):
         history = Article.objects.filter(id__in=unique_articles)
     except Exception as e:
         history = ArticleHistoryItem.objects.filter(user=user)
-    
+
     return render(request, 'account/profile.html', {
-        "history": history
-    
-        })
+        "history": history,
+        "group": request.user.userprofile.groups.first()
+    })
 
 @login_required
 def profile(request, user_id):

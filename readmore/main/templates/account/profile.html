@@ -38,30 +38,35 @@
 			leuk vindt. In de teksten kan je op lastige woorden klikken om meer
 			informatie te krijgen over dat woord.
 		</p>
+		<a href="/"><button class="nav">Ga naar de artikelen</button></a>
 	</div>
-
+    {% if request.user.event_set.count %}
     <div class="group-block">
         <div class="group-info-block wide">
-            <h3>Laatste artikelen gelezen door klasgenoten</h3>
-			<ul>
-				<li>..</li>
-				<li>..</li>
-			</ul>
-			<a href="/"><button class="nav">Ga naar de artikelen</button></a>
-		</div>
-	</div>
+            <h4> Jouw samenvatting van deze week</h4>
+            <div class="group-info-block" id="student_activity">
+                <h3 class="floating">Activiteit</h3>
+            </div>
+            <div class="group-info-block" id="student_categories">
+                <h3>#1 Categori&#xEB;n</h3>
+            </div>
+            <div class="group-info-block" id="student_words">
+                <h3>#1 Woorden</h3>
+            </div>
+        </div>
+    </div>
     <div class="group-block">
-        <div class="group-info-block wide">
+        <div class="group-info-block wide" id="student_articles">
             <h3>Laatste artikelen gelezen door jou</h3>
-			<ul>
-				{% for history_item in history %}
-					<li> <a href="{% url 'article' history_item.pk %}">{{history_item}}</a>
-				{% endfor %}
-			</ul>
-			<a href="/"><button class="nav">Ga naar de artikelen</button></a>
 		</div>
 	</div>
-	{% if not request.user.userprofile.groups.count %}
+    {% endif %}
+    <div class="group-block">
+        <div class="group-info-block wide" id="group_articles">
+            <h3>Laatste artikelen gelezen door klasgenoten</h3>
+		</div>
+	</div>
+	{% if not group %}
     <div class="group-block">
         <div class="group-info-block wide">
             <h3>Aanmelden bij een groep</h3>
@@ -85,8 +90,23 @@
 {% endblock %}
 
 {% block extraScripts %}
+    <script src="{% static 'js/dashboard.js' %}"></script>
     <script>
 		$(function(){
+            {% if request.user.event_set.count %}
+            $.get("{% url 'api_student' request.user.pk %}", function( data ) {
+                draw_activity("#student_activity", data.engagement);
+                draw_category_list("#student_categories", data.categories);
+                draw_word_list("#student_words", data.words)
+                draw_article_list("#student_articles", data.articles);
+            });
+            {% endif %}
+            {% if group %}
+            $.get("{% url 'api_group' group.pk %}?stats=articles",
+                    function( data ) {
+                        draw_article_list("#group_articles", data.articles);
+                    });
+            {% else %}
 			$("#signup_group_form").submit(function(event){
 				if(this.code.value != ""){
 					data = $(this).serialize()
@@ -102,6 +122,7 @@
 				}
 				event.preventDefault();
 			})
+            {% endif %}
 		});
 	</script>
 {% endblock extraScripts %}
