@@ -1,0 +1,93 @@
+{% extends "base_page.html" %}
+{% load staticfiles %}
+
+{% block extraCSS %}
+    <!--<link href="{% static 'css/mainStyle.css' %}" rel="stylesheet">-->
+    <link href="{% static 'css/article_style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/typography.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base_page.css' %}" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard_main.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>  
+{% endblock %}
+
+{% block backdrop %}
+
+{% endblock %}
+
+{% block menu %}
+    <a href="{% url 'dashboard_group' group.pk %}"><button type="submit">Terug</button></a>
+    <form method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        {% if redirect_field_value %}
+            <input type="hidden" name="{{redirect_field_name}}" value="{{redirect_field_value}}"/>
+        {% endif %}
+        <button type="submit">Log out</button>
+    </form>
+{% endblock %}
+
+{% block body %}
+
+<div id="mainContent">
+    <h1>{{student}}</h1>
+    <div class="student-block" id="click_info">
+        <div class="group-block">
+			<div class="group-info-block wide">
+				<h4> Leerling samenvatting van deze week</h4>
+				<div class="group-info-block" id="student_activity">
+					<h3 class="floating">Activiteit</h3>
+				</div>
+				<div class="group-info-block" id="student_categories">
+					<h3>#1 Categori&#xEB;n</h3>
+				</div>
+				<div class="group-info-block" id="student_words">
+					<h3>#1 Woorden</h3>
+				</div>
+			</div>
+		</div>
+        <div class="group-block">
+            <div class="group-info-block wide" id="student_articles">
+                <h3> Laatste 3 gelezen artikelen </h3>
+            </div>
+		</div>
+        <div class="group-block">
+			<div class="group-info-block wide row" style='width: 100%'>
+				<h3> Laatst gegeven beoordelingen </h3>
+				<div id="rating"
+					class="col-sm-6 col-md-5 col-md-offset-1 col-xs-12">
+					<h4> Leukheid </h4>
+				</div>
+				<div id="difficulty"
+					class="col-sm-6 col-md-5 col-md-offset-1 col-xs-12">
+					<h4> Moeilijkheid </h4>
+				</div>
+			</div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock body %}
+
+{% block overlay %}
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
+{% block extraScripts %}
+	<!-- jquery mobile for hashchange event -->
+    <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
+    <script src="{% static 'js/teacher_student.js' %}"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+
+    <script>
+		$(function(){
+				initialize_student("{% url 'api_student' student.pk %}"); });
+	</script>
+{% endblock extraScripts %}

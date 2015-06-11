@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, include, url
+from .views import GroupAPIView
 
 urlpatterns = patterns('',
-    url(r'^$', 'readmore.teacher.views.overview', name='overview'),
+    url(r'^$', 'readmore.teacher.views.dashboard_main', name='overview'),
     url(r'^dashboard$', 'readmore.teacher.views.dashboard', name='dashboard'),
     url(r'^woordkaarten$', 'readmore.teacher.views.word_cards', name='word_cards'),
     url(r'^manage_users$', 'readmore.teacher.views.manage_users', name='manage_users'),
@@ -19,6 +20,16 @@ urlpatterns = patterns('',
     url(r'^lists/userlist/?$',
         'readmore.teacher.views.retrieve_students',
         name='retrieve_students'),
+    url(r'^old$', 'readmore.teacher.views.overview',
+        name='dashboard_test'),
+    url(r'^group/(?P<group_id>\w+)$', 'readmore.teacher.views.dashboard_group',
+        name='dashboard_group'),
+    url(r'^group/(?P<group_id>\w+)/(?P<student_id>\w+)$',
+        'readmore.teacher.views.dashboard_student', name='dashboard_student'),
+    url(r'^api/student/(?P<student_id>\w+)$',
+        'readmore.teacher.views.api_student', name='api_student'),
+    url(r'^api/group/(?P<group_id>\w+)?$', GroupAPIView.as_view(),
+        name='api_group'),
 )
 
 

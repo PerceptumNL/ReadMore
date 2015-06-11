@@ -111,7 +111,8 @@ SOCIALACCOUNT_EMAIL_REQUIRED = 'True'
 SOCIALACCOUNT_AUTO_SIGNUP = 'True'
 ACCOUNT_EMAIL_VERIFICATION = 'False'
 AUTH_PROFILE_MODULE = 'main.UserProfile'
-SIGNUP_ENABLED = False
+SIGNUP_ENABLED = True
+ACCOUNT_FORMS = {'signup': 'readmore.main.forms.ReadMoreSignupForm'}
 ACCOUNT_ADAPTER = "readmore.main.adapter.ReadMoreAccountAdapter"
 
 SOCIALACCOUNT_PROVIDERS = \

@@ -15,6 +15,8 @@ from polymorphic import PolymorphicModel
 import allauth.app_settings
 from allauth.socialaccount import providers
 
+from readmore.teacher.helpers import generate_password
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True)
     badges = models.ManyToManyField('Badge', blank=True, related_name='users')
@@ -54,18 +56,60 @@ class Institute(models.Model):
     def __unicode__(self):
         return unicode(self.title)
 
+def gen_pass():
+        done=False
+        code = ""
+        while not done:
+            pkcode = self.pk_hash()
+            groupcode = generate_password()
+            code = pkcode+groupcode
+            grouplist = Group.objects.filter(code=code)
+            if not grouplist:
+                done=True
+        return code
 
 class Group(models.Model):
     title = models.CharField(max_length=255)
     leader = models.ForeignKey(User, null=True, blank=True)
     institute = models.ForeignKey('Institute', null=True, blank=True)
+    code = models.CharField(max_length=255, blank=True)
 
     def __unicode__(self):
-        return u'Group of %s' % (self.leader,)
+        return u'Group "%s" of %s' % (self.title, self.leader)
 
     def __str__(self):
         return unicode(self).encode('utf-8')
 
+    def pk_hash(self):
+        pk_code = "%03d" % (self.pk*17,)
+        pk_code = pk_code[-3:]
+        return pk_code
+
+    def generate_new_code(self):
+        done=False
+        code = ""
+        while not done:
+            pkcode = self.pk_hash()
+            groupcode = generate_password('-')
+            code = "%s-%s" % (pkcode, groupcode)
+            grouplist = Group.objects.filter(code=code)
+            if not grouplist:
+                done=True
+        return code
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            if not self.pk:
+                super(Group, self).save(*args, **kwargs)
+            self.code = self.generate_new_code()
+        super(Group, self).save()
+
+
+class TeacherCode(models.Model):
+    code = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return unicode(self.code)
 
 class Event(PolymorphicModel):
     user = models.ForeignKey(User)
