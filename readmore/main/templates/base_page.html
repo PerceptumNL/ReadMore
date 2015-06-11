@@ -34,9 +34,9 @@
                                 <button type="submit">Log out</button>
                             </form>
                               {% if user|is_teacher %}
-                                <a href="/teacher/"><button type="submit">Leraar</button></a>
+                                <a href="/dashboard"><button type="submit">Leraar</button></a>
                               {% else %}
-                                <a href="/accounts/profile/">
+                                <a href="/dashboard">
                                     <button type="submit">Profiel</button></a>
                               {% endif %}
                             <a href="/"><button type="submit">Artikelen</button></a>
