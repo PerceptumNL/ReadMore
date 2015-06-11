@@ -202,9 +202,14 @@ def article(request, identifier, source='local'):
                 })
     else:
         # Return JSON with article properties
+        date = ""
+        if isinstance(article, RSSArticle):
+            date = article.publication_date.strftime('%d-%m-%Y %H:%M')
+        
         return HttpResponse(
             json.dumps({
                 'title': article.title,
+                'date': date,
                 'image': article.image,
                 'body': article.get_body()
             }),

@@ -11,6 +11,7 @@ $.widget( "readmore.articleviewer", {
 			'GET',
 			function(data, xhr){
 				title = $("<header>").html(data['title']);
+                title.append($("<h6>").html(data['date']));
 				_self.element.html(data['body']);
 				_self.element.prepend(title);
 				_self.postprocess()
