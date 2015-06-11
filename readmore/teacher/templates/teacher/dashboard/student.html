@@ -19,19 +19,14 @@
 {% endblock %}
 
 {% block menu %}
-    <a href="{% url 'dashboard_group' group.pk %}"><button type="submit">Terug</button></a>
-    <form method="post" action="{% url 'account_logout' %}">
-        {% csrf_token %}
-        {% if redirect_field_value %}
-            <input type="hidden" name="{{redirect_field_name}}" value="{{redirect_field_value}}"/>
-        {% endif %}
-        <button type="submit">Log out</button>
-    </form>
 {% endblock %}
 
 {% block body %}
 
 <div id="mainContent">
+    <a href="{% url 'dashboard_group' group.pk %}" class='btn btn-primary'
+        style='color: #fff'>
+        &lt; Ga terug naar de groep</a>
     <h1>{{student}}</h1>
     <div class="student-block" id="click_info">
         <div class="group-block">
@@ -41,7 +36,7 @@
 					<h3 class="floating">Activiteit</h3>
 				</div>
 				<div class="group-info-block" id="student_categories">
-					<h3>#1 Categori&#xEB;n</h3>
+					<h3>#1 Categorie&#xEB;n</h3>
 				</div>
 				<div class="group-info-block" id="student_words">
 					<h3>#1 Woorden</h3>

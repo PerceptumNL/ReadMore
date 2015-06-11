@@ -19,16 +19,6 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 {% endblock %}
 
-{% block menu %}
-     <form method="post" action="{% url 'account_logout' %}">
-        {% csrf_token %}
-        {% if redirect_field_value %}
-        <input type="hidden" name="{{redirect_field_name}}" value="{{redirect_field_value}}"/>
-        {% endif %}
-        <button type="submit"><t4>Log out</t4></button>
-    </form>
-{% endblock %}
-
 {% block body %}
 <div id="mainContent">
     <div class="group-block">
