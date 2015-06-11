@@ -123,9 +123,7 @@ class GroupAPIView(View):
                     article_count = api_get_history_totals(
                             ArticleHistoryItem.objects, group_id, 'week')
                     art_per_stud = article_count/float(student_count)
-                engagement_norm = art_per_stud/2.0
-                engagement = int(min(5, math.floor(engagement_norm*5)))
-                result_dict["engagement"] = engagement
+                result_dict["engagement"] = compute_engagement(art_per_stud)
 
             if 'words' in stats:
                 # Collect popular words
@@ -151,7 +149,7 @@ def api_student(request, student_id=None):
     result_dict = {}
 
     stats = request.GET.get('stats',
-            "article_count,articles,engagement,words,categories,ratings")
+            "article_count,articles,engagement,words,categories,ratings,progress")
     stats = stats.split(",")
 
     if 'article_count' in stats:
@@ -208,17 +206,11 @@ def api_student(request, student_id=None):
 
     if 'engagement' in stats:
         # Calculate engagement
-        """ A temporary definition of engagement. Conferred with David and the ideal
-        definition would be based on the "actually" read article count related to the
-        estimated capacity of the student, e.g. not punish students for being slower
-        than the rest of the group. Additionally a good measure would be any
-        interaction with the platform, such as ratings, word clicks, etc."""
         if 'articles' not in stats and 'article_count' not in stats:
             article_his = ArticleHistoryItem.objects.filter(
                     user__pk=student_id)
             article_his = filter_on_period(article_his, 'week')
-        engagement = int(min(5, len(article_his)))
-        result_dict["engagement"] = engagement
+        result_dict["engagement"] = compute_engagement(len(article_his))
 
     if 'words' in stats:
         # Collect popular words
@@ -231,6 +223,12 @@ def api_student(request, student_id=None):
         counts = student_category_counts(student_id)
         categories = sorted(counts, key=counts.get, reverse=True)[:5]
         result_dict["categories"] = categories
+    
+    if 'progress' in stats:
+        if 'article_count' not in stats and 'articles' not in stats and 'engagement' not in stats:
+            article_his = ArticleHistoryItem.objects.filter(user__pk=student_id)
+        result_dict["progress"] = [compute_engagement(x) for x in last_4_weeks_count(article_his)]
+        result_dict["week_nr"] = datetime.now(pytz.utc).isocalendar()[1]
 
     return HttpResponse(json.dumps(result_dict), content_type='application/json')
 
@@ -282,7 +280,24 @@ def filter_on_period(objects, period):
         return objects.filter(date__range=[start_week, end_week])
     else:
         return objects
-        
+
+def compute_engagement(count):
+    """ A temporary definition of engagement. Conferred with David and the ideal
+        definition would be based on the "actually" read article count related to the
+        estimated capacity of the student, e.g. not punish students for being slower
+        than the rest of the group. Additionally a good measure would be any
+        interaction with the platform, such as ratings, word clicks, etc.
+
+        The temporary definition follows thresholds of x^3 to translate the
+        number of read articles to the engagement number of 0 through 5"""
+    thresholds = [0,1,8,27,64,125]
+    engagement = 5
+    for i, value in enumerate(thresholds):
+        if count <= value:
+            engagement = i
+            break;
+    return engagement
+
 def last_4_weeks_count(objects):
     date = datetime.now(pytz.utc)
     date -= timedelta(hours=date.hour)
@@ -300,7 +315,7 @@ def last_4_weeks_count(objects):
     return weeks
 
 def api_get_history_totals(history, group_id, period=None):
-    history = history.filter(user__userprofile__groups__in=group_id)
+    history = history.filter(user__userprofile__groups=group_id)
     if period is None:
         total_all = filter_on_period(history, 'total').count()
         total_month = filter_on_period(history, 'month').count()

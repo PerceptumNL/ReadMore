@@ -20,5 +20,9 @@ function initialize_student(student_resource){
             title.html("Er zijn nog geen ratings gegeven deze week");
             $( "#difficulty").append(title);
         }
+        // Test for progress graph; still uses hard-coded values
+        data.progress.forEach(function(d, i) {
+            draw_progress_graph("#progress", d, data.week_nr -3 +i);
+        });
     });
 }

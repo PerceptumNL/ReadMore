@@ -105,7 +105,7 @@ AUTHENTICATION_BACKENDS = (
 # auth and allauth settings
 # Settings for social providers
 # Note: Windows Live requires no settings
-#LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/dashboard'
 ACCOUNT_EMAIL_REQUIRED = 'True'
 SOCIALACCOUNT_EMAIL_REQUIRED = 'True'
 SOCIALACCOUNT_AUTO_SIGNUP = 'True'

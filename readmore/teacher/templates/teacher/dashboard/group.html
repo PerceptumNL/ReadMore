@@ -19,39 +19,20 @@
 
 {% endblock %}
 
-{% block menu %}
-<a href="{% url 'overview' %}"><button type="submit">Terug</button></a>
-    <form method="post" action="{% url 'account_logout' %}">
-        {% csrf_token %}
-        {% if redirect_field_value %}
-            <input type="hidden" name="{{redirect_field_name}}" value="{{redirect_field_value}}"/>
-        {% endif %}
-        <button type="submit">Log out</button>
-    </form>
-{% endblock %}
-
 {% block body %}
 
 <div id="mainContent">
+    {% if request.user.teaches.count > 1 %}
+    <a href="{% url 'overview' %}" class='btn btn-primary'
+        style='color: #fff'>
+        &lt; Terug naar het groepen overzicht</a>
+    {% else %}
+    <a href="{% url 'overview' %}" class='btn btn-primary'
+        style='color: #fff'>
+        Maak een extra groep aan</a>
+    {% endif %}
     <div class="group-block" id="group_info">
         <h1 id="group-title">{{group.title}}</h1>
-        <div class="group-info-block wide">
-			<h4>Aantal leerlingen:
-				<span style='color: #333 !important'>
-					{{ students|length }}
-				</span>
-			</h4>
-            <h4>
-                Groep code:
-                <span style='color: #333 !important; font-weight: bold;'>
-                    {{group.code}}
-                </span>
-            </h4>
-            <p style='font-style: italic;'>
-                Deze code kan gebruikt worden door uw leerlingen om zich bij uw groep
-                toe te voegen.
-            </p>
-        </div>
     </div>
 	{% if students|length %}
     <div class="group-block" id="group_info">
@@ -61,19 +42,13 @@
 				<h3 class="floating">Activiteit</h3>
 			</div>
 			<div class="group-info-block" id="group_categories">
-				<h3>#1 Categori&#xEB;n</h3>
+				<h3>Categorie&#xEB;n</h3>
 			</div>
 			<div class="group-info-block" id="group_words">
-				<h3>#1 Woorden</h3>
+				<h3>Woorden</h3>
 			</div>
         </div>
     </div>
-    <div class="group-block" id="group_info">
-        <div class="group-info-block wide">
-            <h4> Meest gelezen artikelen van deze week</h4>
-			<div id="group_articles"></div>
-		</div>
-	</div>
     <div class="group-block">
         <h4>Leerlingen</h4>
         {% for student in students %}
@@ -92,7 +67,32 @@
             </div>
         {% endfor %}
     </div>
+    <div class="group-block" id="group_info">
+        <div class="group-info-block wide">
+            <h4> Meest gelezen artikelen van deze week</h4>
+			<div id="group_articles"></div>
+		</div>
+	</div>
 	{% endif %}
+    <div class="group-block">
+        <div class="group-info-block wide">
+			<h4>Aantal leerlingen:
+				<span style='color: #333 !important'>
+					{{ students|length }}
+				</span>
+			</h4>
+            <h4>
+                Groep code:
+                <span style='color: #333 !important; font-weight: bold;'>
+                    {{group.code}}
+                </span>
+            </h4>
+            <p style='font-style: italic;'>
+                Deze code kan gebruikt worden door uw leerlingen om zich bij uw groep
+                toe te voegen.
+            </p>
+        </div>
+    </div>
 	<div class="group-block" id="editgroup">
         <h3>Hernoem de groep</h3>
         <form class="form" id="edit_group_form">
@@ -137,11 +137,13 @@
 			var sid;
 			$(".student-block").each(function(){
 				sid = $(this).attr('pk');
-				$.get(student_api_endpoint.replace("sid", sid), function(data){
-					$( "#read_week_"+sid ).html( data.article_count );
-					$( "#student_activity_"+sid).attr('src',
-							'/static/img/engagement-0' +data.engagement+ '.png');
-				});
+				$.get(student_api_endpoint.replace("sid", sid), function(sid){
+					return (function(data){
+							$( "#read_week_"+sid ).html( data.article_count );
+							$( "#student_activity_"+sid).attr('src',
+								'/static/img/engagement-0'+data.engagement+ '.png');
+							});
+				}(sid));
 			});
 			{% endif %}
 			// Load group edit form
