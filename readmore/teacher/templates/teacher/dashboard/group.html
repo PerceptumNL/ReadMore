@@ -42,10 +42,10 @@
 				<h3 class="floating">Activiteit</h3>
 			</div>
 			<div class="group-info-block" id="group_categories">
-				<h3>#1 Categorie&#xEB;n</h3>
+				<h3>Categorie&#xEB;n</h3>
 			</div>
 			<div class="group-info-block" id="group_words">
-				<h3>#1 Woorden</h3>
+				<h3>Woorden</h3>
 			</div>
         </div>
     </div>
@@ -137,11 +137,13 @@
 			var sid;
 			$(".student-block").each(function(){
 				sid = $(this).attr('pk');
-				$.get(student_api_endpoint.replace("sid", sid), function(data){
-					$( "#read_week_"+sid ).html( data.article_count );
-					$( "#student_activity_"+sid).attr('src',
-							'/static/img/engagement-0' +data.engagement+ '.png');
-				});
+				$.get(student_api_endpoint.replace("sid", sid), function(sid){
+					return (function(data){
+							$( "#read_week_"+sid ).html( data.article_count );
+							$( "#student_activity_"+sid).attr('src',
+								'/static/img/engagement-0'+data.engagement+ '.png');
+							});
+				}(sid));
 			});
 			{% endif %}
 			// Load group edit form

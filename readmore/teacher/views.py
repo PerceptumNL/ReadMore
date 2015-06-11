@@ -123,8 +123,13 @@ class GroupAPIView(View):
                     article_count = api_get_history_totals(
                             ArticleHistoryItem.objects, group_id, 'week')
                     art_per_stud = article_count/float(student_count)
-                engagement_norm = art_per_stud/2.0
-                engagement = int(min(5, math.floor(engagement_norm*5)))
+
+                thresholds = [0,1,8,27,64,125]
+                engagement = 5
+                for i, value in enumerate(thresholds):
+                    if art_per_stud <= value:
+                        engagement = i
+                        break;
                 result_dict["engagement"] = engagement
 
             if 'words' in stats:
@@ -217,7 +222,14 @@ def api_student(request, student_id=None):
             article_his = ArticleHistoryItem.objects.filter(
                     user__pk=student_id)
             article_his = filter_on_period(article_his, 'week')
-        engagement = int(min(5, len(article_his)))
+        article_count = len(article_his)
+
+        thresholds = [0,1,8,27,64,125]
+        engagement = 5
+        for i, value in enumerate(thresholds):
+            if article_count <= value:
+                engagement = i
+                break;
         result_dict["engagement"] = engagement
 
     if 'words' in stats:
@@ -300,7 +312,7 @@ def last_4_weeks_count(objects):
     return weeks
 
 def api_get_history_totals(history, group_id, period=None):
-    history = history.filter(user__userprofile__groups__in=group_id)
+    history = history.filter(user__userprofile__groups=group_id)
     if period is None:
         total_all = filter_on_period(history, 'total').count()
         total_month = filter_on_period(history, 'month').count()
