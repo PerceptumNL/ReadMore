@@ -9,6 +9,7 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'css/dashboard_main.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard_student.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href='http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>  
@@ -19,19 +20,14 @@
 {% endblock %}
 
 {% block menu %}
-    <a href="{% url 'dashboard_group' group.pk %}"><button type="submit">Terug</button></a>
-    <form method="post" action="{% url 'account_logout' %}">
-        {% csrf_token %}
-        {% if redirect_field_value %}
-            <input type="hidden" name="{{redirect_field_name}}" value="{{redirect_field_value}}"/>
-        {% endif %}
-        <button type="submit">Log out</button>
-    </form>
 {% endblock %}
 
 {% block body %}
 
 <div id="mainContent">
+    <a href="{% url 'dashboard_group' group.pk %}" class='btn btn-primary'
+        style='color: #fff'>
+        &lt; Ga terug naar de groep</a>
     <h1>{{student}}</h1>
     <div class="student-block" id="click_info">
         <div class="group-block">
@@ -41,10 +37,10 @@
 					<h3 class="floating">Activiteit</h3>
 				</div>
 				<div class="group-info-block" id="student_categories">
-					<h3>#1 Categori&#xEB;n</h3>
+					<h3>Categorie&#xEB;n</h3>
 				</div>
 				<div class="group-info-block" id="student_words">
-					<h3>#1 Woorden</h3>
+					<h3>Woorden</h3>
 				</div>
 			</div>
 		</div>
@@ -66,6 +62,15 @@
 				</div>
 			</div>
         </div>
+        <div class="group-block">
+            <div class="group-info-block wide graph">
+                <h3> Vooruitgang van de laaste 4 weken </h3>
+                <table class="progress-graph">
+                    <tr id="progress_images"></tr>
+                    <tr id="progress_weeks"></tr>
+                </table>
+            </div>
+		</div>
     </div>
 </div>
 

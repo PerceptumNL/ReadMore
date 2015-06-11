@@ -25,12 +25,23 @@
                 <div class="topbar">
                     <div class="content">
                         <div id="buttons">
-                            {% block menu %}{% endblock %}
                             {% if request.user.is_authenticated %}
+                            <form method="post" action="{% url 'account_logout' %}">
+                                {% csrf_token %}
+                                {% if redirect_field_value %}
+                                    <input type="hidden" name="{{redirect_field_name}}" value="{{redirect_field_value}}"/>
+                                {% endif %}
+                                <button type="submit">Log out</button>
+                            </form>
                               {% if user|is_teacher %}
                                 <a href="/teacher/"><button type="submit">Leraar</button></a>
+                              {% else %}
+                                <a href="/accounts/profile/">
+                                    <button type="submit">Profiel</button></a>
                               {% endif %}
+                            <a href="/"><button type="submit">Artikelen</button></a>
                             {% endif %}
+                            {% block menu %}{% endblock %}
                         </div>
 						<a href="/">
 							<img src="{%static 'img/layout/logo_test.png'%}" >

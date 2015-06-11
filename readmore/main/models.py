@@ -30,6 +30,10 @@ class UserProfile(models.Model):
     def __str__(self):
         return unicode(self).encode('utf-8')
 
+    @property
+    def is_teacher(self):
+        return Group.objects.filter(leader=self.user).exists()
+
 class Institute(models.Model):
     title = models.CharField(max_length=255)
     site_id = models.ForeignKey(Site)
@@ -70,7 +74,7 @@ def gen_pass():
 
 class Group(models.Model):
     title = models.CharField(max_length=255)
-    leader = models.ForeignKey(User, null=True, blank=True)
+    leader = models.ForeignKey(User, null=True, blank=True, related_name='teaches')
     institute = models.ForeignKey('Institute', null=True, blank=True)
     code = models.CharField(max_length=255, blank=True)
 
