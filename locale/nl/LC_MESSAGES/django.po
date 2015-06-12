@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-17 23:10+0100\n"
+"POT-Creation-Date: 2015-06-12 14:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -179,6 +179,18 @@ msgctxt "word category"
 msgid "verb"
 msgstr "werkwoord"
 
+#: readmore/main/forms.py:7
+msgid "First Name"
+msgstr "Voornaam"
+
+#: readmore/main/forms.py:8
+msgid "Last Name"
+msgstr "Achternaam"
+
+#: readmore/main/forms.py:10
+msgid "Code"
+msgstr ""
+
 #: readmore/main/templates/account/accounts.html:26
 msgid "Log Out"
 msgstr "Log Uit"
@@ -192,17 +204,17 @@ msgstr ""
 msgid "Log In"
 msgstr "Log In"
 
-#: readmore/main/templates/account/login.html:20
-#: readmore/main/templates/account/login.html:32
+#: readmore/main/templates/account/login.html:18
+#: readmore/main/templates/account/login.html:30
 msgid "Sign In"
 msgstr "Log In"
 
-#: readmore/main/templates/account/login.html:31
+#: readmore/main/templates/account/login.html:29
 msgid "Forgot Password?"
 msgstr "Wachtwoord Vergeten?"
 
-#: readmore/main/templates/account/profile.html:24
-msgid "Welkom bij Lees Meer"
+#: readmore/main/templates/account/profile.html:25
+msgid "Welkom bij LeestMeer"
 msgstr ""
 
 #: readmore/main/templates/account/signup.html:18
@@ -227,7 +239,7 @@ msgstr ""
 "Je staat op het punt om met je %(provider_name)s account in te loggen\n"
 "op %(site_name)s. Vul alstublieft het volgende formulier in als laatste stap."
 
-#: readmore/teacher/views.py:69
+#: readmore/teacher/views.py:439
 msgid "Everybody"
 msgstr "Iedereen"
 

@@ -4,8 +4,8 @@ from allauth.account.forms import SignupForm
 from django.utils.translation import ugettext_lazy as _
 
 class ReadMoreSignupForm(SignupForm):
-   first_name = forms.CharField(max_length=30, label= _('first name'))
-   last_name = forms.CharField(max_length=30, label=_('last name'))
+   first_name = forms.CharField(max_length=30, label= _('First Name'))
+   last_name = forms.CharField(max_length=30, label=_('Last Name'))
    code = forms.CharField(max_length=255, required=False,
            label=_('Code'))
 
