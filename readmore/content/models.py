@@ -448,6 +448,9 @@ class SevenDaysCategory(RSSCategory):
             # Remove youtube content
             for media in body.find_all('div', class_=_css_class_media):
                 media.decompose()
+            # Remove iframes
+            for iframe in body.find_all('iframe'):
+                iframe.decompose()
             # Remove existing images in the body
             for image in body.find_all('img'):
                 image.decompose()
