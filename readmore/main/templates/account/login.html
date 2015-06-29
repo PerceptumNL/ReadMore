@@ -17,7 +17,7 @@
 {% block body %}
     <h1 class="leading">{% trans "Sign In" %}</h1>
     {% if signup_enabled %}
-    <p> Om Lees Meer te kunnen gebruiken moet je een account hebben. Heb jij al een account dan kan je hieronder inloggen.
+    <p> Om LeestMeer te kunnen gebruiken moet je een account hebben. Heb jij al een account dan kan je hieronder inloggen.
     <a class="nav" href="/accounts/signup/">Heb jij nog geen account?<button class="nav" type="submit"><t4>Maak een account</t4></button></a></p>
     {% endif %}
     <form class="login" method="POST" action="{% url 'account_login' %}">

@@ -218,7 +218,7 @@ msgid "Welkom bij LeestMeer"
 msgstr ""
 
 #: readmore/main/templates/account/signup.html:18
-msgid "Schrijf je in voor Lees Meer"
+msgid "Schrijf je in voor LeestMeer"
 msgstr ""
 
 #: readmore/main/templates/socialaccount/signup.html:6
