@@ -7,27 +7,38 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.6/howto/static-files/
+STATIC_ROOT = '/app/staticfiles'
+STATIC_URL = '/static/'
+
+
+ADMINS = (
+    ('Sander', 'sander@perceptum.nl'),
+    ('Robrecht', 'robrecht@perceptum.nl'),
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '45nqsaflov!ls)g#p2@&h486o-wk=0^%z&j#r+r!2#tepz8*@e'
+SECRET_KEY = 'nam+hzdm-pw7$l5y$k+yk)xfhm*1nmy2v!^d$7&yp29n%t8@y!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+SITE_ID = 2
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
-# Application definition
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -57,12 +68,13 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.windowslive',
     'allauth.socialaccount.providers.google',
+    'south',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+#    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -78,9 +90,9 @@ ROOT_URLCONF = 'readmore.urls'
 
 WSGI_APPLICATION = 'readmore.wsgi.application'
 
-
-# Django sites
-SITE_ID = 1
+# Parse database configuration from $DATABASE_URL
+import dj_database_url
+DATABASES = {'default': dj_database_url.config()}
 
 # Authentication back-end
 AUTHENTICATION_BACKENDS = (
@@ -109,6 +121,8 @@ SOCIALACCOUNT_PROVIDERS = \
         { 'SCOPE': ['profile', 'email'],
           'AUTH_PARAMS': { 'access_type': 'online' } }}
 
+REQUIRE_UNIQUE_EMAIL = False
+
 # Template Context
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
@@ -120,17 +134,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
@@ -140,14 +145,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Wikipedia source
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
-
-STATIC_URL = '/static/'
-STATIC_ROOT = 'collectstatic'
-
-LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
+LOCALE_PATHS = (os.path.join(os.path.dirname(BASE_DIR), 'locale'),)
 
 SUMMERNOTE_CONFIG = {
     # Using SummernoteWidget - iframe mode
@@ -163,3 +163,11 @@ SUMMERNOTE_CONFIG = {
 
 # Mediawiki content settings
 CONTENT_MEDIAWIKI_LANG = "nl"
+
+import os
+EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
+EMAIL_HOST= 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+SERVER_EMAIL = 'readmore-platform@perceptum.nl'
