@@ -26,7 +26,7 @@ ADMINS = (
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'nam+hzdm-pw7$l5y$k+yk)xfhm*1nmy2v!^d$7&yp29n%t8@y!'
+SECRET_KEY = '45nqsaflov!ls)g#p2@&h486o-wk=0^%z&j#r+r!2#tepz8*@e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
