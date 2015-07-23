@@ -4,6 +4,7 @@
 {% load i18n %}
 {% load account %}
 {% load url from future %}
+{% block title %}LeestMeer - Inschrijving{% endblock title %}
 
 {% block extraCSS %}
     <link href="{% static 'css/form_style.css' %}" rel="stylesheet">
@@ -15,6 +16,56 @@
 {% endblock %}
 
 {% block body %}
+    <h1 class="leading">Doe nu mee met LeestMeer</h1>
+    <p> Schrijf je nu in om komend schooljaar LeestMeer te gaan gebruiken!</p>
+    <p> Wij zijn druk bezig met de voorbereidingen, maar nemen zo spoedig mogelijk contact met u op</p>
+    
+
+    <p></p>
+    
+    <form class="signup" id="signup_form" method="post" action="{% url 'pilot_signup' %}">
+        {% csrf_token %}
+        <p>
+            <label for="email">E-mail</label>
+            <input type="text" name="email" id="email" placeholder="E-mail"></input>
+
+        </p>
+        <p>
+            <label for="function">Ik ben een:</label><br>
+            <input type="radio" name="function" value="leerling">Leerling<br>
+            <input type="radio" name="function" value="docent">Leraar<br>
+            <input type="radio" name="function" value="directeur">Directeur<br>
+        </p>
+        <p>
+            <label for="school">School</label>
+            <input type="text" name="school" id="school" placeholder="Naam School"></input>
+
+        </p>
+        <button type="submit" class="signupBtn">Ja, ik doe mee met LeestMeer!</button>
+    </form>
+    
+    <!--
+    <div class="option">
+        <div>
+            <h2>Simpel</h2>
+            <p></p>
+        </div>
+    </div>
+    <div class="option">
+        <div>
+            <h2>Volledig</h2>
+            <p></p>
+        </div>
+    </div>
+    <div class="option">
+        <div>
+            <h2>Early Bird!</h2>
+            <p></p>
+        </div>
+    </div>    
+    -->
+    
+<!--
 	<h1 class="leading">{% trans "Schrijf je in voor LeestMeer" %}</h1>
     <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
         {% csrf_token %}
@@ -22,9 +73,10 @@
         {% if redirect_field_value %}
         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
-        <button type="submit" class="signupBtn">{% trans "Schrijf je in" %} &raquo;</button>
+        <button type="submit" class="signupBtn">{% trans "Schrijf je in" %}</button>
     </form>
     <a class="nav" href="/accounts/login/"><p>Heb jij al een account?<button class="nav" type="submit"><t4>Log in</t4></button></p></a>
+-->
 {% endblock %}
 
 {% block footer %}

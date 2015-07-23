@@ -77,6 +77,7 @@ function Loader(container){
                 $('#categorytitle')[0].innerText = "Recent";
             }else{
 		        $('#categorytitle')[0].innerText = category.attr('data-filter');
+		        document.title = "LeestMeer - Overview " + category.attr('data-filter');
 	        }
         }
 		if( location.hash in _self.cache ){
@@ -89,6 +90,9 @@ function Loader(container){
 				})
 			}
 		}
+		ga('send', 'pageview', {
+         'page': location.pathname + location.search  + location.hash
+        });
 		
 	}
 

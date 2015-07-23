@@ -6,7 +6,7 @@
 	    <meta charset="utf-8">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
-	    <title>LeestMeer</title>
+	    <title>{% block title %}LeestMeer{% endblock title %}</title>
         <!-- Fonts -->
         <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'> 
         <link href='http://fonts.googleapis.com/css?family=Roboto:700,300,300italic,400italic,400,700italic' rel='stylesheet' type='text/css'>
@@ -20,6 +20,9 @@
         {% block extraCSS %}{% endblock extraCSS %}
     </head>
     <body>
+    
+        <div class="staticsite"><a href="http://www.leestmeer.nl"></a><h4>leestmeer.nl</h4></div>
+    
 	    <div class="main">
             <div class="background">
                 <div class="topbar">
