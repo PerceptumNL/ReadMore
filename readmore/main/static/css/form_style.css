@@ -42,6 +42,15 @@ input[type=checkbox]{
     border: none;
     width:16px;
 }
+input[type=radio]{
+    display:inline-block;
+    background-color: #333;
+    text-indent:8px;
+    padding: 16px 0;
+    margin: 0;
+    border: none;
+    width:16px;
+}
 
 form button{
     border: none;
@@ -56,6 +65,23 @@ form button{
 form button:hover{
     background-color:#777;
 }
+
+.button{
+    margin: 32px 8px;
+    border: none;
+    background-color: #333;
+    height:32px;
+    cursor: pointer;
+    color: #FFF;
+    font-family: Arial;
+}
+.button:hover{
+    background-color:#777;
+}
+.button t4{
+    padding: 0px 32px;
+}
+
 
 ul{
     list-style-type: none;
@@ -77,3 +103,14 @@ ul li{
     margin: 0px 5px;
     padding:16px 0;
 }
+
+.option{
+    width:100%;
+    background: #e5e5e5;
+    margin: 8px 0;
+}
+.option div{
+    padding: 8px 32px;
+}
+.option div 
+

@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
+    url(r'^accounts/pilotsignup/$', 'readmore.main.views.pilot_signup', name='pilot_signup'),
     url(r'^accounts/profile/$', 'readmore.main.views.profile_self', name='profile'),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^$', 'readmore.main.views.article_overview', name='article_overview'),

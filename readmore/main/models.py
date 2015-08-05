@@ -17,6 +17,18 @@ from allauth.socialaccount import providers
 
 from readmore.teacher.helpers import generate_password
 
+class PilotSignup(models.Model):
+    email = models.CharField(max_length=255)
+    school = models.CharField(max_length=255, blank=True)
+    function = models.CharField(max_length=255, blank=True)
+    signup = models.DateTimeField(auto_now_add=True)
+    
+    def __unicode__(self):
+        return unicode(self.email)
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True)
     badges = models.ManyToManyField('Badge', blank=True, related_name='users')
