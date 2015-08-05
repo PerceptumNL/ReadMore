@@ -14,16 +14,20 @@ import datetime
 import json
 import pytz
 
+from django.core.mail import send_mail
+
 # Pilot Signup
 def pilot_signup(request):
     if request.method == 'POST':
         email = request.POST.get('email', None)
-        school = request.POST.get('school', "")
-        function = request.POST.get('function', "")
+        school = request.POST.get('school', "onbekend")
+        function = request.POST.get('function', "onbekend")
         if email:
             try:
                 pilotSignup = PilotSignup.objects.create(email=email, school=school, function=function)
                 pilotSignup.save()
+                textbody = email + "\n" + function + " op " + school
+                send_mail('Nieuwe pilot signup', textbody, 'no-reply@leestmeer.nl', ['robrecht@leestmeer.nl', 'david@leestmeer.nl'])
                 return HttpResponseRedirect('www.leestmeer.nl', status=204)
             except Exception as e:
                 # Bad request         
