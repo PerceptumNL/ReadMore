@@ -18,12 +18,11 @@ import pytz
 def pilot_signup(request):
     if request.method == 'POST':
         email = request.POST.get('email', None)
-        school = request.POST.get('school', None)
-        function = request.POST.get('function', None)
-        if email is not None:
+        school = request.POST.get('school', "")
+        function = request.POST.get('function', "")
+        if email:
             try:
                 pilotSignup = PilotSignup.objects.create(email=email, school=school, function=function)
-                print pilotSignup
                 pilotSignup.save()
                 return HttpResponseRedirect('www.leestmeer.nl', status=204)
             except Exception as e:

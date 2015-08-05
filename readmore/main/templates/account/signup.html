@@ -19,22 +19,27 @@
     <h1 class="leading">Doe nu mee met LeestMeer</h1>
     <p> Schrijf je nu in om komend schooljaar LeestMeer te gaan gebruiken!</p>
     <p> Wij zijn druk bezig met de voorbereidingen, maar nemen zo spoedig mogelijk contact met u op</p>
-    
-
     <p></p>
+    
+    <div class="option" id="formsubmitted" style="display: none">
+        <div>
+            <h2></h2>
+            <p></p>
+        </div>
+    </div>
     
     <form class="signup" id="signup_form" method="post" action="{% url 'pilot_signup' %}">
         {% csrf_token %}
         <p>
             <label for="email">E-mail</label>
-            <input type="text" name="email" id="email" placeholder="E-mail"></input>
+            <input type="text" name="email" id="email" placeholder="E-mail" required></input>
 
         </p>
         <p>
             <label for="function">Ik ben een:</label><br>
-            <input type="radio" name="function" value="leerling">Leerling<br>
-            <input type="radio" name="function" value="docent">Leraar<br>
-            <input type="radio" name="function" value="directeur">Directeur<br>
+            <input type="radio" name="function" value="leerling">Leerling en wil gaan lezen op LeestMeer<br>
+            <input type="radio" name="function" value="docent">Leraar en wil LeestMeer uitproberen in de klas<br>
+            <input type="radio" name="function" value="directeur">Directeur en wil LeestMeer toepassen bij ons op school<br>
         </p>
         <p>
             <label for="school">School</label>
@@ -77,6 +82,40 @@
     </form>
     <a class="nav" href="/accounts/login/"><p>Heb jij al een account?<button class="nav" type="submit"><t4>Log in</t4></button></p></a>
 -->
+{% endblock %}
+
+{% block extraScripts %}
+    <script>
+    function processForm(e) {
+        if (e.preventDefault) e.preventDefault();
+        $.ajax({
+           type: "POST",
+           url: "{% url 'pilot_signup' %}",
+           data: $("#signup_form").serialize(),
+           success: function(data)
+           {
+               document.getElementById("signup_form").reset();
+           }
+         }).done(function() {
+              $('#formsubmitted div h2').html('Uw inschrijving is gelukt');
+              $('#formsubmitted div p').html('wij nemen zo spoedig mogelijk contact met u op');
+              $('#formsubmitted').css('display', 'block');
+            }).fail(function() {
+              $('#formsubmitted div h2').html('Er is iets mis gegaan met uw inschrijving');
+              $('#formsubmitted div p').html('als dit probleem blijft aanhouden, kunt u een mailtje sturen naar info@leestmeer.nl en dan zetten wij u op de lijst');
+              $('#formsubmitted').css('display', 'block');
+            });
+
+        return false;
+    }
+
+    var form = document.getElementById('signup_form');
+    if (form.attachEvent) {
+        form.attachEvent("submit", processForm);
+    } else {
+        form.addEventListener("submit", processForm);
+    }
+    </script>
 {% endblock %}
 
 {% block footer %}
