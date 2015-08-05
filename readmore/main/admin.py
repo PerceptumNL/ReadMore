@@ -100,6 +100,11 @@ class EventAdmin(PolymorphicParentModelAdmin):
             return ""
     get_value.short_description = 'Value'
 
+class PilotSignupAdmin(admin.ModelAdmin):
+    base_model = PilotSignup
+    list_filter = ('function', 'school')
+    list_display = ('email', 'function', 'school', 'signup',)
+    
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Institute)
@@ -107,3 +112,4 @@ admin.site.register(Group)
 admin.site.register(TeacherCode)
 admin.site.register(Event, EventAdmin)
 admin.site.register(UserProfile)
+admin.site.register(PilotSignup, PilotSignupAdmin)

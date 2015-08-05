@@ -5,13 +5,15 @@
 {% load account %}
 {% load url from future %}
 
+{% block title %}LeestMeer - Inloggen{% endblock title %}
+
 {% block extraCSS %}
     <link href="{% static 'css/form_style.css' %}" rel="stylesheet">
 
 {% endblock %}
 
 {% block menu %}
-       <a href="/accounts/signup/"><button type="submit"><t4>Inschrijven</t4></button></a>
+       <a href="/accounts/signup/"><button><t4>Schrijf je in voor LeestMeer</t4></button></a>
 {% endblock %}
 
 {% block body %}
@@ -29,6 +31,10 @@
       <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
       <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
     </form>
+    
+
+    <a href="/accounts/signup/"><button class="button"><t4>Ik heb nog geen account!</t4></button></a>
+    
 
 {% endblock %}
 

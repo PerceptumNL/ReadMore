@@ -89,3 +89,11 @@ body {
     color: #F3F3F3;
 }
 
+.button{
+    background-color: #22ADC2;
+    margin: 15px auto;
+    min-height: 120px;
+    border-radius: 10px;
+    box-shadow: 3px 3px 0px #736f66;
+}
+
