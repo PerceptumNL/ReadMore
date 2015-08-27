@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.windowslive',
     'allauth.socialaccount.providers.google',
+	'compressor',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -138,6 +139,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'collectstatic'
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)
 
 LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
 
