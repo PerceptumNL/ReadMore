@@ -1,12 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, \
-        HttpResponseServerError, HttpResponseRedirect
-from django.conf import settings
+from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Q
 import operator
 import re
 import json
-import requests
 from readmore.content.models import *
 from readmore.main.models import *
 import django.dispatch
@@ -23,28 +20,10 @@ def update_feeds(request):
     return HttpResponse()
 
 @login_required
-def index(request):
+def overview(request):
     """Return response containing overview of categories and articles."""
-    # Only show top categories on the index page
-    categories = Category.objects.filter(parent=None)
-    articles = []
-    for category in categories:
-        articles += category.get_articles()
-    # Render response
-    if request.is_ajax():
-        # Return JSON list of categories with their properties
-        categories = [{'url': c.get_absolute_url(), 'title': c.title,
-            'image': c.image} for c in categories]
-        articles = [{'url': a.get_absolute_url(), 'title': a.title,
-            'image': a.image} for a in articles]
-        return HttpResponse(
-                json.dumps({'categories': categories, 'articles': articles}),
-                content_type='application/json')
-    else:
-        # Render HTML of the landing page containing top categories
-        return render(request, 'articleOverview.html',{
-                "articles": articles,
-                "categories": categories})
+    categories = Category.objects.filter(parent=None).order_by('order')
+    return render(request, 'content/overview.html', {"categories": categories})
 
 @login_required
 def query(request):
@@ -60,12 +39,15 @@ def query(request):
                 'title': article.title,
                 'category-color': category.color,
                 'image': article.image if article.image else category.image})
-        return HttpResponse(json.dumps({'articles': articles}), content_type='application/json')
+        return HttpResponse(json.dumps({'articles': articles}),
+                content_type='application/json')
     elif query_string.strip():
         matching = []
         articles = []
-        querylist = [Q(body__icontains=query) for query in normalize_query(query_string)]
-        querylist += [Q(title__icontains=query) for query in normalize_query(query_string)]
+        querylist = [Q(body__icontains=query) for query in
+                normalize_query(query_string)]
+        querylist += [Q(title__icontains=query) for query in
+                normalize_query(query_string)]
         matching = Article.objects.filter(reduce(operator.or_, querylist))
         default = timezone.make_aware(datetime.datetime.now(), timezone.utc)
         matching = sorted(matching, key=(
@@ -77,15 +59,19 @@ def query(request):
                 'url': article.get_absolute_url(),
                 'title': article.title,
                 'category-color': article.categories.all().first().color,
-                'image': article.image if article.image else article.categories.all().first().image})
-        return HttpResponse(json.dumps({'articles': articles}), content_type="application/json")
+                'image': (article.image if article.image else
+                    article.categories.all().first().image)})
+        return HttpResponse(json.dumps({'articles': articles}),
+                content_type="application/json")
     else:
-        return HttpResponse(json.dumps({'articles': []}), content_type="application/json")
+        return HttpResponse(json.dumps({'articles': []}),
+                content_type="application/json")
 
-def normalize_query(query_string,
-                    findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
-                    normspace=re.compile(r'\s{2,}').sub):
-    return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)] 
+def normalize_query(query_string, findterms=None, normspace=None):
+    findterms = findterms or re.compile(r'"([^"]+)"|(\S+)').findall
+    normspace =  normspace or re.compile(r'\s{2,}').sub
+    return [normspace(' ', (t[0] or t[1]).strip()) for t in
+            findterms(query_string)]
 
 @login_required
 def category(request, identifier, source='local'):
@@ -167,7 +153,8 @@ def article(request, identifier, source='local'):
         # Fetch random articles from the same categories for reading suggestions.
         random_articles = []
         read_articles = ArticleHistoryItem.objects.filter(user=request.user)
-        read_articles = list(set([history.article.pk for history in read_articles] + [article.pk]))
+        read_articles = list(set(
+            [history.article.pk for history in read_articles] + [article.pk]))
         for category in categories:
             random_articles += category.get_random_articles(3, read_articles)
 
@@ -175,9 +162,11 @@ def article(request, identifier, source='local'):
         if article in random_articles:
             random_articles.remove(article)
 
-        difficulty_items = ArticleDifficultyItem.objects.filter(user=request.user, article=article)
-        rating_items = ArticleRatingItem.objects.filter(user=request.user, article=article)
-        
+        difficulty_items = ArticleDifficultyItem.objects.filter(
+                user=request.user, article=article)
+        rating_items = ArticleRatingItem.objects.filter(
+                user=request.user, article=article)
+
         recommendations = []
         for rand_article in random_articles:
             if rand_article.image:
@@ -193,19 +182,17 @@ def article(request, identifier, source='local'):
                         category=category,
                         article_id=identifier,
                         article=article)
-        return render(request, 'article_page.html',
-                {
-                "article": article, 
-                "random_articles": recommendations,
-                "rating_given": len(rating_items)>0,
-                "difficulty_given": len(difficulty_items)>0,
-                })
+        return render(request, 'content/viewer.html', {
+            "article": article,
+            "random_articles": recommendations,
+            "rating_given": len(rating_items)>0,
+            "difficulty_given": len(difficulty_items)>0})
     else:
         # Return JSON with article properties
         date = ""
         if isinstance(article, RSSArticle):
             date = article.publication_date.strftime('%d-%m-%Y %H:%M')
-        
+
         return HttpResponse(
             json.dumps({
                 'title': article.title,

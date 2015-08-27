@@ -14,6 +14,7 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
 function draw_rating_block(container, data){
     var block = $('<div class="articleTile rating-block">');
     block.attr("style", "background-image: url('"+data.image+"');");
@@ -54,7 +55,9 @@ function draw_category_list(container, categories){
 function draw_article_list(container, articles){
 	$.each( articles, function( index, value ){
 		var block = $('<div class="articleTile">');
-		block.attr("style", "background-image: url('"+value.image+"');");
+		if(value.image){
+			block.attr("style", "background-image: url('"+value.image+"');");
+		}
 		block.append("<a href='"+value.url+"'>");
 		block.append('<div class="articleTitle"><p>'+value.title+'</p></div>');
 		$(container).append(block);
@@ -78,3 +81,14 @@ function draw_progress_graph(container, engagement, week){
     var week = $("<h5>").html("Week "+week.toString());
     $(container+"_weeks").append($("<td>").html(week));
 }
+
+$(function(){
+	$(".form-show").click(function(){
+		current_id = $(this).attr('id').split("-")[0];
+		$("#"+current_id+"-form").slideToggle();
+	});
+	$(".student-show").click(function(){
+		current_id = $(this).attr('id').split("-")[0];
+		$("#"+current_id+"-students").slideToggle();
+	})
+});

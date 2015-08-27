@@ -3,8 +3,7 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 from polymorphic import PolymorphicModel
 from readmore.content.thirdparty.wiki_api import MediaWikiAPI, NS_PAGE, \
-        NS_CATEGORY, NS_PORTAL
-from readmore.content.helpers import *
+        NS_CATEGORY, NS_PORTAL, process_title
 import lxml
 import locale
 import random
@@ -340,7 +339,7 @@ class WikiCategory(Category):
             for cat in subcats:
                 subcategories.append(WikiCategory(
                     parent=self,
-                    title=stripped(cat['title']),
+                    title=process_title(cat['title']),
                     identifier=cat['pageid'],
                     identifier_type='pageid',
                     wiki_type=NS_CATEGORY))
@@ -705,6 +704,32 @@ class WikiArticle(Article):
             return int(self.identifier)
         else:
             return self.identifier
+
+    def process_wiki_page_html(self, html):
+        """Process the html of a wikipedia page."""
+        from bs4 import BeautifulSoup
+        soup = BeautifulSoup(html)
+        # Find and remove all edit links
+        edits = soup.find_all("span", class_="mw-editsection")
+        for edit in edits:
+            edit.extract()
+        # Find and edit all internal links
+        internal = soup.find_all("a")
+        for link in internal:
+            source = link.get('href')
+            link['class'] = 'wikiBlueLink'
+            if source[0:5] == "/wiki":
+                link['href'] = reverse('wikipedia_article', args=(source[6:],)) + "?type=title"
+        # Find all external links and add target="_blank"
+        external = soup.find_all("a", class_="external text")
+        for link in external:
+            link['target'] = '_blank'
+
+        # Get all info-tables and delete them
+        infoTables = soup.find_all("table", class_="infobox")
+        for table in infoTables:
+            table.extract()
+        return str(soup)
 
     def get_body(self):
         """Return the body of this article.

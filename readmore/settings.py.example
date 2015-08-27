@@ -29,8 +29,6 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-# Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'polymorphic',
@@ -43,13 +41,7 @@ INSTALLED_APPS = (
     'longerusernameandemail',
     'django_summernote',
     'readmore.main',
-    'readmore.widgets',
-    'readmore.widgets.articleviewer',
-    'readmore.widgets.dummy',
-    'readmore.widgets.dictionary',
-    'readmore.widgets.customcard',
-    'readmore.widgets.carddeck',
-    'readmore.widgets.dashboard',
+    'readmore.cover',
     'readmore.content',
     'readmore.teacher',
     'allauth',

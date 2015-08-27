@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404
-from django.conf import settings
 from django.db.models import Avg, Count
 from django.http import HttpResponse, HttpResponseRedirect, \
         HttpResponseBadRequest, HttpResponseForbidden
@@ -7,7 +6,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from readmore.main.models import *
-from readmore.content.views import index
 from readmore.content.models import *
 from allauth.socialaccount.models import SocialAccount
 import datetime
@@ -16,7 +14,6 @@ import pytz
 
 from django.core.mail import send_mail
 
-# Pilot Signup
 def pilot_signup(request):
     if request.method == 'POST':
         email = request.POST.get('email', None)
@@ -24,17 +21,18 @@ def pilot_signup(request):
         function = request.POST.get('function', "onbekend")
         if email:
             try:
-                pilotSignup = PilotSignup.objects.create(email=email, school=school, function=function)
+                pilotSignup = PilotSignup.objects.create(
+                        email=email, school=school, function=function)
                 pilotSignup.save()
                 textbody = email + "\n" + function + " op " + school
-                send_mail('Nieuwe pilot signup', textbody, 'no-reply@leestmeer.nl', ['robrecht@leestmeer.nl', 'david@leestmeer.nl'])
+                send_mail('Nieuwe pilot signup', textbody,
+                        'no-reply@leestmeer.nl',
+                        ['robrecht@leestmeer.nl', 'david@leestmeer.nl'])
                 return HttpResponseRedirect('www.leestmeer.nl', status=204)
-            except Exception as e:
-                # Bad request         
+            except Exception:
+                # Bad request
                 return HttpResponse(status=400)
 
-
-# New pages
 @login_required
 def history(request):
     if request.method == 'POST':
@@ -55,33 +53,14 @@ def history(request):
                     ArticleDifficultyItem.objects.create(article = crt_article, user = request.user, rating=value)
                 else:
                     return HttpResponse(status=400)
-                
+
                 # Ratings worked
                 return HttpResponse(status=204)
             except Exception as e:
-                # Bad request         
+                # Bad request
                 return HttpResponse(status=400)
     # Not a post request
     return HttpResponseRedirect("/")
-
-@login_required
-def article_overview(request):
-    """Return response containing overview of categories and articles."""
-    # Only show top categories on the index page
-    categories = Category.objects.filter(parent=None).order_by('order')
-    return render(request, 'articleOverview.html', {
-        "categories": categories
-    })
-
-
-def login(request):
-    # If user already logged in, go to main site
-    if request.user.is_authenticated():
-        return index(request)
-    # Else go to login page
-    else:
-    
-        return render(request, 'login.html',{'signup_enabled': settings.SIGNUP_ENABLED})
 
 @login_required
 def dashboard_dispatch(request):
@@ -146,9 +125,6 @@ def profile(request, user_id):
             "statistics": statistics,
             "profileImage": google_image,
             "articleHistory": article_history})
-
-def about(request):
-    return render(request, 'about.html')
 
 def filter_on_period(objects, period):
     if period == 'month':

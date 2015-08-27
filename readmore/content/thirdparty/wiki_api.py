@@ -11,7 +11,7 @@ NS_PORTAL = '100'
 
 def process_title(title):
     """Chop-off the first term before the ':'."""
-    title = title.split(":")[1]
+    title = title.split(":")[-1]
     return title.encode('ascii', 'xmlcharrefreplace')
 
 

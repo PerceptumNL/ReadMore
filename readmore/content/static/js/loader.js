@@ -93,7 +93,6 @@ function Loader(container){
 		ga('send', 'pageview', {
          'page': location.pathname + location.search  + location.hash
         });
-		
 	}
 
 	$(window).hashchange(_self.update);

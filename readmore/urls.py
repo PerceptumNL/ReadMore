@@ -4,8 +4,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^/?$', include('readmore.content.urls')),
     url(r'^content/', include('readmore.content.urls')),
-    url(r'^widgets/', include('readmore.widgets.urls')),
+    url(r'^cover/', include('readmore.cover.urls')),
     url(r'^teacher/', include('readmore.teacher.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^summernote/', include('django_summernote.urls')),

@@ -9,13 +9,10 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from readmore.main.models import *
 from readmore.content.models import *
-from readmore.widgets.customcard.models import CustomCard
+from readmore.cover.models import CustomCard
 from django.utils.translation import ugettext as _
 from datetime import datetime, timedelta
 from collections import Counter
-from django.db.models import Count
-from django.core.exceptions import ObjectDoesNotExist
-import math
 import helpers
 import json
 
@@ -25,11 +22,11 @@ def dashboard_main(request):
         groups = Group.objects.filter(leader=request.user)
         articles = RSSArticle.objects.filter(publication_date__gte=datetime.now()-timedelta(days=7))
         return render(request, 'teacher/dashboard/main.html', {
-        "groups": groups,        
+        "groups": groups,
     })
     else:
         return HttpResponseRedirect("/")
-        
+
 def dashboard_group(request, group_id=None):
     if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
         group = get_object_or_404(Group, pk=group_id)
@@ -41,7 +38,7 @@ def dashboard_group(request, group_id=None):
     })
     else:
         return HttpResponseRedirect("/")
-        
+
 def dashboard_student(request, group_id=None, student_id=None):
     if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
         student = User.objects.get(pk=student_id)
@@ -223,7 +220,7 @@ def api_student(request, student_id=None):
         counts = student_category_counts(student_id)
         categories = sorted(counts, key=counts.get, reverse=True)[:5]
         result_dict["categories"] = categories
-    
+
     if 'progress' in stats:
         if 'article_count' not in stats and 'articles' not in stats and 'engagement' not in stats:
             article_his = ArticleHistoryItem.objects.filter(user__pk=student_id)
@@ -264,7 +261,7 @@ def student_article_count(history):
 
 def unique_strs(objs):
     return list(set([unicode(obj) for obj in objs]))
-    
+
 def filter_on_period(objects, period):
     if period == 'month':
         date = datetime.now(pytz.utc)
@@ -305,13 +302,13 @@ def last_4_weeks_count(objects):
     date -= timedelta(seconds=date.second)
     date -= timedelta(microseconds=date.microsecond)
     end_week = date - timedelta(date.weekday())
-    
+
     weeks = [0]*4
     for i in range(3,-1,-1):
         start_week = end_week
         end_week = start_week + timedelta(7)
         weeks[i] = len(objects.filter(date__range=[start_week, end_week]))
-    
+
     return weeks
 
 def api_get_history_totals(history, group_id, period=None):
@@ -324,20 +321,14 @@ def api_get_history_totals(history, group_id, period=None):
     else:
         return filter_on_period(history, period).count()
 
-def api_group_read(request, group_id=None):
-    pass
-def api_group_words(request, group_id=None):
-    pass
-def api_group_engaged(request, group_id=None):
-    pass
-def api_group_mostread(request, group_id=None):
-    pass
+###########################################################
+## Below: Paper Elements version of the teacher dashboard #
+###########################################################
 
-# Create your views here.
 @login_required
 def overview(request):
     if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
-        return render(request, 'teacher/overview.html',)
+        return render(request, 'teacher/paper/overview.html',)
     else:
         return HttpResponseRedirect("/")
 
@@ -362,7 +353,7 @@ def add_user(request):
                 message = "Nieuwe gebruiker '" + str(username) + "' aangemaakt met wachtwoord " + str(password) + ", in groep " + str(group_choice.title) + " van instituut " + str(group_choice.institute)
             else:
                 message = "Gebruiker '" + str(username) + "' bestaat al, gebruik alstublieft een andere naam."
-        return render(request, 'teacher/manage_users.html', {
+        return render(request, 'teacher/paper/manage_users.html', {
             'message':message,
             'groups':group_list,
             })
@@ -372,7 +363,7 @@ def manage_users(request):
     group_list = Group.objects.filter(leader=request.user)
     if request.user.is_superuser or len(group_list):
 
-        return render(request, 'teacher/manage_users.html',
+        return render(request, 'teacher/paper/manage_users.html',
             {
             'groups': group_list,
             })
@@ -386,7 +377,7 @@ def dashboard(request):
     else:
         user_list = User.objects.filter(userprofile__groups__leader=request.user)
     if len(Group.objects.filter(leader=request.user)):
-        return render(request, 'teacher/dashboard.html', {
+        return render(request, 'teacher/paper/dashboard.html', {
             'users': user_list,
         })
     else:
@@ -395,14 +386,14 @@ def dashboard(request):
 @login_required
 def word_cards(request):
     cards = CustomCard.objects.all()
-    return render(request, 'teacher/teachercards.html', {
+    return render(request, 'teacher/paper/teachercards.html', {
         "word_cards": cards
     })
 
 @login_required
 def add_word(request):
     if request.method == "GET":
-        return render(request, 'teacher/teachercard.html')
+        return render(request, 'teacher/paper/teachercard.html')
     if request.method == 'POST':
         word = request.POST.get('word', None)
         description = request.POST.get('description', None)
@@ -414,7 +405,7 @@ def add_word(request):
             try:
                 CustomCard.objects.create(word=word, content=description, user=request.user)
                 return HttpResponseRedirect("woordkaarten")
-            except Exception as e:
+            except Exception:
                 # Bad request
                 return HttpResponse(status=404)
     # Not a post request
@@ -428,7 +419,7 @@ def remove_word(request):
                 card = CustomCard.objects.get(pk=word_pk)
                 card.delete()
                 return HttpResponseRedirect("woordkaarten")
-            except Exception as e:
+            except Exception:
                 # Bad request
                 return HttpResponse(status=404)
     # Not a post request

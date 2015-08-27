@@ -257,10 +257,12 @@ class Statistics(models.Model):
         name = 'Statistics (%s)' % (self.user.username,)
         return unicode(name)
 
+
 class History(models.Model):
     user = models.ForeignKey(User)
     opened = models.DateTimeField(auto_now_add=True)
     article_id = models.CharField(max_length=255)
+
     class Meta:
         verbose_name_plural = "Article History"
 
@@ -268,22 +270,19 @@ class History(models.Model):
         return self.article_id
 
     def __unicode__(self):
-        return unicode(self.article_id)   
-        
-    
+        return unicode(self.article_id)
+
 @receiver(user_signed_up)
 def connect_statistics_to_user(sender, request, user, **kw):
     statistics = Statistics(user=user)
     statistics.save()
-    #print "Created Statistics for %s" % (user)
 
 
-# Create your models here.
 class Badge(models.Model):
     title = models.CharField(max_length=255)
     default_image = models.URLField(max_length=255, null=True, blank=True)
-    field_to_listen_to = models.CharField(max_length=255, choices = Statistics.STATS)
-    
+    field_to_listen_to = models.CharField(max_length=255,
+            choices=Statistics.STATS)
     class Meta:
         verbose_name_plural = "Badges"
 
@@ -303,15 +302,14 @@ class Badge(models.Model):
                 badge_image = counter_badge.image
                 break
         return badge_image
-        
+
 
 class CounterBadge(models.Model):
     badge = models.ForeignKey(Badge, related_name='counter_badges')
     trigger_at_greater_than = models.IntegerField(default=0)
     image = models.URLField(max_length=255, null=True, blank=True)
-    
+
     class Meta:
         ordering = ('trigger_at_greater_than',)
-        
 
 
