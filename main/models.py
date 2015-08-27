@@ -12,7 +12,6 @@ from django.dispatch import receiver
 
 import pytz
 from polymorphic import PolymorphicModel
-import allauth.app_settings
 from allauth.socialaccount import providers
 
 from teacher.helpers import generate_password

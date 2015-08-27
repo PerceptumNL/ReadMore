@@ -4,7 +4,6 @@ from django.utils import timezone
 from polymorphic import PolymorphicModel
 from content.thirdparty.wiki_api import MediaWikiAPI, NS_PAGE, \
         NS_CATEGORY, NS_PORTAL, process_title
-import lxml
 import locale
 import random
 import urllib
