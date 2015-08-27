@@ -7,9 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
-from readmore.main.models import *
-from readmore.content.models import *
-from readmore.cover.models import CustomCard
+from main.models import *
+from content.models import *
+from cover.models import CustomCard
 from django.utils.translation import ugettext as _
 from datetime import datetime, timedelta
 from collections import Counter

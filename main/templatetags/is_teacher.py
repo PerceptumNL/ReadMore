@@ -1,5 +1,5 @@
 from django import template
-from readmore.main.models import Group
+from main.models import Group
 register = template.Library()
 
 @register.filter(name='is_teacher')

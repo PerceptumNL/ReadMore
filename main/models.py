@@ -15,7 +15,7 @@ from polymorphic import PolymorphicModel
 import allauth.app_settings
 from allauth.socialaccount import providers
 
-from readmore.teacher.helpers import generate_password
+from teacher.helpers import generate_password
 
 class PilotSignup(models.Model):
     email = models.CharField(max_length=255)

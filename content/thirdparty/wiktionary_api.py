@@ -42,7 +42,7 @@ Known issues:
 """
 import re
 from django.conf import settings
-from readmore.content.thirdparty.wiki_api import MediaWikiAPI
+from content.thirdparty.wiki_api import MediaWikiAPI
 from string import whitespace, punctuation
 from django.utils.translation import pgettext
 

@@ -4,8 +4,8 @@ from django.db.models import Q
 import operator
 import re
 import json
-from readmore.content.models import *
-from readmore.main.models import *
+from content.models import *
+from main.models import *
 import django.dispatch
 import datetime
 from django.utils import timezone

@@ -1,4 +1,4 @@
-from readmore.content.thirdparty.wiktionary_api import WiktionaryParser
+from content.thirdparty.wiktionary_api import WiktionaryParser
 from django.utils.translation import ugettext as _
 
 def create_term_card(term):

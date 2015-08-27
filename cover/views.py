@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import CustomCard
-from readmore.content.thirdparty.wiktionary_api import *
+from content.thirdparty.wiktionary_api import *
 from django.utils.translation import ugettext as _
 from cards import *
 import json

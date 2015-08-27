@@ -5,8 +5,8 @@ from django.http import HttpResponse, HttpResponseRedirect, \
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from readmore.main.models import *
-from readmore.content.models import *
+from main.models import *
+from content.models import *
 from allauth.socialaccount.models import SocialAccount
 import datetime
 import json
@@ -66,10 +66,10 @@ def history(request):
 def dashboard_dispatch(request):
     groups = request.user.teaches.count()
     if groups == 1:
-        from readmore.teacher.views import dashboard_group
+        from teacher.views import dashboard_group
         return dashboard_group(request, request.user.teaches.get().pk)
     elif groups > 1:
-        from readmore.teacher.views import dashboard_main
+        from teacher.views import dashboard_main
         return dashboard_main(request)
     else:
         return profile_self(request)

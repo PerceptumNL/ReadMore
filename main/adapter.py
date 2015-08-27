@@ -1,5 +1,5 @@
 from django.conf import settings
-from readmore.main.models import Group, TeacherCode, UserProfile
+from main.models import Group, TeacherCode, UserProfile
 from allauth.account.adapter import DefaultAccountAdapter
 from django.http import HttpResponse, HttpResponseNotFound, \
         HttpResponseServerError, HttpResponseRedirect

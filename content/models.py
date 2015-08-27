@@ -2,7 +2,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from polymorphic import PolymorphicModel
-from readmore.content.thirdparty.wiki_api import MediaWikiAPI, NS_PAGE, \
+from content.thirdparty.wiki_api import MediaWikiAPI, NS_PAGE, \
         NS_CATEGORY, NS_PORTAL, process_title
 import lxml
 import locale
