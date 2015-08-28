@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, DataError
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from polymorphic import PolymorphicModel
@@ -214,17 +214,21 @@ class RSSCategory(Category):
                             for image in images:
                                 body += '<img src="%s" />' % (image['href'],)
 
-                    article, created = RSSArticle.objects.get_or_create(
-                            identifier=entry['id'],
-                            defaults={
-                                'title': entry['title'],
-                                'body': body,
-                                'image': main_image,
-                                'publication_date': published,
-                                'source': self.source
-                            })
-                    article.categories.add(self)
-                    article.save()
+                    try:
+                        article, created = RSSArticle.objects.get_or_create(
+                                identifier=entry['id'],
+                                defaults={
+                                    'title': entry['title'],
+                                    'body': body,
+                                    'image': main_image,
+                                    'publication_date': published,
+                                    'source': self.source
+                                })
+                    except DataError:
+                        continue
+                    else:
+                        article.categories.add(self)
+                        article.save()
             self.last_update = updated
             super(RSSCategory, self).save()
 
