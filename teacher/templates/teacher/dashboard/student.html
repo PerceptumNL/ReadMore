@@ -1,0 +1,117 @@
+{% extends "base_page.html" %}
+{% load staticfiles %}
+
+{% block title %}LeestMeer - Dashboard Leerling {% endblock title %}
+
+{% block extraCSS %}
+    <link href="{% static 'css/article_style.css' %}" rel="stylesheet">
+	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard_main.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard_student.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block backdrop %}
+
+{% endblock %}
+
+{% block menu %}
+{% endblock %}
+
+{% block body %}
+
+<div id="mainContent">
+    <a href="{% url 'dashboard_group' group.pk %}" class='btn btn-primary'
+        style='color: #fff'>
+        &lt; Ga terug naar de groep</a>
+    <h1>{{student}}</h1>
+    <div class="student-block" id="click_info">
+        <div class="group-block">
+			<div class="group-info-block wide">
+				<h4> Leerling samenvatting van deze week</h4>
+				<div class="group-info-block" id="student_activity">
+					<h3 class="floating">Activiteit</h3>
+				</div>
+				<div class="group-info-block" id="student_categories">
+					<h3>Categorie&#xEB;n</h3>
+				</div>
+				<div class="group-info-block" id="student_words">
+					<h3>Woorden</h3>
+				</div>
+			</div>
+		</div>
+        <div class="group-block">
+            <div class="group-info-block wide" id="student_articles">
+                <h3> Laatste 3 gelezen artikelen </h3>
+            </div>
+		</div>
+        <div class="group-block">
+			<div class="group-info-block wide row" style='width: 100%'>
+				<h3> Laatst gegeven beoordelingen </h3>
+				<div id="rating"
+					class="col-sm-6 col-md-5 col-md-offset-1 col-xs-12">
+					<h4> Leukheid </h4>
+				</div>
+				<div id="difficulty"
+					class="col-sm-6 col-md-5 col-md-offset-1 col-xs-12">
+					<h4> Moeilijkheid </h4>
+				</div>
+			</div>
+        </div>
+        <div class="group-block">
+            <div class="group-info-block wide graph">
+                <h3> Vooruitgang van de laaste 4 weken </h3>
+                <table class="progress-graph">
+                    <tr id="progress_images"></tr>
+                    <tr id="progress_weeks"></tr>
+                </table>
+            </div>
+		</div>
+    </div>
+</div>
+
+
+{% endblock body %}
+
+{% block overlay %}
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
+{% block extraScripts %}
+	<!-- jquery mobile for hashchange event -->
+    <script src="{% static 'js/jquery.mobile.custom.min.js' %}"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+    <script>
+	$(function(){
+		$.get("{% url 'api_student' student.pk %}", function( data ) {
+			draw_activity("#student_activity", data.engagement);
+			draw_category_list("#student_categories", data.categories);
+			draw_word_list("#student_words", data.words)
+			draw_article_list("#student_articles", data.articles);
+			// Load last interesting rating
+			if (!$.isEmptyObject(data.rating)) {
+				draw_rating_block("#rating", data.rating)
+			} else {
+				var title = $("<h6 style='margin: 8px 8px 8px 24px'>");
+				title.html("Er zijn nog geen ratings gegeven deze week");
+				$( "#rating").append(title);
+			}
+			// Load last difficulty rating
+			if (!$.isEmptyObject(data.difficulty)) {
+				draw_rating_block("#difficulty", data.difficulty)
+			} else {
+				var title = $("<h6 style='margin: 8px 8px 8px 24px'>");
+				title.html("Er zijn nog geen ratings gegeven deze week");
+				$( "#difficulty").append(title);
+			}
+			// Progress graph
+			data.progress.forEach(function(d, i) {
+				draw_progress_graph("#progress", d, data.week_nr -4 +i);
+			});
+		});
+	});
+	</script>
+{% endblock extraScripts %}

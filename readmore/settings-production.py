@@ -40,8 +40,6 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-# Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'polymorphic',
@@ -53,22 +51,17 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'longerusernameandemail',
     'django_summernote',
-    'readmore.main',
-    'readmore.widgets',
-    'readmore.widgets.articleviewer',
-    'readmore.widgets.dummy',
-    'readmore.widgets.dictionary',
-    'readmore.widgets.customcard',
-    'readmore.widgets.carddeck',
-    'readmore.widgets.dashboard',
-    'readmore.content',
-    'readmore.teacher',
+    'main',
+    'cover',
+    'content',
+    'teacher',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.windowslive',
     'allauth.socialaccount.providers.google',
     'south',
+	'compressor',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -113,8 +106,8 @@ ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = 'False'
 AUTH_PROFILE_MODULE = 'main.UserProfile'
 SIGNUP_ENABLED = True
-ACCOUNT_FORMS = {'signup': 'readmore.main.forms.ReadMoreSignupForm'}
-ACCOUNT_ADAPTER = "readmore.main.adapter.ReadMoreAccountAdapter"
+ACCOUNT_FORMS = {'signup': 'main.forms.ReadMoreSignupForm'}
+ACCOUNT_ADAPTER = "main.adapter.ReadMoreAccountAdapter"
 
 SOCIALACCOUNT_PROVIDERS = \
     { 'google':
@@ -148,6 +141,18 @@ USE_TZ = True
 # Wikipedia source
 
 LOCALE_PATHS = (os.path.join(os.path.dirname(BASE_DIR), 'locale'),)
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.6/howto/static-files/
+
+STATIC_URL = '/static/'
+STATIC_ROOT = 'collectstatic'
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)
 
 SUMMERNOTE_CONFIG = {
     # Using SummernoteWidget - iframe mode

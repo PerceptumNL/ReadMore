@@ -1,0 +1,35 @@
+from django.conf.urls import patterns, include, url
+from .views import GroupAPIView
+
+urlpatterns = patterns('',
+    url(r'^$', 'teacher.views.dashboard_main', name='overview'),
+    url(r'^dashboard$', 'teacher.views.dashboard', name='dashboard'),
+    url(r'^woordkaarten$', 'teacher.views.word_cards', name='word_cards'),
+    url(r'^manage_users$', 'teacher.views.manage_users', name='manage_users'),
+    url(r'^add_user$', 'teacher.views.add_user', name='add_user'),
+    url(r'^add_word$', 'teacher.views.add_word', name='add_word'),
+    url(r'^remove_word$', 'teacher.views.remove_word', name='remove_word'),
+    url(r'^carddeck/overview/?$', 'teacher.views.carddeck_overview',
+        name='dashboard_carddeck_overview'),
+    url(r'^carddeck/user/?$', 'teacher.views.carddeck_user',
+        name='dashboard_carddeck_user'),
+    url(r'^carddeck/article/?$', 'teacher.views.carddeck_article',
+        name='dashboard_carddeck_article'),
+    url(r'^carddeck/word/?$', 'teacher.views.carddeck_word',
+        name='dashboard_carddeck_word'),
+    url(r'^lists/userlist/?$',
+        'teacher.views.retrieve_students',
+        name='retrieve_students'),
+    url(r'^old$', 'teacher.views.overview',
+        name='dashboard_test'),
+    url(r'^group/(?P<group_id>\w+)$', 'teacher.views.dashboard_group',
+        name='dashboard_group'),
+    url(r'^group/(?P<group_id>\w+)/(?P<student_id>\w+)$',
+        'teacher.views.dashboard_student', name='dashboard_student'),
+    url(r'^api/student/(?P<student_id>\w+)$',
+        'teacher.views.api_student', name='api_student'),
+    url(r'^api/group/(?P<group_id>\w+)?$', GroupAPIView.as_view(),
+        name='api_group'),
+)
+
+
