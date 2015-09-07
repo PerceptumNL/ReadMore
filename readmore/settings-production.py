@@ -60,7 +60,6 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.windowslive',
     'allauth.socialaccount.providers.google',
-    'south',
 	'compressor',
 )
 
