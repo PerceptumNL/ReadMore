@@ -19,15 +19,20 @@ class ReadMoreAccountAdapter(DefaultAccountAdapter):
         code = form.cleaned_data['code']
         if code:
             # Check if the code is a teacher code
-            if TeacherCode.objects.filter(code=code).exists():
-                group = Group.objects.create(title="Group of %s" % (user,),
-                        leader=user)
-            else:
+            try:
+                code_obj = TeacherCode.objects.get(code=code)
+            except TeacherCode.DoesNotExist:
                 try:
                     group = Group.objects.get(code=code)
                 except Group.DoesNotExist:
                     pass
                 else:
+                    profile.institute = group.institute
                     profile.groups.add(group)
                     profile.save()
+            else:
+                group = Group.objects.create(title="Group of %s" % (user,),
+                        leader=user)
+                profile.institute = code_obj.institute
+                user.save()
         return user
