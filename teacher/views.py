@@ -18,36 +18,44 @@ import json
 
 @login_required
 def dashboard_main(request):
-    if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
-        groups = Group.objects.filter(leader=request.user)
-        return render(request, 'teacher/dashboard/main.html', {
-        "groups": groups,
-    })
+    teacher = request.GET.get('teacher', None)
+    if request.user.is_superuser and teacher is not None:
+        groups = Group.objects.filter(leader__pk=teacher)
+    else:
+        groups = Group.objects.filter(leader__pk=request.user.pk)
+
+    if len(groups):
+        return render(request, 'teacher/dashboard/main.html',
+                {"groups": groups, "using": teacher})
     else:
         return HttpResponseRedirect("/")
 
 def dashboard_group(request, group_id=None):
-    if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
-        group = get_object_or_404(Group, pk=group_id)
-        students = User.objects.filter(userprofile__groups__pk=group_id)
-
-        return render(request, 'teacher/dashboard/group.html', {
-            "group": group,
-            "students": students,
-    })
+    teacher = request.GET.get('teacher', None)
+    if request.user.is_superuser and teacher is not None:
+        group = get_object_or_404(Group, pk=group_id, leader__pk=teacher)
     else:
-        return HttpResponseRedirect("/")
+        group = get_object_or_404(Group, pk=group_id,
+                leader__pk=request.user.pk)
+
+    students = User.objects.filter(userprofile__groups__pk=group_id)
+
+    return render(request, 'teacher/dashboard/group.html', {
+        "group": group, "students": students, "using": teacher})
 
 def dashboard_student(request, group_id=None, student_id=None):
-    if request.user.is_superuser or len(Group.objects.filter(leader=request.user)):
-        student = User.objects.get(pk=student_id)
-        group = Group.objects.get(pk=group_id)
-        return render(request, 'teacher/dashboard/student.html', {
-            "group": group,
-            "student": student,
-    })
+    teacher = request.GET.get('teacher', None)
+    if request.user.is_superuser and teacher is not None:
+        group = get_object_or_404(Group, pk=group_id, leader__pk=teacher)
     else:
-        return HttpResponseRedirect("/")
+        group = get_object_or_404(Group, pk=group_id,
+                leader__pk=request.user.pk)
+
+    student = get_object_or_404(User, pk=student_id, userprofile__groups=group)
+
+    return render(request, 'teacher/dashboard/student.html', {
+        "using": teacher, "group": group, "student": student})
+
 
 class GroupAPIView(View):
 
