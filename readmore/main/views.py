@@ -32,6 +32,7 @@ def pilot_signup(request):
             except Exception as e:
                 # Bad request         
                 return HttpResponse(status=400)
+    return HttpResponseBadRequest()
 
 
 # New pages
