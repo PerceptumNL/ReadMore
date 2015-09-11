@@ -22,9 +22,10 @@ class ReadMoreSignupForm(SignupForm):
        set_form_field_order(self, ['first_name', 'last_name']+order)
 
     def clean(self):
-        super(SignupForm, self).clean()
-        code = self.cleaned_data['code']
-        if not TeacherCode.objects.filter(active=True, code=code).exists() or \
-                not Group.objects.filter(code=code).exists():
-                    raise forms.ValidationError(_("This code is not known."))
-        return self.cleaned_data
+        cleaned_data = super(SignupForm, self).clean()
+        code = cleaned_data.get('code', None)
+        if code is not None:
+            if not (TeacherCode.objects.filter(active=True, code=code).exists() \
+                    or Group.objects.filter(code=code).exists()):
+                        self.add_error('code', "Deze code is niet bekend.")
+        return cleaned_data
