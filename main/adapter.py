@@ -37,4 +37,5 @@ class ReadMoreAccountAdapter(DefaultAccountAdapter):
                 profile.institute = code_obj.institute
                 profile.code = code_obj
                 profile.save()
+                user.save()
         return user
