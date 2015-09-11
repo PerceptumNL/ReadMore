@@ -12,7 +12,9 @@ class UserProfileInline(admin.StackedInline):
 
 class CustomUserAdmin(UserAdmin):
     save_on_top = True
-    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'last_login')
+    list_display = ('email', 'full_name', 'date_joined',
+            'last_login', 'num_active', "teacher_dashboard")
+    list_filter = ('userprofile__institute',)
     inlines = [UserProfileInline]
     add_fieldsets = (
         ( None, {
@@ -22,6 +24,48 @@ class CustomUserAdmin(UserAdmin):
     )
     add_form = UserCreationForm
     form = UserChangeForm
+
+    def full_name(self, obj):
+        return obj.get_full_name()
+
+    def num_active(self, obj):
+        if not obj.userprofile.is_teacher:
+            return "n/a"
+        from datetime import timedelta, date
+        profiles = UserProfile.objects.filter(groups__leader__pk=obj.pk)
+        compare_date = date.today()-timedelta(weeks=1)
+        compare_date_before = compare_date-timedelta(weeks=1)
+        total = 0
+        active = 0
+        active_before = 0
+        for profile in profiles:
+            if not profile.is_teacher:
+                total += 1
+                if Event.objects.filter(user=profile.user,
+                        date__gt=compare_date).exists():
+                    active += 1
+                if Event.objects.filter(user=profile.user,
+                        date__gt=compare_date_before,
+                        date__lt=compare_date).exists():
+                    active_before += 1
+
+        if active > active_before:
+            direction = "&#9650;"
+        elif active_before > active:
+            direction = "&#9660;"
+        else:
+            direction = "&#x26AB;"
+        return "%d / %d in the last week (%s)" % (active, total, direction)
+    num_active.allow_tags = True
+
+    def teacher_dashboard(self, obj):
+        if not obj.userprofile.is_teacher:
+            return "n/a"
+        else:
+            link = "%s?teacher=%d" % (reverse("dashboard_dispatch"), obj.pk)
+            return "<a href='%s'>Dashboard</a>" % (link,)
+    teacher_dashboard.allow_tags = True
+
 
 
 class CounterBadgeInline(admin.StackedInline):
@@ -104,10 +148,50 @@ class PilotSignupAdmin(admin.ModelAdmin):
     base_model = PilotSignup
     list_filter = ('function', 'school')
     list_display = ('email', 'function', 'school', 'signup',)
-    
+
+class InstituteModel(admin.ModelAdmin):
+    list_display = ('title', 'num_active', 'teachers_link')
+
+    def num_active(self, obj):
+        from datetime import timedelta, date
+        profiles = UserProfile.objects.filter(institute__pk=obj.pk)
+        compare_date = date.today()-timedelta(weeks=1)
+        compare_date_before = compare_date-timedelta(weeks=1)
+        total = 0
+        active = 0
+        active_before = 0
+        for profile in profiles:
+            if not profile.is_teacher:
+                total += 1
+                if Event.objects.filter(user=profile.user,
+                        date__gt=compare_date).exists():
+                    active += 1
+                if Event.objects.filter(user=profile.user,
+                        date__gt=compare_date_before,
+                        date__lt=compare_date).exists():
+                    active_before += 1
+
+        if active > active_before:
+            direction = "&#9650;"
+        elif active_before > active:
+            direction = "&#9660;"
+        else:
+            direction = "&#x26AB;"
+        return "%d / %d in the last week (%s)" % (active, total, direction)
+    num_active.allow_tags = True
+
+    def teachers_link(self, obj):
+        from django.contrib.auth import get_user_model
+        model = get_user_model()
+        info = model._meta.app_label, model._meta.model_name
+        link = "%s?userprofile__institute__id__exact=%d" % (
+                reverse('admin:%s_%s_changelist' % info), obj.pk)
+        return "<a href='%s'>Docenten</a>" % (link,)
+    teachers_link.allow_tags = True
+
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(Institute)
+admin.site.register(Institute, InstituteModel)
 admin.site.register(Group)
 admin.site.register(TeacherCode)
 admin.site.register(Event, EventAdmin)
