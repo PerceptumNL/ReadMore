@@ -34,6 +34,7 @@ class UserProfile(models.Model):
     groups = models.ManyToManyField('Group', blank=True, related_name='users')
     institute = models.ForeignKey('Institute', blank=True, null=True,
             related_name='users')
+    code = models.ForeignKey('TeacherCode', null=True, blank=True)
 
     def __unicode__(self):
         return unicode(self.user)
