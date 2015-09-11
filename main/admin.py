@@ -189,11 +189,17 @@ class InstituteModel(admin.ModelAdmin):
         return "<a href='%s'>Docenten</a>" % (link,)
     teachers_link.allow_tags = True
 
+class TeacherCodeAdmin(admin.ModelAdmin):
+    list_display = ('code', 'institute', 'created_on', 'users')
+
+    def users(self, obj):
+        return UserProfile.objects.filter(code__pk=obj.pk).count()
+
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Institute, InstituteModel)
 admin.site.register(Group)
-admin.site.register(TeacherCode)
+admin.site.register(TeacherCode, TeacherCodeAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(UserProfile)
 admin.site.register(PilotSignup, PilotSignupAdmin)
