@@ -122,6 +122,9 @@ class Group(models.Model):
 
 class TeacherCode(models.Model):
     code = models.CharField(max_length=255)
+    institute = models.ForeignKey('Institute')
+    active = models.BooleanField(default=True)
+    created_on = models.DateField(auto_now_add=True)
 
     def __unicode__(self):
         return unicode(self.code)
