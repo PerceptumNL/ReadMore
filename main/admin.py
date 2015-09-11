@@ -104,12 +104,19 @@ class PilotSignupAdmin(admin.ModelAdmin):
     base_model = PilotSignup
     list_filter = ('function', 'school')
     list_display = ('email', 'function', 'school', 'signup',)
-    
+
+
+class TeacherCodeAdmin(admin.ModelAdmin):
+    list_display = ('code', 'institute', 'created_on', 'users')
+
+    def users(self, obj):
+        return UserProfile.objects.filter(code__pk=obj.pk).count()
+
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Institute)
 admin.site.register(Group)
-admin.site.register(TeacherCode)
+admin.site.register(TeacherCode, TeacherCodeAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(UserProfile)
 admin.site.register(PilotSignup, PilotSignupAdmin)
