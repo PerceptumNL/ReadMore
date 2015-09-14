@@ -20,9 +20,15 @@
 {% block body %}
 
 <div id="mainContent">
+	{% if using %}
+	<a href="{% url 'dashboard_group' group.pk %}?teacher={{ using }}"
+		class='btn btn-primary' style='color: #fff'>
+       &lt; Ga terug naar de groep</a>
+   {% else %}
     <a href="{% url 'dashboard_group' group.pk %}" class='btn btn-primary'
         style='color: #fff'>
-        &lt; Ga terug naar de groep</a>
+       &lt; Ga terug naar de groep</a>
+   {% endif %}
     <h1>{{student}}</h1>
     <div class="student-block" id="click_info">
         <div class="group-block">

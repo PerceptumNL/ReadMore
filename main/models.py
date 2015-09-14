@@ -34,6 +34,7 @@ class UserProfile(models.Model):
     groups = models.ManyToManyField('Group', blank=True, related_name='users')
     institute = models.ForeignKey('Institute', blank=True, null=True,
             related_name='users')
+    code = models.ForeignKey('TeacherCode', null=True, blank=True)
 
     def __unicode__(self):
         return unicode(self.user)
@@ -122,6 +123,9 @@ class Group(models.Model):
 
 class TeacherCode(models.Model):
     code = models.CharField(max_length=255)
+    institute = models.ForeignKey('Institute')
+    active = models.BooleanField(default=True)
+    created_on = models.DateField(auto_now_add=True)
 
     def __unicode__(self):
         return unicode(self.code)

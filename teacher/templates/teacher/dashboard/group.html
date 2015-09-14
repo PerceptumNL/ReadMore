@@ -17,7 +17,11 @@
 {% block body %}
 
 <div id="mainContent">
-    {% if request.user.teaches.count > 1 %}
+    {% if using %}
+		<a href="{% url 'overview' %}?teacher={{ using }}" class='btn btn-primary'
+        style='color: #fff'>
+        &lt; Terug naar het groepen overzicht</a>
+    {% elif request.user.teaches.count > 1 %}
     <a href="{% url 'overview' %}" class='btn btn-primary'
         style='color: #fff'>
         &lt; Terug naar het groepen overzicht</a>
@@ -48,7 +52,11 @@
         <h4>Leerlingen</h4>
         {% for student in students %}
             <div class="student-block link-div" pk="{{student.pk}}">
+				{% if using %}
+                <a href="{% url 'dashboard_student' group.pk student.pk %}?teacher={{ using }}"></a>
+				{% else %}
                 <a href="{% url 'dashboard_student' group.pk student.pk %}"></a>
+				{% endif %}
                 <h5 class="floating">{{student}} </i></h5>
                 <img id="student_activity_{{student.pk}}" src="{% static 'img/engagement-00.png'%}">
                 <div class="button">
@@ -88,6 +96,7 @@
             </p>
         </div>
     </div>
+	{% if not using %}
 	<div class="group-block" id="editgroup">
         <h3>Hernoem de groep</h3>
         <form class="form" id="edit_group_form">
@@ -97,6 +106,7 @@
             <input type="submit" value="Hernoem groep"></input>
         </form>
 	</div>
+	{% endif %}
 </div>
 
 
@@ -140,6 +150,7 @@
 				}(sid));
 			});
 			{% endif %}
+			{% if not using %}
 			// Load group edit form
 			$("#edit_group_form").submit(function(event){
 				if(this.title.value != ""){
@@ -161,6 +172,7 @@
 				}
 				event.preventDefault();
 			})
+			{% endif %}
 		});
 	</script>
 {% endblock extraScripts %}

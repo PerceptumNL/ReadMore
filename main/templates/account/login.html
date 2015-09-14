@@ -3,7 +3,6 @@
 
 {% load i18n %}
 {% load account %}
-{% load url from future %}
 
 {% block title %}LeestMeer - Inloggen{% endblock title %}
 
@@ -34,7 +33,7 @@
     
 
     <a href="/accounts/signup/"><button class="button"><t4>Ik heb nog geen account!</t4></button></a>
-    
+	<p><a href="{% url 'password_reset' %}">Wachtwoord vergeten?</a></p>
 
 {% endblock %}
 

@@ -22,7 +22,11 @@
 {% for group in groups %}
     <div class="group-block info-block" id="group_{{group.pk}}" pk="{{group.pk}}">
         <div class="group-info-block wide link-to-detail link-div">
+			{% if using %}
+			<a href="{% url 'dashboard_group' group.pk %}?teacher={{ using }}"></a>
+			{% else %}
             <a href="{% url 'dashboard_group' group.pk %}"></a>
+			{% endif %}
 			<div class="activity-block" style='height:100px; float:left'>
 				<img id="group_activity_{{group.pk}}" src="{% static 'img/engagement-00.png'%}">
 			</div>
@@ -36,6 +40,7 @@
     </div>
 {% endfor %}
 
+{% if not using %}
 <div class="group-block" id="newgroup">
         <h3>Maak een nieuwe groep aan</h3>
         <form class="form" id="create_group_form">
@@ -44,6 +49,7 @@
             <input type="submit" value="Maak nieuwe groep"></input>
         </form>
 </div>
+{% endif %}
 
 </div>
 
@@ -75,6 +81,7 @@
 			$(".group-block.info-block").each(function(){
 			   initialize_group($(this).attr('pk'));
 			});
+			{% if not using %}
 			$("#create_group_form").submit(function(event){
 				if(this.title.value != ""){
 					var title = this.title.value
@@ -92,6 +99,7 @@
 				}
 				event.preventDefault();
 			})
+			{% endif %}
 		});
 	</script>
 {% endblock extraScripts %}

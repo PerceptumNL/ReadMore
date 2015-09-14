@@ -64,10 +64,17 @@ def history(request):
 
 @login_required
 def dashboard_dispatch(request):
-    groups = request.user.teaches.count()
+    teacher = request.GET.get('teacher', None)
+    if request.user.is_superuser and teacher is not None:
+        from django.contrib.auth import get_user_model
+        user = get_object_or_404(get_user_model(), pk=teacher)
+    else:
+        user = request.user
+
+    groups = user.teaches.count()
     if groups == 1:
         from teacher.views import dashboard_group
-        return dashboard_group(request, request.user.teaches.get().pk)
+        return dashboard_group(request, user.teaches.get().pk)
     elif groups > 1:
         from teacher.views import dashboard_main
         return dashboard_main(request)
