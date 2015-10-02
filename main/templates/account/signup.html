@@ -9,10 +9,6 @@
 
 {% endblock %}
 
-{% block menu %}
-    <a href="/accounts/login/"><button type="submit"><t4>Inloggen</t4></button></a>
-{% endblock %}
-
 {% block body %}
 	<h1 class="leading">{% trans "Schrijf je in voor Lees Meer" %}</h1>
     <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
