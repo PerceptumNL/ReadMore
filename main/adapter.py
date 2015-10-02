@@ -33,7 +33,7 @@ class ReadMoreAccountAdapter(DefaultAccountAdapter):
                     profile.save()
             else:
                 group = Group.objects.create(title="Group of %s" % (user,),
-                        leader=user)
+                        leader=user, institute=code_obj.institute)
                 profile.institute = code_obj.institute
                 profile.code = code_obj
                 profile.save()
