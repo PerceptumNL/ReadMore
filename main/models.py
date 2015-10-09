@@ -35,16 +35,13 @@ class UserProfile(models.Model):
     institute = models.ForeignKey('Institute', blank=True, null=True,
             related_name='users')
     code = models.ForeignKey('TeacherCode', null=True, blank=True)
+    is_teacher = models.BooleanField(default=False)
 
     def __unicode__(self):
         return unicode(self.user)
 
     def __str__(self):
         return unicode(self).encode('utf-8')
-
-    @property
-    def is_teacher(self):
-        return Group.objects.filter(leader=self.user).exists()
 
 class Institute(models.Model):
     title = models.CharField(max_length=255)
