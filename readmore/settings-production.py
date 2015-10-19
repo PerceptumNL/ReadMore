@@ -117,13 +117,22 @@ SOCIALACCOUNT_PROVIDERS = \
 
 REQUIRE_UNIQUE_EMAIL = False
 
-# Template Context
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.request",
-    "django.contrib.auth.context_processors.auth",
-    "allauth.account.context_processors.account",
-    "allauth.socialaccount.context_processors.socialaccount",
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # Already defined Django-related contexts here
+
+                # `allauth` needs this from django
+                "django.contrib.auth.context_processors.auth",
+                'django.template.context_processors.request',
+            ],
+        },
+    },
+]
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
