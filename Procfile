@@ -1,1 +1,1 @@
-web: python manage.py runserver $PORT --settings=readmore.settings-production
+web: gunicorn --debug True --log-level debug readmore.wsgi
