@@ -1,4 +1,4 @@
-Django==1.8.4
+Django==1.8.5
 argparse==1.2.1
 beautifulsoup4==4.3.2
 dj-database-url==0.3.0
