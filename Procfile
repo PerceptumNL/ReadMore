@@ -1,1 +1,1 @@
-web: python manage.py runserver --settings=readmore.settings-production
+web: python manage.py runserver $PORT --settings=readmore.settings-production
