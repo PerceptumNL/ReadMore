@@ -14,7 +14,7 @@ class CustomUserAdmin(UserAdmin):
     save_on_top = True
     list_display = ('email', 'full_name', 'date_joined',
             'last_login', 'num_active', "teacher_dashboard")
-    list_filter = ('userprofile__institute',)
+    list_filter = ('userprofile__institute','userprofile__is_teacher')
     inlines = [UserProfileInline]
     add_fieldsets = (
         ( None, {
@@ -184,7 +184,8 @@ class InstituteModel(admin.ModelAdmin):
         from django.contrib.auth import get_user_model
         model = get_user_model()
         info = model._meta.app_label, model._meta.model_name
-        link = "%s?userprofile__institute__id__exact=%d" % (
+        link = ("%s?userprofile__institute__id__exact=%d" +
+                "&userprofile__is_teacher__exact=1") % (
                 reverse('admin:%s_%s_changelist' % info), obj.pk)
         return "<a href='%s'>Docenten</a>" % (link,)
     teachers_link.allow_tags = True

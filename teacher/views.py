@@ -64,7 +64,8 @@ class GroupAPIView(View):
             return HttpResponse(status=403)
         title = request.POST.get('title', None)
         if title:
-            group = Group.objects.create(leader=request.user, title=title)
+            group = Group.objects.create(leader=request.user, title=title,
+                    institute=request.user.userprofile.institute)
             return HttpResponse(reverse('dashboard_group', args=(group.pk,)))
         else:
             return HttpResponseBadRequest()
