@@ -16,7 +16,8 @@ from django.core.mail import send_mail
 
 def show_technical_report(request):
     from django.views.debug import technical_500_response
-    return technical_500_response(request)
+    import sys
+    return technical_500_response(request, *sys.exc_info())
 
 def pilot_signup(request):
     if request.method == 'POST':
