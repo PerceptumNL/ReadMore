@@ -1,1 +1,1 @@
-web: gunicorn --log-level debug readmore.wsgi
+web: gunicorn readmore.wsgi
