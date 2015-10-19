@@ -62,6 +62,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.windowslive',
     'allauth.socialaccount.providers.google',
+    'load_students',
 	'compressor',
 )
 
