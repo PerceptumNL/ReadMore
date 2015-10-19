@@ -2,7 +2,6 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth import views as auth_views
 
 urlpatterns = patterns('',
-    url(r'^debug/$', 'main.views.show_technical_report'),
     url(r'^password_reset/$', auth_views.password_reset,
         {'template_name': 'account/password_reset_form.html'},
         name="password_reset"),
