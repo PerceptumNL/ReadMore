@@ -1,0 +1,41 @@
+{% extends "base_page.html" %}
+{% load staticfiles %}
+
+
+{% block body %}
+    {% if groups %}
+        <h3>The following groups had N students added<h3>
+        <p>
+        {% for group, count in groups.items %}
+            {{ group }} : {{ count }} <br/>
+        {% endfor %}
+        </p>
+    {% endif %}
+
+    {% if incorrect %}
+        <h3>Incorrectly formatted lines<h3>
+        <p>
+        {% for line in incorrect %}
+            {{ line }} <br/>
+        {% endfor %}
+        </p>
+    {% endif %}
+
+    {% if id_exists %}
+        <h3>Student ID already exists<h3>
+        <p>
+        {% for line in id_exists %}
+            {{ line }} <br/>
+        {% endfor %}
+        </p>
+    {% endif %}
+    
+    {% if no_group %}
+        <h3>No such group found<h3>
+        <p>
+        {% for line in no_group %}
+            {{ line }} <br/>
+        {% endfor %}
+        </p>
+    {% endif %}
+{% endblock %}
