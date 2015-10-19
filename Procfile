@@ -1,1 +1,1 @@
-web: gunicorn readmore.wsgi
+web: python manage.py runserver --settings=readmore.settings-production
