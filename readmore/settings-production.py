@@ -124,11 +124,10 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                # Already defined Django-related contexts here
-
-                # `allauth` needs this from django
-                "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.debug",
                 'django.template.context_processors.request',
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
