@@ -23,7 +23,7 @@ class ReadMoreSignupForm(SignupForm):
 
     def clean(self):
         cleaned_data = super(SignupForm, self).clean()
-        code = cleaned_data.get('code', None)
+        code = cleaned_data.get('code', None).strip()
         if code is not None:
             if not (TeacherCode.objects.filter(active=True, code=code).exists() \
                     or Group.objects.filter(code=code).exists()):
