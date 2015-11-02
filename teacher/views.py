@@ -318,8 +318,6 @@ def week_progress(objects, date):
 
     week_count = len(objects.filter(date__range=[week_start, date]))
     before_count = len(objects.filter(date__range=[before_start, week_start]))
-    
-    print week_count, before_count
 
     if week_count == 0:
         return 0.0
@@ -328,7 +326,6 @@ def week_progress(objects, date):
     else:
         return week_count / (before_count / float(before_weeks))
 
-        
 def last_4_weeks_progress(objects):
     date = start_of_week()
 
