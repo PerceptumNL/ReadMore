@@ -46,6 +46,7 @@ class UserProfile(models.Model):
 class Institute(models.Model):
     title = models.CharField(max_length=255)
     site_id = models.ForeignKey(Site)
+    email_domain = models.CharField(max_length=255, blank=True)
     timezone = models.CharField(max_length=100,
             choices=zip(pytz.common_timezones, pytz.common_timezones))
     provider = models.CharField(verbose_name=('provider'),

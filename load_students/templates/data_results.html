@@ -12,6 +12,15 @@
         </p>
     {% endif %}
 
+    {% if teachers %}
+        <h3>The following teachers had N groups added<h3>
+        <p>
+        {% for teacher, count in teachers.items %}
+            {{ teacher }} : {{ count }} <br/>
+        {% endfor %}
+        </p>
+    {% endif %}
+    
     {% if incorrect %}
         <h3>Incorrectly formatted lines<h3>
         <p>
@@ -22,7 +31,7 @@
     {% endif %}
 
     {% if id_exists %}
-        <h3>Student ID already exists<h3>
+        <h3>User ID already exists<h3>
         <p>
         {% for line in id_exists %}
             {{ line }} <br/>
@@ -38,4 +47,14 @@
         {% endfor %}
         </p>
     {% endif %}
+
+    {% if group_exists %}
+        <h3>Group name(s) already exist<h3>
+        <p>
+        {% for line in group_exists %}
+            {{ line }} <br/>
+        {% endfor %}
+        </p>
+    {% endif %}
+
 {% endblock %}
