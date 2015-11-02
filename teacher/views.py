@@ -212,10 +212,9 @@ def api_student(request, student_id=None):
     if 'engagement' in stats:
         # Calculate engagement
         if 'articles' not in stats and 'article_count' not in stats:
-            article_his = ArticleHistoryItem.objects.filter(
-                    user__pk=student_id)
-            article_his = filter_on_period(article_his, 'week')
-        result_dict["engagement"] = compute_engagement(len(article_his))
+            article_his = ArticleHistoryItem.objects.filter(user__pk=student_id)
+        progress = week_progress(article_his, start_of_week())
+        result_dict["engagement"] = compute_engagement(progress)
 
     if 'words' in stats:
         # Collect popular words
@@ -232,7 +231,7 @@ def api_student(request, student_id=None):
     if 'progress' in stats:
         if 'article_count' not in stats and 'articles' not in stats and 'engagement' not in stats:
             article_his = ArticleHistoryItem.objects.filter(user__pk=student_id)
-        result_dict["progress"] = [compute_engagement(x) for x in last_4_weeks_count(article_his)]
+        result_dict["progress"] = [compute_engagement(x) for x in last_4_weeks_progress(article_his)]
         result_dict["week_nr"] = datetime.now(pytz.utc).isocalendar()[1]
 
     return HttpResponse(json.dumps(result_dict), content_type='application/json')
@@ -286,38 +285,56 @@ def filter_on_period(objects, period):
     else:
         return objects
 
-def compute_engagement(count):
+def compute_engagement(progress):
     """ A temporary definition of engagement. Conferred with David and the ideal
         definition would be based on the "actually" read article count related to the
         estimated capacity of the student, e.g. not punish students for being slower
         than the rest of the group. Additionally a good measure would be any
         interaction with the platform, such as ratings, word clicks, etc.
 
-        The temporary definition follows thresholds of x^3 to translate the
-        number of read articles to the engagement number of 0 through 5"""
-    thresholds = [0,1,8,27,64,125]
-    engagement = 5
+        The temporary definition is based on the percentage of articles read 
+        in relation to the students average (progress), which are mapped to the
+        engagement number of 0 through 5 using thresholds."""
+    thresholds = [0.0, 0.125, 0.25, 0.5, 1.0]
     for i, value in enumerate(thresholds):
-        if count <= value:
-            engagement = i
-            break;
-    return engagement
+        if progress <= value:
+            return i
+    return 5
 
-def last_4_weeks_count(objects):
-    date = datetime.now(pytz.utc)
+
+def start_of_week():
+    date = datetime.now(pytz.utc) 
     date -= timedelta(hours=date.hour)
     date -= timedelta(minutes=date.minute)
     date -= timedelta(seconds=date.second)
     date -= timedelta(microseconds=date.microsecond)
-    end_week = date - timedelta(date.weekday())
+    return date
 
-    weeks = [0]*4
+def week_progress(objects, date):
+    before_weeks = 2
+
+    week_start = date - timedelta(7)
+    before_start = week_start - timedelta(7*before_weeks)
+
+    week_count = len(objects.filter(date__range=[week_start, date]))
+    before_count = len(objects.filter(date__range=[before_start, week_start]))
+
+    if week_count == 0:
+        return 0.0
+    elif before_count == 0:
+        return 1.0
+    else:
+        return week_count / (before_count / float(before_weeks))
+
+def last_4_weeks_progress(objects):
+    date = start_of_week()
+
+    progress = []
     for i in range(3,-1,-1):
-        start_week = end_week
-        end_week = start_week + timedelta(7)
-        weeks[i] = len(objects.filter(date__range=[start_week, end_week]))
+        progress.append(week_progress(objects, date))
+        date -= timedelta(7)
 
-    return weeks
+    return progress[::-1]
 
 def api_get_history_totals(history, group_id, period=None):
     history = history.filter(user__userprofile__groups=group_id)
