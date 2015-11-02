@@ -23,8 +23,9 @@ class ReadMoreSignupForm(SignupForm):
 
     def clean(self):
         cleaned_data = super(SignupForm, self).clean()
-        code = cleaned_data.get('code', None).strip()
+        code = cleaned_data.get('code', None)
         if code is not None:
+            code = code.strip()
             if not (TeacherCode.objects.filter(active=True, code=code).exists() \
                     or Group.objects.filter(code=code).exists()):
                         self.add_error('code', "Deze code is niet bekend.")
