@@ -17,7 +17,7 @@ oauthlib==0.6.3
 psycopg2==2.5.3
 python-openid==2.2.5
 pytz==2014.9
-requests==2.3.0
+requests==2.20.0
 requests-oauthlib==0.4.1
 six==1.7.3
 static3==0.5.1
